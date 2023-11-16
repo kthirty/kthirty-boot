@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>kthirty-core</artifactId>
+        <groupId>top.kthirty</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>kthirty-core-boot</artifactId>
+    <packaging>jar</packaging>
+    <url>https://kthirty.top</url>
+    <inceptionYear>2023-Now</inceptionYear>
+    <description>核心启动封装-服务注册与发现-配置中心</description>
+
+    <dependencies>
+        <!--Google Auto Service-->
+        <dependency>
+            <groupId>net.dreamlu</groupId>
+            <artifactId>mica-auto</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!--bootstrap 文件解析-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+        <!--注解执行器 , 用于自定义配置在配置文件中的提示-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+    </dependencies>
+    <profiles>
+        <profile>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <id>cloud</id>
+            <dependencies>
+                <!--配置中心-->
+                <dependency>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+                </dependency>
+                <!--服务注册与发现-->
+                <dependency>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                </dependency>
+                <!--sentinel -->
+                <dependency>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>com.fasterxml.jackson.dataformat</groupId>
+                            <artifactId>jackson-dataformat-xml</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
+</project>
