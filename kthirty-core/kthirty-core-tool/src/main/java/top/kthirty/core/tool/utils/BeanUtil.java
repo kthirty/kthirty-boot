@@ -70,7 +70,6 @@ public class BeanUtil extends org.springframework.beans.BeanUtils {
 
 	/**
 	 * 深复制
-	 *
 	 * 注意：不支持链式Bean
 	 *
 	 * @param source 源对象

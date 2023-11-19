@@ -1009,7 +1009,7 @@ public class StringUtil extends org.springframework.util.StringUtils {
 		if (fromIndex > endLimit) {
 			return INDEX_NOT_FOUND;
 		}
-		if (searchStr.length() == 0) {
+		if (searchStr.isEmpty()) {
 			return fromIndex;
 		}
 
@@ -1070,7 +1070,7 @@ public class StringUtil extends org.springframework.util.StringUtils {
 		}
 		fromIndex = Math.min(fromIndex, str.length());
 
-		if (searchStr.length() == 0) {
+		if (searchStr.isEmpty()) {
 			return fromIndex;
 		}
 
@@ -1117,7 +1117,7 @@ public class StringUtil extends org.springframework.util.StringUtils {
 		if (str == null || searchStr == null || ordinal <= 0) {
 			return INDEX_NOT_FOUND;
 		}
-		if (searchStr.length() == 0) {
+		if (searchStr.isEmpty()) {
 			return 0;
 		}
 		int found = 0;
@@ -1363,7 +1363,7 @@ public class StringUtil extends org.springframework.util.StringUtils {
 		StringBuilder result = new StringBuilder();
 		String[] a = para.split(c);
 		for (String s : a) {
-			if (result.length() == 0) {
+			if (result.isEmpty()) {
 				result.append(s.toLowerCase());
 			} else {
 				result.append(s.substring(0, 1).toUpperCase());

@@ -34,7 +34,7 @@ public abstract class BaseBeanCopier {
 		 * @param source 源
 		 * @param target 目标
 		 * @param useConverter 是否使用转换
-		 * @return
+		 * @return Object
 		 */
 		Object newInstance(String source, String target, boolean useConverter);
 	}

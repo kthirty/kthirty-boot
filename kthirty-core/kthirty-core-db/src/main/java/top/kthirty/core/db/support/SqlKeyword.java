@@ -1,7 +1,8 @@
 package top.kthirty.core.db.support;
 
 
-import cn.hutool.core.text.StrPool;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.query.QueryWrapper;
 
@@ -35,11 +36,11 @@ public class SqlKeyword {
 	 * @param qw    查询包装类
 	 */
 	public static void buildCondition(Map<String, Object> query, QueryWrapper qw) {
-		if (Func.isEmpty(query)) {
+		if (CollUtil.isEmpty(query)) {
 			return;
 		}
 		query.forEach((k, v) -> {
-			if (Func.hasEmpty(k, v) || k.endsWith(IGNORE)) {
+			if (ObjectUtil.hasEmpty(k, v) || k.endsWith(IGNORE)) {
 				return;
 			}
 			if (k.endsWith(EQUAL)) {

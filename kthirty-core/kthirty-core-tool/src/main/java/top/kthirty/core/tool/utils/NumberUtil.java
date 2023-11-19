@@ -53,7 +53,7 @@ public class NumberUtil extends org.springframework.util.NumberUtils {
 			return defaultValue;
 		}
 		try {
-			return Integer.valueOf(str);
+			return Integer.parseInt(str);
 		} catch (final NumberFormatException nfe) {
 			return defaultValue;
 		}
@@ -100,7 +100,7 @@ public class NumberUtil extends org.springframework.util.NumberUtils {
 			return defaultValue;
 		}
 		try {
-			return Long.valueOf(str);
+			return Long.parseLong(str);
 		} catch (final NumberFormatException nfe) {
 			return defaultValue;
 		}
