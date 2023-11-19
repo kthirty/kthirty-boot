@@ -38,9 +38,6 @@
     </dependencies>
     <profiles>
         <profile>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <id>cloud</id>
             <dependencies>
                 <!--配置中心-->

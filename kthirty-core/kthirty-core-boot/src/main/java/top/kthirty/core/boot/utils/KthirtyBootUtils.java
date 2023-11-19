@@ -2,17 +2,18 @@ package top.kthirty.core.boot.utils;
 
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.lang.Singleton;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.core.env.*;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
-import top.kthirty.core.boot.launch.KthirtyLaunchInfo;
-import top.kthirty.core.boot.launch.annotations.KthirtyLauncher;
-import top.kthirty.core.boot.launch.annotations.KthirtyLaunchers;
 import top.kthirty.core.boot.constant.AppConstant;
 import top.kthirty.core.boot.constant.EnvEnum;
+import top.kthirty.core.boot.launch.KthirtyLaunchInfo;
 import top.kthirty.core.boot.launch.LauncherService;
+import top.kthirty.core.boot.launch.annotations.KthirtyLauncher;
+import top.kthirty.core.boot.launch.annotations.KthirtyLaunchers;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -29,8 +30,10 @@ public class KthirtyBootUtils {
         String[] activeProfiles = launchInfo.getActiveProfiles().toArray(new String[0]);
         String activeProfileStr = String.join(",", launchInfo.getActiveProfiles());
         builder.profiles(activeProfiles);
-        if(AppConstant.BASE_PACKAGES == null || AppConstant.BASE_PACKAGES.length == 0){
-            AppConstant.BASE_PACKAGES = new String[]{ClassUtils.getPackageName(launchInfo.getSource())};
+        // 添加启动类所在Package
+        String appPackage = ClassUtils.getPackageName(launchInfo.getSource());
+        if(!ArrayUtil.contains(AppConstant.BASE_PACKAGES,appPackage)){
+            AppConstant.BASE_PACKAGES = ArrayUtil.append(AppConstant.BASE_PACKAGES,appPackage);
         }
         launchInfo.addProperties("spring.application.name", launchInfo.getAppName());
         launchInfo.addProperties("kthirty.name", launchInfo.getAppName());

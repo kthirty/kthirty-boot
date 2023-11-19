@@ -10,6 +10,10 @@
     </parent>
 
     <artifactId>kthirty-boot-examples</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>boot-examples</module>
+    </modules>
 
 
 </project>

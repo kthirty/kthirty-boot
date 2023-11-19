@@ -1,11 +1,15 @@
 package top.kthirty.core.boot.config;
 
 import lombok.AllArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import top.kthirty.core.boot.props.KthirtyProperties;
+import top.kthirty.core.boot.secure.SecureUtil;
 
 /**
  * 配置类
@@ -18,4 +22,11 @@ import top.kthirty.core.boot.props.KthirtyProperties;
 @EnableConfigurationProperties({
         KthirtyProperties.class
 })
-public class KthirtyBootConfiguration {}
+public class KthirtyBootConfiguration {
+
+    @Bean
+    @ConditionalOnClass(ApplicationContextAware.class)
+    public SecureUtil secureUtil(){
+        return new SecureUtil();
+    }
+}
