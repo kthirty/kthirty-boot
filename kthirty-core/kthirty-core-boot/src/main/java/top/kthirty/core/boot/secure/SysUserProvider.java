@@ -1,5 +1,12 @@
 package top.kthirty.core.boot.secure;
-
+/**
+ * <p>
+ * 当前登录用户获取器
+ * </p>
+ *
+ * @author KThirty
+ * @since 2023/11/20
+ */
 public interface SysUserProvider {
     /**
      * 获取当前登录用户

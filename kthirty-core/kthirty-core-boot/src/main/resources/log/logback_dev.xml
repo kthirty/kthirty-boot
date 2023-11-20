@@ -109,5 +109,6 @@
     <logger name="com.netflix.eureka" level="INFO"/>
     <!-- 业务日志 -->
     <Logger name="top.kthirty" level="DEBUG" />
+    <Logger name="com.zaxxer.hikari" level="WARN" />
 
 </configuration>

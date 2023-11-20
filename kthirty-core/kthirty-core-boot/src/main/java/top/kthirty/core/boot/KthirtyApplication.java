@@ -1,9 +1,12 @@
 package top.kthirty.core.boot;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ArrayUtil;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
+import top.kthirty.core.boot.constant.AppConstant;
 import top.kthirty.core.boot.launch.KthirtyAppInfo;
 import top.kthirty.core.boot.launch.KthirtyLaunchInfo;
 import top.kthirty.core.boot.utils.KthirtyBootUtils;
@@ -59,7 +62,11 @@ public class KthirtyApplication {
                 .setCustomLaunchers(kthirtyAppInfo.getCustomLaunchers())
                 .setDescription(kthirtyAppInfo.getDescription())
                 .setArgs(CollUtil.newHashSet(args));
-
+        // 添加启动类所在Package
+        String appPackage = ClassUtils.getPackageName(launchInfo.getSource());
+        if(!ArrayUtil.contains(AppConstant.BASE_PACKAGES,appPackage)){
+            AppConstant.BASE_PACKAGES = ArrayUtil.append(AppConstant.BASE_PACKAGES,appPackage);
+        }
         // 处理当前运行环境
         KthirtyBootUtils.processEnv(builder, launchInfo);
         // 处理Launcher

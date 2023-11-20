@@ -1,5 +1,7 @@
 package top.kthirty.core.boot.constant;
 
+import cn.hutool.core.util.ArrayUtil;
+
 /**
  * <p>
  * 系统基础配置
@@ -16,5 +18,8 @@ public class AppConstant {
 
     public static String basePackages(){
         return String.join(",", BASE_PACKAGES);
+    }
+    public static void addBasePackages(String basePackage){
+        BASE_PACKAGES = ArrayUtil.append(BASE_PACKAGES,basePackage);
     }
 }

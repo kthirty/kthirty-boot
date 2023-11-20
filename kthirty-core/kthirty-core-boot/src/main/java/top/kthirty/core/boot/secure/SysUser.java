@@ -1,10 +1,18 @@
 package top.kthirty.core.boot.secure;
 
+import cn.hutool.core.lang.Dict;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.util.List;
-
+/**
+ * <p>
+ * 当前登录用户
+ * </p>
+ *
+ * @author KThirty
+ * @since 2023/11/20
+ */
 @Data
 @Accessors(chain = true)
 public class SysUser {
@@ -37,4 +45,8 @@ public class SysUser {
      * 如果管理多个租户可以返回多个，第一个为用户操作时的租户id
      */
     private List<String> tenantIds;
+    /**
+     * 额外拓展
+     */
+    private Dict extra;
 }

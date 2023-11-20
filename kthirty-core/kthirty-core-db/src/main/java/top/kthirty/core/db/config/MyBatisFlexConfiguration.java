@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import top.kthirty.core.db.listener.OperatingListener;
 @Slf4j
 @Configuration
-@MapperScan("*")
+@MapperScan(basePackages = "top.kthirty.**.mapper")
 @AutoConfigureBefore(MybatisFlexAutoConfiguration.class)
 public class MyBatisFlexConfiguration implements MyBatisFlexCustomizer {
     @Override

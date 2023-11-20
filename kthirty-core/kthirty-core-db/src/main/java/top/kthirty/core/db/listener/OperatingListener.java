@@ -6,7 +6,14 @@ import com.mybatisflex.annotation.UpdateListener;
 import top.kthirty.core.boot.secure.SecureUtil;
 
 import java.util.Date;
-
+/**
+ * <p>
+ * 数据操作监听，用于填充基础数据
+ * </p>
+ *
+ * @author KThirty
+ * @since 2023/11/20
+ */
 public class OperatingListener implements InsertListener, UpdateListener {
     @Override
     public void onInsert(Object entity) {

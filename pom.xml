@@ -31,6 +31,7 @@
         <redission.version>3.16.5</redission.version>
         <!--DB-->
         <mybatis-flex.version>1.7.3</mybatis-flex.version>
+        <mybatis-spring.version>3.0.1</mybatis-spring.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -90,6 +91,11 @@
                 <groupId>com.mybatis-flex</groupId>
                 <artifactId>mybatis-flex-spring-boot-starter</artifactId>
                 <version>${mybatis-flex.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>${mybatis-spring.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
