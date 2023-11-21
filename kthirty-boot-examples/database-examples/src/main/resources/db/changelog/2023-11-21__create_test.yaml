@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: kthirty
+      changes:
+        - createTable:
+            tableName: test01
+            columns:
+              - column:
+                  name: id
+                  type: varchar(32)
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                  remarks: '姓名'

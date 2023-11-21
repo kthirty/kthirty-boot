@@ -25,8 +25,6 @@ public class CoreDbLaunchImpl implements LauncherService {
      * @param launchInfo 部署信息
      */
     private void processDefaultEnv(KthirtyLaunchInfo launchInfo) {
-//        String typeAliasesPackage = Arrays.stream(AppConstant.BASE_PACKAGES).map(item -> item+".**.entity").collect(Collectors.joining(","));
-//        String mapperLocations = Arrays.stream(AppConstant.BASE_PACKAGES).map(item -> "classpath:"+ StrUtil.replace(item,".","/") +"/**/mapper/*Mapper.xml").collect(Collectors.joining(","));
         launchInfo.addProperties("spring.datasource.type","com.zaxxer.hikari.HikariDataSource");
         launchInfo.addProperties("spring.datasource.hikari.minimum-idle","5");
         launchInfo.addProperties("spring.datasource.hikari.idle-timeout","600000");
@@ -35,8 +33,7 @@ public class CoreDbLaunchImpl implements LauncherService {
         launchInfo.addProperties("spring.datasource.hikari.connection-timeout","30000");
         launchInfo.addProperties("spring.datasource.hikari.auto-commit",true);
         launchInfo.addProperties("logging.level.com.zaxxer.hikari.pool.HikariPool","WARN");
-//        launchInfo.addProperties("mybatis-flex.mapper-locations","["+mapperLocations+"]");
-//        launchInfo.addProperties("mybatis-flex.type-aliases-package",typeAliasesPackage);
         launchInfo.addProperties("mybatis-flex.global-config.print-banner",false);
+        launchInfo.addProperties("spring.liquibase.change-log","classpath:/db/changelog/**/*.yaml");
     }
 }

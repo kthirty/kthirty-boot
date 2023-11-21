@@ -28,6 +28,7 @@
         <hutool.version>5.8.23</hutool.version>
         <mica-auto.version>3.1.2</mica-auto.version>
         <swagger3.version>2.2.18</swagger3.version>
+        <knife4j.version>4.3.0</knife4j.version>
         <redission.version>3.16.5</redission.version>
         <!--DB-->
         <mybatis-flex.version>1.7.3</mybatis-flex.version>
@@ -80,6 +81,11 @@
                 <groupId>io.swagger.core.v3</groupId>
                 <artifactId>swagger-annotations</artifactId>
                 <version>${swagger3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
             </dependency>
             <!--redisson-->
             <dependency>

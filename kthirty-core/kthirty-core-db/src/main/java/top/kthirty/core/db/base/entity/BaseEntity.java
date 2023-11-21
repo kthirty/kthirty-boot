@@ -14,4 +14,5 @@ import java.io.Serializable;
  */
 @Data
 @ToString
-public class BaseEntity implements Serializable {}
+public class BaseEntity implements Serializable {
+}

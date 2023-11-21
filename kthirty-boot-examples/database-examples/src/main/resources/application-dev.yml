@@ -3,6 +3,10 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/kthirty
     username: kthirty
     password: kthirty
+  liquibase:
+    parameters:
+      liquibase.command.parameters:
+        searchPath: classpath:/db/changelog/
 mybatis-flex:
   configuration:
     log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
