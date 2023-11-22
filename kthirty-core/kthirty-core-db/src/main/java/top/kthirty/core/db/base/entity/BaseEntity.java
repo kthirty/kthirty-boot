@@ -2,6 +2,7 @@ package top.kthirty.core.db.base.entity;
 
 import lombok.Data;
 import lombok.ToString;
+import top.kthirty.core.tool.dict.DictFiller;
 
 import java.io.Serializable;
 /**
@@ -14,5 +15,5 @@ import java.io.Serializable;
  */
 @Data
 @ToString
-public class BaseEntity implements Serializable {
+public class BaseEntity implements Serializable, DictFiller {
 }

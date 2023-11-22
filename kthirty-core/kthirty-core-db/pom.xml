@@ -51,6 +51,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>top.kthirty</groupId>
+            <artifactId>kthirty-core-tool</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
         </dependency>

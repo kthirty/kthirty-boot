@@ -30,6 +30,13 @@ public class SpringUtil implements ApplicationContextAware {
         }
         return context.getBean(clazz);
     }
+    public static <T> T getBeanSafe(Class<T> clazz) {
+        try{
+            return getBean(clazz);
+        }catch (Throwable e){
+            return null;
+        }
+    }
 
     public static <T> Map<String, T> getBeansOfType(Class<T> clazz) {
         if (clazz == null) {
