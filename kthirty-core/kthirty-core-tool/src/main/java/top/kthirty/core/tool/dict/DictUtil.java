@@ -38,4 +38,18 @@ public class DictUtil {
     public static String getLabel(String code,String value){
         return getLabel(code,value,StringPool.COMMA);
     }
+
+    /**
+     * 删除缓存
+     * @param code 字典code
+     * @param value 字典值（为空删除所有）
+     */
+    public static void remove(String code,String value){
+        if(DICT_PROVIDER != null){
+            DICT_PROVIDER.removeCache(code,value);
+        }
+    }
+    public static void remove(String code){
+        remove(code,null);
+    }
 }

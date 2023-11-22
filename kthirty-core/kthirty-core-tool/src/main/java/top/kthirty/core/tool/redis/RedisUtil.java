@@ -66,6 +66,9 @@ public class RedisUtil {
 			return false;
 		}
 	}
+	public Set<String> keys(String pattern){
+		return redisTemplate.keys(pattern);
+	}
 
 	/**
 	 * 删除缓存

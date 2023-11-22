@@ -25,4 +25,13 @@ public interface DictProvider {
      * @return label
      */
     String getLabel(String tableName,String valueField,String labelField,String value);
+    /**
+     * <p>
+     * 修改时删除相应的缓存
+     * </p>
+     *
+     * @author KThirty
+     * @since 2023/11/22
+     */
+    default void removeCache(String code,String value){};
 }

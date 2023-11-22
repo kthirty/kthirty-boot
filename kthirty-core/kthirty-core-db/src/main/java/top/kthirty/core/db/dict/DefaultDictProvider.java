@@ -56,7 +56,34 @@ public class DefaultDictProvider implements DictProvider {
         return putCache(cacheKey,label,dictProperties.getCacheTime());
     }
 
-    private String getBySql(String sql,Object... args){
+    /**
+     * 删除缓存，value 为空默认为删除所有
+     * @param code 字典code
+     * @param value 字典value
+     */
+    @Override
+    public void removeCache(String code, String value) {
+        if(redisUtil != null){
+            if(Func.isBlank(value)){
+                redisUtil.keys(dictProperties.getRedisKeyPrefix() + code + StringPool.COLON + StringPool.ASTERISK).forEach(redisUtil::del);
+            }else {
+                redisUtil.del(code + StringPool.COLON + value);
+            }
+        }else{
+            if(Func.isBlank(value)){
+                cache.cacheObjIterator().forEachRemaining(item -> {
+                    if(StrUtil.startWith(item.getKey(),code)){
+                        cache.remove(item.getKey());
+                    }
+                });
+            }else{
+                cache.remove(code + StringPool.COLON + value);
+            }
+        }
+
+    }
+
+    private String getBySql(String sql, Object... args){
         try {
             List<Row> rows = Db.selectListBySql(sql, args);
             if (Func.isNotEmpty(rows)) {
