@@ -1,4 +1,7 @@
 package top.kthirty.core.tool.dict;
+
+import java.util.List;
+
 /**
  * <p>
  * 数据字典解析器
@@ -9,23 +12,6 @@ package top.kthirty.core.tool.dict;
  */
 public interface DictProvider {
     /**
-     * 获取数据字典
-     * @param code 字典code
-     * @param value 值
-     * @return label
-     */
-    String getLabel(String code,String value);
-
-    /**
-     * 获取表数据
-     * @param tableName 表名
-     * @param valueField 值对应的字段明
-     * @param labelField 需要获取的label字段名
-     * @param value 属性值
-     * @return label
-     */
-    String getLabel(String tableName,String valueField,String labelField,String value);
-    /**
      * <p>
      * 修改时删除相应的缓存
      * </p>
@@ -33,5 +19,21 @@ public interface DictProvider {
      * @author KThirty
      * @since 2023/11/22
      */
-    default void removeCache(String code,String value){};
+    void removeCache(String code,String value);
+    default void removeCache(String code){removeCache(code,null);}
+
+    /**
+     * 添加缓存
+     * @param code 字典代码
+     * @param items 选项
+     * @param time 过期时间-秒
+     */
+    void put(String code, List<DictItem> items,long time);
+
+    /**
+     * 获取字典
+     * @param code 字典code
+     * @return 选项列表
+     */
+    List<DictItem> get(String code);
 }

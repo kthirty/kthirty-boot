@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import top.kthirty.core.tool.dict.DictProvider;
 import top.kthirty.core.tool.redis.RedisUtil;
+import top.kthirty.core.tool.utils.SpringUtil;
+
 /**
  * <p>
  * 数据字典装配
@@ -28,24 +30,14 @@ import top.kthirty.core.tool.redis.RedisUtil;
 public class DictConfiguration {
 
     /**
-     * 有Redis
+     * 字典解析器
      */
     @Bean
     @Order(0)
     @ConditionalOnMissingBean(DictProvider.class)
-    @ConditionalOnBean({RedisUtil.class,KthirtyDictProperties.class})
-    public DictProvider dictProvider(RedisUtil redisUtil,KthirtyDictProperties kthirtyDictProperties) {
-        return new DefaultDictProvider(redisUtil,kthirtyDictProperties);
-    }
-
-    /**
-     * 无Redis
-     */
-    @Bean
-    @Order(1)
-    @ConditionalOnMissingBean(DictProvider.class)
     @ConditionalOnBean({KthirtyDictProperties.class})
     public DictProvider dictProvider(KthirtyDictProperties kthirtyDictProperties) {
-        return new DefaultDictProvider(null,kthirtyDictProperties);
+        return new DefaultDictProvider(SpringUtil.getBeanSafe(RedisUtil.class),kthirtyDictProperties);
     }
+
 }

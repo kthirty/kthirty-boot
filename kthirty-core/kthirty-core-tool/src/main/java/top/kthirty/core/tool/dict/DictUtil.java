@@ -1,8 +1,10 @@
 package top.kthirty.core.tool.dict;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.utils.SpringUtil;
 import top.kthirty.core.tool.utils.StringPool;
 
@@ -12,31 +14,87 @@ import java.util.stream.Collectors;
 public class DictUtil {
     public static final Logger LOGGER = LoggerFactory.getLogger(DictUtil.class);
     private static final DictProvider DICT_PROVIDER = SpringUtil.getBeanSafe(DictProvider.class);
+
     /**
-     * 解析字典
+     * 获取字典选项列表
      * @param code 字典code
-     * @param value 值
-     * @param splitBy 多个值的分割符号
-     * @return label
+     * @return 选项
+     */
+    public static List<DictItem> get(String code){
+        if(Func.isBlank(code) || Func.isNull(DICT_PROVIDER)){
+            return null;
+        }
+        return DICT_PROVIDER.get(code);
+    }
+
+    /**
+     * 获取标签
+     * @param code 字典代码
+     * @param value 字典值
+     * @param splitBy 分割符号(多个值分割后获取)
+     * @return 标签
      */
     public static String getLabel(String code,String value,String splitBy){
-        if(!StrUtil.isAllNotBlank(value,code) || DICT_PROVIDER == null){
+        if(Func.isAnyBlank(code,value)){
             return StringPool.EMPTY;
         }
-        List<String> values = StrUtil.isNotBlank(splitBy) ? StrUtil.splitTrim(value,splitBy) : List.of(value);
-        // 存在两个 : 且分割后为三个 , 说明为合法的table格式
-        if(StrUtil.count(code,StringPool.COLON) == 2 && StrUtil.splitTrim(code, StringPool.COLON).size() == 3){
-            List<String> split = StrUtil.split(code, StringPool.COLON);
-            String tableName = split.get(0);
-            String valueField = split.get(1);
-            String labelField = split.get(2);
-            return values.stream().map(i -> DICT_PROVIDER.getLabel(tableName,valueField,labelField,i)).collect(Collectors.joining(StringPool.COMMA));
+        List<DictItem> items = get(code);
+        if(Func.isEmpty(items)){
+            return StringPool.EMPTY;
+        }
+        // 非多个值
+        if(Func.isNull(splitBy)){
+            return items.stream().filter(i -> Func.equalsSafe(i.getValue(),value)).map(DictItem::getLabel).collect(Collectors.joining());
         }else{
-            return values.stream().map(i -> DICT_PROVIDER.getLabel(code,i)).collect(Collectors.joining(StringPool.COMMA));
+            List<String> valueList = StrUtil.split(value, splitBy);
+            return items.stream().filter(i -> CollUtil.contains(valueList,i.getValue())).map(DictItem::getLabel).collect(Collectors.joining(splitBy));
         }
     }
     public static String getLabel(String code,String value){
         return getLabel(code,value,StringPool.COMMA);
+    }
+
+    /**
+     * 标签解析为值
+     * @param code 字典代码
+     * @param label 标签
+     * @param splitBy 分割符号(多个值分割后获取)
+     * @return 字典值
+     */
+    public static String getValue(String code,String label,String splitBy){
+        if(Func.isAnyBlank(code,label)){
+            return StringPool.EMPTY;
+        }
+        List<DictItem> items = get(code);
+        if(Func.isEmpty(items)){
+            return StringPool.EMPTY;
+        }
+        // 非多个值
+        if(Func.isNull(splitBy)){
+            return items.stream().filter(i -> Func.equalsSafe(i.getLabel(),label)).map(DictItem::getValue).collect(Collectors.joining());
+        }else{
+            List<String> valueList = StrUtil.split(label, splitBy);
+            return items.stream().filter(i -> CollUtil.contains(valueList,i.getLabel())).map(DictItem::getValue).collect(Collectors.joining(splitBy));
+        }
+    }
+    public static String getValue(String code,String label){
+        return getValue(code,label,StringPool.COMMA);
+    }
+
+    /**
+     * 添加缓存
+     * @param code 字典code
+     * @param items 选项
+     * @param time 过期时间-秒 (<=0永不过期)
+     */
+    public static void add(String code,List<DictItem> items,long time){
+        if(Func.isBlank(code) || Func.isEmpty(items) || Func.isNull(DICT_PROVIDER)){
+            return;
+        }
+        DICT_PROVIDER.put(code,items,time);
+    }
+    public static void add(String code,List<DictItem> items){
+        add(code,items,0);
     }
 
     /**

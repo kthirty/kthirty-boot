@@ -13,7 +13,7 @@ public class KthirtyDictProperties {
     /**
      * 数据字典查询sql
      */
-    private String dictSql = "select label from sys_dict_item where code = '?' and value = '?'";
+    private String dictSql = "select label,value,code from sys_dict_item where code = '?'";
     /**
      * 缓存时间，默认两小时
      */
@@ -22,4 +22,8 @@ public class KthirtyDictProperties {
      * redis Key 前缀
      */
     private String redisKeyPrefix = "sys:dict:";
+    /**
+     * 是否自动查数据库
+     */
+    private boolean autoDb = true;
 }
