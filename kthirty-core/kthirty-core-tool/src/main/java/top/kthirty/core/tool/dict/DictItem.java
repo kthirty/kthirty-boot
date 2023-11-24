@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 /**
  * <p>
  * 数据字典选项值
@@ -21,16 +23,20 @@ import lombok.experimental.Accessors;
 @Builder
 @Accessors(chain = true)
 public class DictItem {
+    @Schema(title = "ID")
+    private String id;
+    @Schema(title = "父ID")
+    private String parentId;
     @Schema(title = "属性值")
     private String value;
     @Schema(title = "显示值")
     private String label;
-    @Schema(title = "备注")
-    private String remarks;
-    @Schema(title = "权重(从小到大)")
-    private int weight = 0;
+    @Schema(title = "权重")
+    private int weight;
     @Schema(title = "是否禁用")
     private boolean disabled;
-    @Schema(title = "字典Code")
-    private String code;
+    @Schema(title = "拓展信息")
+    private Dict extra;
+    @Schema(title = "子选项")
+    private List<DictItem> children;
 }

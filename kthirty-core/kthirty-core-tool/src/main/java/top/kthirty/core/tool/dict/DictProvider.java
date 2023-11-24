@@ -20,7 +20,6 @@ public interface DictProvider {
      * @since 2023/11/22
      */
     void removeCache(String code,String value);
-    default void removeCache(String code){removeCache(code,null);}
 
     /**
      * 添加缓存
@@ -36,4 +35,20 @@ public interface DictProvider {
      * @return 选项列表
      */
     List<DictItem> get(String code);
+    /**
+     * 获取标签
+     * @param code 字典代码
+     * @param value 字典值
+     * @param separator 分割符号(多个值分割后获取)
+     * @return 标签
+     */
+    String getLabel(String code,String value,String separator);
+    /**
+     * 标签解析为值
+     * @param code 字典代码
+     * @param label 标签
+     * @param separator 分割符号(多个值分割后获取)
+     * @return 字典值
+     */
+    String getValue(String code,String label,String separator);
 }
