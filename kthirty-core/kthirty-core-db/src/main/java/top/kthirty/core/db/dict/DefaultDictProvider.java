@@ -21,6 +21,7 @@ import top.kthirty.core.tool.redis.RedisUtil;
 import top.kthirty.core.tool.utils.StringPool;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -187,9 +188,9 @@ public class DefaultDictProvider implements DictProvider {
             // 获取缓存（数据字典类型且配置了自动查库，get方法中会自动查库！！！）
             List<DictItem> items = get(code);
             if (Func.isNotEmpty(items)) {
-                DictItem find = Util.deepGetFirst(items, i -> Func.equalsSafe(i.getValue(), label));
+                DictItem find = Util.deepGetFirst(items, i -> Func.equalsSafe(i.getLabel(), label));
                 if (Func.notNull(find)) {
-                    result.add(find.getLabel());
+                    result.add(find.getValue());
                     break;
                 }
             }
@@ -312,6 +313,7 @@ public class DefaultDictProvider implements DictProvider {
                 return all.stream()
                         .filter(i -> Func.equalsSafe(i.getParentId(), parentId))
                         .peek(i -> i.setChildren(getChildren(i.getId(), all)))
+                        .sorted(Comparator.comparingInt(DictItem::getWeight))
                         .toList();
             }
             return null;

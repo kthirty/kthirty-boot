@@ -14,4 +14,4 @@ databaseChangeLog:
                   type: varchar(255)
                   constraints:
                     nullable: false
-                  remarks: '姓名'
+                  remarks: "姓名"

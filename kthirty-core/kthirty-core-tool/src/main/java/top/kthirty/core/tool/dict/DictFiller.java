@@ -29,7 +29,7 @@ public interface DictFiller {
                     .filter(field -> AnnotationUtil.hasAnnotation(field, Dict.class))
                     .forEach(field -> {
                         Dict dict = AnnotationUtil.getAnnotation(field, Dict.class);
-                        String code = Func.toStr(dict.code(), field.getName());
+                        String code = StrUtil.blankToDefault(dict.code(), field.getName());
                         String value = Func.toStr(ReflectUtil.getFieldValue(this, field));
                         String fieldName = StrUtil.format(dict.fieldName(), field.getName());
                         if (Func.isNoneBlank(value, fieldName)) {
@@ -46,7 +46,7 @@ public interface DictFiller {
                     .forEach(method -> {
                         String name = StrUtil.startWith(method.getName(),"get") ? StrUtil.lowerFirst(StrUtil.removePrefix(method.getName(),"get")) : method.getName();
                         Dict dict = AnnotationUtil.getAnnotation(method, Dict.class);
-                        String code = Func.toStr(dict.code(), method.getName());;
+                        String code =StrUtil.blankToDefault(dict.code(), method.getName());;
                         String value = Func.toStr(ReflectUtil.invoke(this,method));
                         String fieldName = StrUtil.format(dict.fieldName(), name);
                         if (Func.isNoneBlank(value, fieldName)) {

@@ -3,6 +3,7 @@ package top.kthirty.core.boot.utils;
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.core.env.*;
 import org.springframework.util.Assert;
@@ -97,15 +98,8 @@ public class KthirtyBootUtils {
      * @param launchInfo 运行信息
      */
     public static void echoLaunchInfo(KthirtyLaunchInfo launchInfo) {
-        System.out.println();
-        System.out.printf("------------应用名[%s:%s]--------------%n", launchInfo.getAppName(),launchInfo.getDescription());
-        System.out.printf("------------运行端口:%s--------------%n", launchInfo.getPort());
-        System.out.printf("------------环境变量:%s--------------%n", launchInfo.getEnv());
-        System.out.printf("------------Profiles:%s--------------%n", launchInfo.getActiveProfiles());
-        System.out.printf("------------命令行参数:%s个，%s--------------%n", launchInfo.getArgs().size(), StrUtil.join("",launchInfo.getArgs()));
-        System.out.printf("------------系统默认参数:%s个--------------%n", launchInfo.getProperties().size());
-        launchInfo.getProperties().entrySet().stream().map(e -> e.getKey()+"="+e.getValue()).sorted().forEach(s -> System.out.printf("------------[%s]--------------%n",s));
-        System.out.println();
+        System.out.printf("------------应用名[%s:%s:%s:%s]--------------%n", launchInfo.getAppName(),launchInfo.getDescription(),launchInfo.getEnv(),launchInfo.getPort());
+        System.out.printf("------------系统默认参数:%s--------------%n", JSONUtil.toJsonStr(launchInfo.getProperties()));
     }
 
 

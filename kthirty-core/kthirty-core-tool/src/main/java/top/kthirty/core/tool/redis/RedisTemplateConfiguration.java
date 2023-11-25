@@ -31,7 +31,7 @@ import java.time.Duration;
 @Slf4j
 @EnableCaching
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnClass({RedisAutoConfiguration.class})
+@ConditionalOnClass({RedisAutoConfiguration.class,RedisSerializer.class})
 @AutoConfigureBefore({RedisAutoConfiguration.class})
 public class RedisTemplateConfiguration {
 

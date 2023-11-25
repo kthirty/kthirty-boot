@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - includeAll:
+      path: classpath:/db/changelog/**/*.yaml
+      filter: top.kthirty.core.db.liquibase.KthirtyIncludeAllFilter
