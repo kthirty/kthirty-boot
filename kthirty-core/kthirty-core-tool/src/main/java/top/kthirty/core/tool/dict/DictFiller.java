@@ -46,7 +46,7 @@ public interface DictFiller {
                     .forEach(method -> {
                         String name = StrUtil.startWith(method.getName(),"get") ? StrUtil.lowerFirst(StrUtil.removePrefix(method.getName(),"get")) : method.getName();
                         Dict dict = AnnotationUtil.getAnnotation(method, Dict.class);
-                        String code =StrUtil.blankToDefault(dict.code(), method.getName());;
+                        String code =StrUtil.blankToDefault(dict.code(), method.getName());
                         String value = Func.toStr(ReflectUtil.invoke(this,method));
                         String fieldName = StrUtil.format(dict.fieldName(), name);
                         if (Func.isNoneBlank(value, fieldName)) {
