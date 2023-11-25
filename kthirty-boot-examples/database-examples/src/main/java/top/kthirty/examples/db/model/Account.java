@@ -15,6 +15,7 @@
  */
 package top.kthirty.examples.db.model;
 
+import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
@@ -31,6 +32,7 @@ public class Account extends BaseEntity {
 
     @Id(keyType = KeyType.Auto)
     private Long id;
+    @Column
     private String userName;
     private Integer age;
     private Date birthday;
