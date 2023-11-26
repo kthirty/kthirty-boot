@@ -13,7 +13,7 @@ import java.lang.annotation.*;
  * @since 2023/11/25
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
+@Target({ElementType.FIELD,ElementType.TYPE})
 @Documented
 public @interface Excel {
     /**
@@ -25,9 +25,9 @@ public @interface Excel {
     String title() default "";
 
     /**
-     * 单元格宽度
+     * 单元格宽度(几个字符)
      */
-    int width() default 200;
+    int width() default 10;
 
     /**
      * 导入导出分组
@@ -37,5 +37,9 @@ public @interface Excel {
      */
     String[] group() default {ExcelGroup.IMPORT,ExcelGroup.EXPORT};
 
+    /**
+     * 字段排序
+     */
+    int sort() default 0;
 }
 

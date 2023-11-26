@@ -12,6 +12,9 @@ public class DictUtil {
     public static final Logger LOGGER = LoggerFactory.getLogger(DictUtil.class);
     private static final DictProvider DICT_PROVIDER = SpringUtil.getBeanSafe(DictProvider.class);
 
+    public static boolean isAvailable(){
+        return DICT_PROVIDER != null;
+    }
     /**
      * 获取字典选项列表
      *

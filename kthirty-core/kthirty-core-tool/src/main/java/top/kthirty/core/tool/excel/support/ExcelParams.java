@@ -2,15 +2,12 @@ package top.kthirty.core.tool.excel.support;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import top.kthirty.core.tool.excel.handler.CellReader;
+import top.kthirty.core.tool.excel.handler.CellStyleEditor;
+import top.kthirty.core.tool.excel.handler.CellWriter;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class ExcelParams {
     /**
      * 分组
@@ -25,6 +22,24 @@ public class ExcelParams {
      */
     private int ignoreStartRow = 0;
 
+    /**
+     * 导入时的字段值修改器
+     */
+    private CellReader cellReader;
+    /**
+     * 导出时的字段值修改器
+     */
+    private CellWriter cellWriter;
+    /**
+     * 导出字段样式修改器
+     */
+    private CellStyleEditor cellStyleEditor;
+
+    /**
+     * 序号
+     */
+    private String seqName = "序号";
+
     public void defaultGroups(String... groups) {
         if (ArrayUtil.isEmpty(this.groups)) {
             this.groups = groups;
@@ -35,5 +50,21 @@ public class ExcelParams {
             this.style = style;
         }
     }
+    public void defaultCellReader(CellReader reader){
+        if(ObjUtil.isNull(this.cellReader)){
+            this.cellReader = reader;
+        }
+    }
+    public void defaultCellWriter(CellWriter writer){
+        if(ObjUtil.isNull(this.cellWriter)){
+            this.cellWriter = writer;
+        }
+    }
+    public void defaultCellStyleEditor(CellStyleEditor cellStyleEditor){
+        if(ObjUtil.isNull(this.cellStyleEditor)){
+            this.cellStyleEditor = cellStyleEditor;
+        }
+    }
+
 
 }

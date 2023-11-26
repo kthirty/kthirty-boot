@@ -1,27 +1,24 @@
 package top.kthirty.core.tool.excel.support;
 
 import cn.hutool.core.annotation.AnnotationUtil;
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
-import cn.hutool.core.lang.func.Func1;
-import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.poi.excel.ExcelReader;
-import cn.hutool.poi.excel.reader.BeanSheetReader;
+import cn.hutool.poi.excel.ExcelWriter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.excel.Excel;
+import top.kthirty.core.tool.utils.StringPool;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -59,64 +56,26 @@ public class ExcelHelper {
         return field.getName();
     }
 
-    public static <E> List<E> deepRead(Workbook workbook, Class<E> clazz, String sheetName, ExcelParams params, Func1<Map,Boolean> filter) {
-        Sheet sheet = workbook.getSheet(sheetName);
-        if (sheet == null) {
-            return null;
-        }
-        ExcelReader reader = new ExcelReader(sheet);
-        // 本次需要处理的字段
-        Field[] fields = getFieldsByGroup(clazz, params.getGroups());
-        // 计算读取行
-        int headerRowIndex = getStartRow(reader, params.getIgnoreStartRow());
-        int startRowIndex = headerRowIndex + 1;
-        int endRowIndex = reader.getRowCount();
-        // 设置Bean读取器
-        final BeanSheetReader<Map> beanSheetReader = new BeanSheetReader<>(headerRowIndex, startRowIndex, endRowIndex, Map.class);
-        beanSheetReader.setIgnoreEmptyRow(true);
-        Map<String, String> aliasMap = Arrays.stream(fields).collect(Collectors.toMap(ExcelHelper::getFieldTitle, Field::getName));
-        beanSheetReader.setHeaderAlias(aliasMap);
-        // 开始读取
-        List<Map> records = reader.read(beanSheetReader);
-        // 根据传入Filter去除无效数据
-        records = records.stream().filter(filter::callWithRuntimeException).toList();
-        // 类型转换
-        List<E> result = new ArrayList<>(records.size());
-        for (Map item : records) {
-            E bean = BeanUtil.mapToBean(item, clazz, false, CopyOptions.create().setIgnoreError(true));
-            // 处理子类
-            Field[] subTableFields = getSubTableFields(clazz, params.getGroups());
-            if(Func.isNotEmpty(subTableFields)){
-                for (Field subTableField : subTableFields) {
-                    Class<?> subClass = getFieldGenericType(subTableField);
-                    String title = getFieldTitle(subTableField);
-                    List<?> subResult = deepRead(workbook, subClass, title, params, subItem -> {
-                        // 下级的 {sheetName序号} 属性要与当前数据的{序号}属性相同
-                        String mainId = MapUtil.getStr(item,"序号");
-                        String subMainId = MapUtil.getStr(subItem, sheetName + "序号");
-                        return Func.equalsSafe(mainId,subMainId);
-                    });
-                    if(subResult != null){
-                        ReflectUtil.setFieldValue(bean,subTableField,subResult);
-                    }
-                }
-            }
-            result.add(bean);
-        }
-        return result;
-    }
-
     /**
      * 分组获取字段
      *
      * @param clazz  源Clas
      * @param groups 组
+     * @param containsColl 包含List形式的字段
      * @param <E>    实体类型
      * @return 所有符合分组的字段
      */
-    public static <E> Field[] getFieldsByGroup(Class<E> clazz, String[] groups) {
-        return ReflectUtil.getFields(clazz, field -> AnnotationUtil.hasAnnotation(field, Excel.class)
-                && ArrayUtil.containsAny(AnnotationUtil.getAnnotation(field, Excel.class).group(), groups));
+    public static <E> List<Field> getFieldsByGroup(Class<E> clazz, String[] groups,boolean containsColl) {
+        Field[] fields = ReflectUtil.getFields(clazz, field -> AnnotationUtil.hasAnnotation(field, Excel.class)
+                && ArrayUtil.containsAny(AnnotationUtil.getAnnotation(field, Excel.class).group(), groups)
+                && (containsColl || !Collection.class.isAssignableFrom(field.getType())));
+        List<Field> list = ListUtil.list(true, fields);
+        // 根据标题排序
+        list = CollUtil.sort(list, Comparator.comparingInt(f -> AnnotationUtil.getAnnotation(f, Excel.class).sort()));
+        return list;
+    }
+    public static <E> List<Field> getFieldsByGroup(Class<E> clazz, String[] groups){
+        return getFieldsByGroup(clazz,groups,false);
     }
 
     /**
@@ -147,11 +106,8 @@ public class ExcelHelper {
                 return false;
             }
             // 泛型中不包含该分组需要的字段
-            Field[] fields = getFieldsByGroup(typeArgument, groups);
-            if(Func.isEmpty(fields)){
-                return false;
-            }
-            return true;
+            List<Field> fields = getFieldsByGroup(typeArgument, groups);
+            return !Func.isEmpty(fields);
         });
     }
 
@@ -168,6 +124,24 @@ public class ExcelHelper {
         }
         return null;
     }
+    public static Map<String,String> getHeaderAlias(List<Field> fields){
+        return fields.stream().collect(Collectors.toMap(ExcelHelper::getFieldTitle, Field::getName));
+    }
 
+    public static String getClassTitle(Class<?> clazz){
+        Excel excel = AnnotationUtil.getAnnotation(clazz, Excel.class);
+        return excel != null ? excel.title() : StringPool.EMPTY;
+    }
+
+    public static void activeSheet(ExcelWriter writer,String sheetName){
+        if(writer.getSheet().getSheetName().equals(sheetName)){
+            return;
+        }
+        writer.setSheet(sheetName);
+        int lastRowNum = writer.getSheet().getLastRowNum();
+        if(lastRowNum != -1){
+            writer.setCurrentRow(lastRowNum + 1);
+        }
+    }
 
 }
