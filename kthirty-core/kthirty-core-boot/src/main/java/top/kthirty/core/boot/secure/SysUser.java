@@ -23,7 +23,7 @@ public class SysUser {
     /**
      * 登录名
      */
-    private String loginName;
+    private String username;
     /**
      * 真实姓名
      */

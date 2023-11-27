@@ -61,6 +61,7 @@
         <swagger3.version>2.2.18</swagger3.version>
         <knife4j.version>4.3.0</knife4j.version>
         <redission.version>3.16.5</redission.version>
+        <jjwt.version>0.12.3</jjwt.version>
         <!--DB-->
         <mybatis-flex.version>1.7.3</mybatis-flex.version>
         <mybatis-spring.version>3.0.1</mybatis-spring.version>
@@ -133,6 +134,12 @@
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis-spring</artifactId>
                 <version>${mybatis-spring.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

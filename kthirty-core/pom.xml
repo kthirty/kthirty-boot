@@ -17,6 +17,7 @@
         <module>kthirty-core-db</module>
         <module>kthirty-core-test</module>
         <module>kthirty-core-web</module>
+        <module>kthirty-core-secure</module>
     </modules>
     <dependencies>
         <dependency>
