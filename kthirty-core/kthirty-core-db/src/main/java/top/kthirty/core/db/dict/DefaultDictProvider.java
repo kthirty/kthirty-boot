@@ -99,7 +99,7 @@ public class DefaultDictProvider implements DictProvider {
         }
         // 查库
         List<Row> rows = Db.selectListBySql(dictProperties.getDictSql(), code);
-        if (Func.notNull(rows)) {
+        if (Func.isNotEmpty(rows)) {
             List<DictItem> items = rows.stream().map(r -> r.toEntity(DictItem.class)).toList();
             // 空转0后，仍然存在父ID不为0的，说明为树状
             boolean isTree = items.stream()

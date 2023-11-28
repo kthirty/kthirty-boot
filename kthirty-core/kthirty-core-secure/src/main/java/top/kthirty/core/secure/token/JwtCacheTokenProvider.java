@@ -15,7 +15,7 @@ import top.kthirty.core.secure.config.KthirtySecureProperties;
  */
 
 public class JwtCacheTokenProvider extends AbstractJwtTokenProvider {
-    private static final Cache<String,SysUser> LOCAL_CACHE = CacheUtil.newLFUCache(Integer.MAX_VALUE);
+    private static final Cache<String,SysUser> LOCAL_CACHE = CacheUtil.newLFUCache(10000);
 
     public JwtCacheTokenProvider(KthirtySecureProperties secureProperties) {
         super(secureProperties);

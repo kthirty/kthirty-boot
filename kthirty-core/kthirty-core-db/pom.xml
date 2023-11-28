@@ -12,7 +12,7 @@
     <artifactId>kthirty-core-db</artifactId>
 
     <dependencies>
-        <!--Google Auto Service-->
+        <!--Auto Service-->
         <dependency>
             <groupId>net.dreamlu</groupId>
             <artifactId>mica-auto</artifactId>

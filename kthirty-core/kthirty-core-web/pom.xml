@@ -12,7 +12,7 @@
     <inceptionYear>2020-Now</inceptionYear>
     <description>核心web封装</description>
     <dependencies>
-        <!--Google Auto Service-->
+        <!--Auto Service-->
         <dependency>
             <groupId>net.dreamlu</groupId>
             <artifactId>mica-auto</artifactId>

@@ -7,13 +7,11 @@ import com.mybatisflex.core.keygen.KeyGenerators;
 import com.mybatisflex.spring.boot.MyBatisFlexCustomizer;
 import com.mybatisflex.spring.boot.MybatisFlexAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.context.annotation.Configuration;
 import top.kthirty.core.db.listener.OperatingListener;
 @Slf4j
 @Configuration
-@MapperScan(basePackages = "top.kthirty.**.mapper")
 @AutoConfigureBefore(MybatisFlexAutoConfiguration.class)
 public class MyBatisFlexConfiguration implements MyBatisFlexCustomizer {
     @Override

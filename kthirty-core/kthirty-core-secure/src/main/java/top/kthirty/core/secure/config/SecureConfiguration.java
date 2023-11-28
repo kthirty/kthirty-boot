@@ -3,7 +3,6 @@ package top.kthirty.core.secure.config;
 import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -12,6 +11,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -39,11 +39,16 @@ import java.util.Objects;
  *
  * @author Kthirty
  */
-@Order
-@Configuration(proxyBeanMethods = false)
-@AllArgsConstructor
+@Configuration
 @EnableConfigurationProperties({KthirtySecureProperties.class})
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class SecureConfiguration {
+
+    @Bean
+    @ConditionalOnMissingBean(SecureRegistry.class)
+    public SecureRegistry secureRegistry() {
+        return new SecureRegistry();
+    }
 
     @ConditionalOnProperty(name = "kthirty.secure.enabled", matchIfMissing = true, havingValue = "true")
     @Bean
@@ -67,8 +72,9 @@ public class SecureConfiguration {
      */
     @Bean
     @ConditionalOnClass(RedisUtil.class)
-    @ConditionalOnBean({RedisUtil.class,KthirtySecureProperties.class})
+    @ConditionalOnBean({RedisUtil.class})
     @ConditionalOnMissingBean(TokenProvider.class)
+    @Order(1)
     public TokenProvider jwtRedisTokenProvider(RedisUtil redisUtil,KthirtySecureProperties kthirtySecureProperties){
         return new JwtRedisTokenProvider(redisUtil,kthirtySecureProperties);
     }
@@ -76,8 +82,8 @@ public class SecureConfiguration {
      * 无Redis时，使用本地缓存
      */
     @Bean
-    @ConditionalOnBean({KthirtySecureProperties.class})
     @ConditionalOnMissingBean(TokenProvider.class)
+    @Order(1)
     public TokenProvider jwtCacheTokenProvider(KthirtySecureProperties kthirtySecureProperties){
         return new JwtCacheTokenProvider(kthirtySecureProperties);
     }
@@ -87,6 +93,7 @@ public class SecureConfiguration {
      * @param provider token获取器
      */
     @Bean
+    @Order(0)
     @ConditionalOnBean(TokenProvider.class)
     public SysUserProvider sysUserProvider(TokenProvider provider){
         return () -> {

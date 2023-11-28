@@ -66,6 +66,7 @@ public class KthirtyRestExceptionTranslator {
 	}
 
 
+
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public R handleError(MethodArgumentTypeMismatchException e) {

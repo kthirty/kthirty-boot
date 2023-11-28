@@ -13,7 +13,7 @@
     <description>核心启动封装-服务注册与发现-配置中心</description>
 
     <dependencies>
-        <!--Google Auto Service-->
+        <!--Auto Service-->
         <dependency>
             <groupId>net.dreamlu</groupId>
             <artifactId>mica-auto</artifactId>

@@ -14,6 +14,7 @@
     <modules>
         <module>boot-examples</module>
         <module>database-examples</module>
+        <module>web-examples</module>
     </modules>
 
 

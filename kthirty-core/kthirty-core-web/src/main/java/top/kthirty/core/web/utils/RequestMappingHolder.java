@@ -7,6 +7,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.mvc.condition.PathPatternsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import top.kthirty.core.tool.Func;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 
 /**
  * <p>
@@ -47,10 +49,16 @@ public class RequestMappingHolder implements ApplicationContextAware {
                     .map(Enum::name)
                     .filter(method -> StrUtil.equalsIgnoreCase(method, httpServletRequest.getMethod()))
                     .collect(Collectors.toList());
+            if(Func.isEmpty(matchMethod)){
+                continue;
+            }
             // url匹配
-            List<String> matchingPatterns = reqInfo.getKey().getPatternsCondition().getMatchingPatterns(httpServletRequest.getRequestURI());
-            // 匹配全成功
-            if(Func.isNotEmpty(matchingPatterns) && Func.isNotEmpty(matchMethod)){
+            PathPatternsRequestCondition pathPatternsCondition = reqInfo.getKey().getPathPatternsCondition();
+            if(pathPatternsCondition == null){
+                continue;
+            }
+            PathPatternsRequestCondition matchingCondition = pathPatternsCondition.getMatchingCondition(httpServletRequest);
+            if(matchingCondition != null){
                 return reqInfo.getValue();
             }
         }

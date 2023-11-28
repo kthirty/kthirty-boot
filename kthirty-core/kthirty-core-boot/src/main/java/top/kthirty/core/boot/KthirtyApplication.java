@@ -31,7 +31,7 @@ public class KthirtyApplication {
         return builder.run(args);
     }
     public static ConfigurableApplicationContext run(Class<?> source, String... args) {
-        SpringApplicationBuilder builder = createSpringApplicationBuilder(new KthirtyAppInfo(source.getName(), "", 8080), source, args);
+        SpringApplicationBuilder builder = createSpringApplicationBuilder(new KthirtyAppInfo(source.getSimpleName(), "", 8080), source, args);
         return builder.run(args);
     }
     public static ConfigurableApplicationContext run(KthirtyAppInfo kthirtyAppInfo, Class<?> source, String... args) {
