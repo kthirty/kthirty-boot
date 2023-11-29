@@ -5,23 +5,25 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>top.kthirty</groupId>
-        <artifactId>kthirty-boot</artifactId>
+        <artifactId>kthirty-service</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>kthirty-core</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>kthirty-system</artifactId>
+    <packaging>jar</packaging>
     <modules>
-        <module>kthirty-core-boot</module>
-        <module>kthirty-core-tool</module>
-        <module>kthirty-core-db</module>
-        <module>kthirty-core-test</module>
-        <module>kthirty-core-web</module>
-        <module>kthirty-core-secure</module>
-        <module>kthirty-core-all</module>
+
     </modules>
     <dependencies>
-
+        <dependency>
+            <groupId>top.kthirty</groupId>
+            <artifactId>kthirty-core-all</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

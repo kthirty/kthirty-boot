@@ -17,8 +17,8 @@ import java.util.Date;
 public class OperatingListener implements InsertListener, UpdateListener {
     @Override
     public void onInsert(Object entity) {
-        setIfExists(entity, "createBy", SecureUtil.getUserId(),true);
-        setIfExists(entity, "orgCode", SecureUtil.getUserId(),false);
+        setIfExists(entity, "createBy", SecureUtil.getUsername(),true);
+        setIfExists(entity, "orgCode", SecureUtil.getOrgCode(),false);
         setIfExists(entity, "deleted", false,false);
         setIfExists(entity, "createDate", new Date(),false);
         setIfExists(entity, "tenantId", SecureUtil.getTenantId(),false);
@@ -26,7 +26,7 @@ public class OperatingListener implements InsertListener, UpdateListener {
 
     @Override
     public void onUpdate(Object entity) {
-        setIfExists(entity, "updateBy", SecureUtil.getUserId(),true);
+        setIfExists(entity, "updateBy", SecureUtil.getUsername(),true);
         setIfExists(entity, "updateDate", new Date(),true);
     }
 

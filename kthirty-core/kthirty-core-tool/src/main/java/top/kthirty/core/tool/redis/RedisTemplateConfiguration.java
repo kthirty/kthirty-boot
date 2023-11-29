@@ -74,7 +74,6 @@ public class RedisTemplateConfiguration {
 	@Bean(name = "redisUtil")
 	@ConditionalOnBean(RedisTemplate.class)
 	public RedisUtil redisUtils(RedisTemplate<String, Object> redisTemplate) {
-		log.info("Redis Util init success");
 		return new RedisUtil(redisTemplate);
 	}
 

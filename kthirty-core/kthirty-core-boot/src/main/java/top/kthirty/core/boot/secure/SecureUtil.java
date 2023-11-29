@@ -21,6 +21,10 @@ public class SecureUtil implements ApplicationContextAware {
         SysUser currentUser = getCurrentUser();
         return currentUser != null ? currentUser.getId() : null;
     }
+    public static String getUsername(){
+        SysUser currentUser = getCurrentUser();
+        return currentUser != null ? currentUser.getUsername() : null;
+    }
     public static String getRealName(){
         SysUser currentUser = getCurrentUser();
         return currentUser != null ? currentUser.getRealName() : null;

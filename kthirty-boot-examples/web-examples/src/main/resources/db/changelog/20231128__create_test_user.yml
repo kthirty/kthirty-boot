@@ -4,9 +4,9 @@ databaseChangeLog:
       author: KTHIRTY
       changes:
         - dropTable:
-            tableName: sys_user
+            tableName: test_user
         - createTable:
-            tableName: sys_user
+            tableName: test_user
             columns:
               - column:
                   type: varchar(32)

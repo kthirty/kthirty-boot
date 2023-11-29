@@ -9,20 +9,12 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>kthirty-core</artifactId>
+    <artifactId>kthirty-service</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>kthirty-core-boot</module>
-        <module>kthirty-core-tool</module>
-        <module>kthirty-core-db</module>
-        <module>kthirty-core-test</module>
-        <module>kthirty-core-web</module>
-        <module>kthirty-core-secure</module>
-        <module>kthirty-core-all</module>
+        <module>kthirty-system</module>
     </modules>
-    <dependencies>
 
-    </dependencies>
 
     <build>
         <plugins>

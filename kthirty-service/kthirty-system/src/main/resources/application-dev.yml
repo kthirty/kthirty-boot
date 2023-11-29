@@ -1,0 +1,13 @@
+server:
+  port: 9001
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/kthirty
+    username: kthirty
+    password: kthirty
+  liquibase:
+    clear-checksums: true
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379

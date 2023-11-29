@@ -42,6 +42,8 @@
     <modules>
         <module>kthirty-boot-examples</module>
         <module>kthirty-core</module>
+        <module>kthirty-extra</module>
+        <module>kthirty-service</module>
     </modules>
 
     <properties>
@@ -63,9 +65,15 @@
         <redission.version>3.16.5</redission.version>
         <jjwt.version>0.12.3</jjwt.version>
         <!--DB-->
-        <mybatis-flex.version>1.7.3</mybatis-flex.version>
+        <mybatis-flex.version>1.7.5</mybatis-flex.version>
         <mybatis-spring.version>3.0.1</mybatis-spring.version>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
     <dependencyManagement>
         <dependencies>
             <!-- Spring Boot-->

@@ -9,7 +9,7 @@ import top.kthirty.core.tool.dict.Dict;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Table("sys_user")
+@Table("test_user")
 public class SystemUser extends IdEntity<String> {
     @Schema(title = "用户名")
     private String username;
