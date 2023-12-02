@@ -37,6 +37,11 @@
             <artifactId>kthirty-core-secure</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>top.kthirty</groupId>
+            <artifactId>kthirty-core-devtools</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

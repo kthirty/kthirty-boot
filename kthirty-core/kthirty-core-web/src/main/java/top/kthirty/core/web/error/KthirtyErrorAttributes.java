@@ -10,6 +10,7 @@ import org.springframework.web.context.request.WebRequest;
 import top.kthirty.core.tool.utils.BeanUtil;
 import top.kthirty.core.tool.api.R;
 import top.kthirty.core.tool.api.SystemResultCode;
+import top.kthirty.core.web.utils.WebUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ public class KthirtyErrorAttributes extends DefaultErrorAttributes {
 	@Override
 	public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions options) {
 		String requestUri = this.getAttr(webRequest, "javax.servlet.error.request_uri");
-		String status = this.getAttr(webRequest, "javax.servlet.error.status_code").toString();
+		String status = this.getAttr(webRequest, "javax.servlet.error.status_code");
 		Throwable error = getError(webRequest);
 		R result;
 		if (error == null) {
@@ -36,7 +37,7 @@ public class KthirtyErrorAttributes extends DefaultErrorAttributes {
 		} else {
 			for (ErrorHandler errorHandler : errorHandlers) {
 				if(errorHandler.support(error)){
-					return BeanUtil.toMap(errorHandler.handle(error,null));
+					return BeanUtil.toMap(errorHandler.handle(error, WebUtil.getResponse()));
 				}
 			}
 			log.error("未处理的异常",error);

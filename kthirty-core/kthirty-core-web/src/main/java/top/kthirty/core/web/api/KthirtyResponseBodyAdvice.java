@@ -14,6 +14,8 @@ import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.api.R;
 
 import java.lang.annotation.Annotation;
+import java.util.Objects;
+
 /**
  * <p>
  * KthirtyResult 注解封装，响应自动封装
@@ -48,6 +50,9 @@ public class KthirtyResponseBodyAdvice implements ResponseBodyAdvice<Object> {
         }
         if(o instanceof String){
             return Func.toJson(R.success(o));
+        }
+        if(Objects.isNull(o) && methodParameter.getMethod() != null && methodParameter.getMethod().getReturnType() == String.class){
+            return Func.toJson(R.success());
         }
         return R.success(o);
     }

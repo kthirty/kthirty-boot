@@ -21,8 +21,8 @@ public class SwaggerLauncherServiceImpl implements LauncherService {
 			launchInfo.addProperties("knife4j.production", "true");
 		}
 		launchInfo.addProperties("knife4j.enable", "true");
-		launchInfo.addProperties("knife4j.setting.enableHomeCustom", "true");
-		launchInfo.addProperties("knife4j.setting.homeCustomLocation", "classpath:swagger-md/home.md");
+		launchInfo.addProperties("knife4j.setting.enable-home-custom", "true");
+		launchInfo.addProperties("knife4j.setting.home-custom-path", "classpath:swagger-md/home.md");
 
 		// 隐藏models
 		launchInfo.addProperties("knife4j.setting.enableSwaggerModels", "false");

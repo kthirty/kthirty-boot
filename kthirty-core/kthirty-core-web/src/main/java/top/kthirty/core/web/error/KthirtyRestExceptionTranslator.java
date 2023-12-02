@@ -35,7 +35,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * 全局异常处理，处理可预见的异常
@@ -45,7 +44,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass({Servlet.class, DispatcherServlet.class})
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.ANY)
 @RestControllerAdvice
 @AllArgsConstructor
 public class KthirtyRestExceptionTranslator {
@@ -142,7 +141,7 @@ public class KthirtyRestExceptionTranslator {
 	public R handleError(Throwable e) {
 		HttpServletResponse response = WebUtil.getResponse();
 		if(Func.isNotEmpty(errorHandlers)){
-			List<ErrorHandler> handlers = errorHandlers.stream().sorted(Comparator.comparing(ErrorHandler::getOrder)).collect(Collectors.toList());
+			List<ErrorHandler> handlers = errorHandlers.stream().sorted(Comparator.comparing(ErrorHandler::getOrder)).toList();
 			for (ErrorHandler handler : handlers) {
 				if(handler.support(e)){
 					return handler.handle(e, response);

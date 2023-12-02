@@ -18,6 +18,7 @@
         <module>kthirty-core-test</module>
         <module>kthirty-core-web</module>
         <module>kthirty-core-secure</module>
+        <module>kthirty-core-devtools</module>
         <module>kthirty-core-all</module>
     </modules>
     <dependencies>

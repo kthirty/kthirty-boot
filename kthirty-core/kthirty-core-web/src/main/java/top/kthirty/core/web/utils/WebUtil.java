@@ -115,6 +115,11 @@ public class WebUtil extends org.springframework.web.util.WebUtils {
 		return (requestAttributes == null) ? null : ((ServletRequestAttributes) requestAttributes).getRequest();
 	}
 
+	public static String getClientId(){
+		HttpServletRequest request = getRequest();
+		return request == null ? null : request.getHeader("Client-Id");
+	}
+
 	/**
 	 * 获取 HttpServletResponse
 	 *
