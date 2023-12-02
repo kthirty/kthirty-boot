@@ -4,6 +4,8 @@ import cn.hutool.core.lang.Dict;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 /**
  * <p>
@@ -15,7 +17,9 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class SysUser {
+public class SysUser implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     /**
      * 用户ID
      */
