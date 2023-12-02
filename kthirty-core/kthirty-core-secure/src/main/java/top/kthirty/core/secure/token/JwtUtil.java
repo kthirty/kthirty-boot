@@ -5,12 +5,13 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.SecretKey;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
-
+@Slf4j
 class JwtUtil {
     private static final String SECRET = "O7hO6ooU8eyv98EPHgKmGNH6GXOSxV5V";
     private static final SecretKey KEY = Keys.hmacShaKeyFor(SECRET.getBytes());
@@ -31,10 +32,14 @@ class JwtUtil {
     }
 
     public static Claims getClaims(String token){
-        return Jwts.parser()
-                .verifyWith(KEY)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        try{
+            return Jwts.parser()
+                    .verifyWith(KEY)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        }catch (Exception e){
+            return null;
+        }
     }
 }

@@ -104,7 +104,9 @@ public class SecureConfiguration {
             // 从请求头获取Token
             String header = request.getHeader(AuthConstant.REQUEST_AUTHORIZATION_HEADER);
             String parameter = request.getParameter(AuthConstant.REQUEST_AUTHORIZATION_HEADER);
-            return provider.getCurrentUser(StrUtil.blankToDefault(header,parameter));
+            String token = StrUtil.blankToDefault(header,parameter);
+            token = StrUtil.removePrefix(token,"Bearer ");
+            return provider.getCurrentUser(token);
         };
     }
 

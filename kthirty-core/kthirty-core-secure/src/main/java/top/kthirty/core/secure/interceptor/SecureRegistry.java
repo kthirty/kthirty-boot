@@ -25,7 +25,10 @@ public class SecureRegistry {
 		this.defaultExcludePatterns.add("/error/**");
 		this.defaultExcludePatterns.add("/assets/**");
 		this.defaultExcludePatterns.add("/favicon.ico");
+		// swagger
 		this.defaultExcludePatterns.add("/doc.html");
+		this.defaultExcludePatterns.add("/webjars/**");
+		this.defaultExcludePatterns.add("/v3/api-docs/**");
 	}
 
 	/**

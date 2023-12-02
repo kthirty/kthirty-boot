@@ -72,7 +72,7 @@ public abstract class AbstractJwtTokenProvider implements TokenProvider{
             String username = claims.get(JwtCacheTokenProvider.ClaimKey.USERNAME, String.class);
             return getCache(USER_PREFIX + username);
         }catch (Exception e){
-            throw new NotLoginException(e);
+            return null;
         }
     }
 
