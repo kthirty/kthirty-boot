@@ -24,7 +24,7 @@ public class LogicEntity<T> extends IdEntity<T>{
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN, shape = JsonFormat.Shape.STRING)
     @Column(value = "create_date",onInsertValue = "now()")
-    private Date createTime;
+    private Date createDate;
     /**
      * 最后一次更新人
      */
@@ -35,7 +35,7 @@ public class LogicEntity<T> extends IdEntity<T>{
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN, shape = JsonFormat.Shape.STRING)
     @Column (value = "update_date", onInsertValue = "now()",onUpdateValue = "now()")
-    private Date updateTime;
+    private Date updateDate;
     /**
      * 删除标记
      */

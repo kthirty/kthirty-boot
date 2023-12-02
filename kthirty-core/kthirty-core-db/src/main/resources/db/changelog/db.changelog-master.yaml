@@ -2,8 +2,12 @@ databaseChangeLog:
   - includeAll:
       path: classpath:/db/changelog/**/*.yaml
       errorIfMissingOrEmpty: false
-      filter: top.kthirty.core.db.liquibase.KthirtyIncludeAllFilter
+      filter: top.kthirty.core.db.liquibase.IgnoreMasterFilter
   - includeAll:
       path: classpath:/db/changelog/**/*.yml
       errorIfMissingOrEmpty: false
-      filter: top.kthirty.core.db.liquibase.KthirtyIncludeAllFilter
+      filter: top.kthirty.core.db.liquibase.IgnoreMasterFilter
+  - includeAll:
+      path: classpath:/db/changelog/**/*.xml
+      errorIfMissingOrEmpty: false
+      filter: top.kthirty.core.db.liquibase.IgnoreMasterFilter
