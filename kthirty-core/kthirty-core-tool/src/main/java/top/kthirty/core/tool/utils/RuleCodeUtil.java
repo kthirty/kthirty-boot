@@ -31,7 +31,7 @@ public class RuleCodeUtil {
     public static RuleCodeUtil getInstance(Handler handler,String category){
         Assert.notNull(handler,"处理器不可为空");
         Assert.notBlank(category,"分类不可为空");
-        return new RuleCodeUtil(SpringUtil.getBean(RedisUtil.class),category,handler);
+        return new RuleCodeUtil(SpringUtil.getBeanSafe(RedisUtil.class),category,handler);
     }
 
     /**
@@ -51,7 +51,7 @@ public class RuleCodeUtil {
 
     public interface HandlerPool{
         /**
-         * A01-Z99
+         * A00-Z99
          */
         Handler SINGLE_LETTER = new SingleLetterSeqHandler();
         /**
@@ -68,13 +68,13 @@ public class RuleCodeUtil {
 
     /**
      * 单字母序列生成器
-     * A01-Z99
+     * A00-Z99
      */
     public static class SingleLetterSeqHandler implements Handler{
         @Override
         public String next(String currentVal) {
             if(StrUtil.isBlank(currentVal)){
-                return "A01";
+                return "A00";
             }
             Assert.isTrue(currentVal.length() == 3,"当前值位数必须为3,但是目前值为{}",currentVal);
             String seq = StrUtil.sub(currentVal, 1, 3);
