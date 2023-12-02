@@ -5,10 +5,17 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import top.kthirty.core.boot.KthirtyApplication;
 
 @SpringBootApplication
-@MapperScan
+@MapperScan(basePackages = "top.kthirty.**.mapper")
 public class SystemApplication {
     public static void main(String[] args) {
         KthirtyApplication.run(SystemApplication.class,args);
-
     }
+
+
+//    @Bean
+//    public GroupedOpenApi adminApi() {
+//        return GroupedOpenApi.builder()
+//                .group("系统管理")
+//                .pathsToMatch("/**").build();
+//    }
 }

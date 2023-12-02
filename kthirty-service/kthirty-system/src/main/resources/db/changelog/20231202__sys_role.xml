@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!--创建角色表-->
+    <changeSet id="sys_role" author="KTHIRTY">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="sys_role"/>
+            </not>
+        </preConditions>
+        <createTable tableName="sys_role" remarks="角色">
+            <column name="id" type="varchar(32)" remarks="主键">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="create_by" remarks="创建人" type="varchar(32)"/>
+            <column name="update_by" remarks="更新人" type="varchar(32)"/>
+            <column name="create_date" remarks="创建时间" type="timestamp" defaultValueDate="current_timestamp"/>
+            <column name="update_date" remarks="更新时间" type="timestamp" defaultValueDate="current_timestamp"/>
+            <column name="deleted" remarks="删除标记" type="tinyint" defaultValueBoolean="false"/>
+            <column name="code" type="varchar(32)" remarks="代码(上级关系)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="sys_role_code"/>
+            </column>
+            <column name="code_name" type="varchar(32)" remarks="角色代码">
+                <constraints nullable="false" unique="true" uniqueConstraintName="sys_role_code_name"/>
+            </column>
+            <column name="name" remarks="角色名" type="varchar(32)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="parent_id" type="varchar(32)" remarks="上级角色ID" defaultValue="0"/>
+        </createTable>
+    </changeSet>
+    <!--初始化角色-->
+    <changeSet id="init_sys_role" author="KTHIRTY">
+        <preConditions onFail="MARK_RAN">
+            <tableIsEmpty tableName="sys_role"/>
+        </preConditions>
+        <insert tableName="sys_role">
+            <column name="id" value="1"/>
+            <column name="code" value="A00"/>
+            <column name="code_name" value="administrator"/>
+            <column name="name" value="超级管理员"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!--创建用户表-->
+    <changeSet id="sys_user" author="KTHIRTY">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="sys_user"/>
+            </not>
+        </preConditions>
+        <createTable tableName="sys_user" remarks="用户信息">
+            <column name="id" type="varchar(32)" remarks="主键">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="create_by" remarks="创建人" type="varchar(32)"/>
+            <column name="update_by" remarks="更新人" type="varchar(32)"/>
+            <column name="create_date" remarks="创建时间" type="timestamp" defaultValueDate="current_timestamp"/>
+            <column name="update_date" remarks="更新时间" type="timestamp" defaultValueDate="current_timestamp"/>
+            <column name="deleted" remarks="删除标记" type="tinyint" defaultValueBoolean="false"/>
+            <column name="username" type="varchar(32)" remarks="用户名">
+                <constraints unique="true" uniqueConstraintName="sys_user_username" nullable="false"/>
+            </column>
+            <column name="real_name" type="varchar(100)" remarks="真实姓名"/>
+            <column name="code" type="varchar(32)" remarks="编码"/>
+            <column name="password" type="varchar(100)" remarks="密码"/>
+            <column name="email" type="varchar(100)" remarks="邮箱"/>
+            <column name="phone" type="varchar(100)" remarks="手机号"/>
+            <column name="birthday" remarks="生日" type="timestamp"/>
+            <column name="sex" remarks="性别" type="char(1)"/>
+            <column name="avatar" remarks="头像" type="varchar(2000)"/>
+            <column name="status" remarks="状态" type="varchar(10)"/>
+            <column name="post_code" remarks="岗位" type="varchar(1000)"/>
+            <column name="dept_code" remarks="部门" type="varchar(1000)"/>
+            <column name="role_code" remarks="部门" type="varchar(1000)"/>
+        </createTable>
+    </changeSet>
+    <!--初始化用户-->
+    <changeSet id="init_sys_user" author="KTHIRTY">
+        <preConditions onFail="MARK_RAN">
+            <tableIsEmpty tableName="sys_user"/>
+        </preConditions>
+        <insert tableName="sys_user">
+            <column name="id" value="1"/>
+            <column name="username" value="admin"/>
+            <column name="code" value="000000"/>
+            <column name="real_name" value="管理员"/>
+            <column name="password" value="c960a34ba5d72761ff1957005eded603d8f6c822"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

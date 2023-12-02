@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="sys_menu" author="KTHIRTY">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="sys_menu"/>
+            </not>
+        </preConditions>
+        <createTable tableName="sys_menu" remarks="菜单">
+            <column name="id" type="varchar(32)" remarks="主键">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="create_by" remarks="创建人" type="varchar(32)"/>
+            <column name="update_by" remarks="更新人" type="varchar(32)"/>
+            <column name="create_date" remarks="创建时间" type="timestamp" defaultValueDate="current_timestamp"/>
+            <column name="update_date" remarks="更新时间" type="timestamp" defaultValueDate="current_timestamp"/>
+            <column name="deleted" remarks="删除标记" type="tinyint" defaultValueBoolean="false"/>
+            <column name="name" type="varchar(32)" remarks="菜单名称"/>
+            <column name="type" type="varchar(2)" remarks="类型(1菜单,2权限)"/>
+            <column name="code" type="varchar(32)" remarks="菜单CODE"/>
+            <column name="permission" type="varchar(100)" remarks="权限标识"/>
+            <column name="parent_id" type="varchar(32)" remarks="上级ID" defaultValue="0"/>
+            <column name="sort" type="int(2)" remarks="排序" defaultValue="0"/>
+            <column name="url" type="varchar(100)" remarks="请求地址"/>
+            <column name="component" type="varchar(100)" remarks="前端组件"/>
+            <column name="icon" type="varchar(100)" remarks="图标"/>
+            <column name="description" type="varchar(255)" remarks="描述"/>
+            <column name="status" type="varchar(2)" remarks="状态(1启用/0禁用)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="sys_role_menu_rl" author="KTHIRTY">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="sys_role_menu_rl"/>
+            </not>
+        </preConditions>
+        <createTable tableName="sys_role_menu_rl" remarks="角色菜单关联表">
+            <column name="id" type="varchar(32)" remarks="主键">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="role_id" type="varchar(32)" remarks="角色ID"/>
+            <column name="menu_id" type="varchar(32)" remarks="菜单ID"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

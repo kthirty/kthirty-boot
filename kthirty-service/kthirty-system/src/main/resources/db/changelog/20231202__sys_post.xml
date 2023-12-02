@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="sys_post" author="KTHIRTY">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="sys_post"/>
+            </not>
+        </preConditions>
+        <createTable tableName="sys_post" remarks="岗位信息">
+            <column name="id" type="varchar(32)" remarks="主键">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="create_by" remarks="创建人" type="varchar(32)"/>
+            <column name="update_by" remarks="更新人" type="varchar(32)"/>
+            <column name="create_date" remarks="创建时间" type="timestamp" defaultValueDate="current_timestamp"/>
+            <column name="update_date" remarks="更新时间" type="timestamp" defaultValueDate="current_timestamp"/>
+            <column name="deleted" remarks="删除标记" type="tinyint" defaultValueBoolean="false"/>
+            <column name="status" remarks="状态(1/0)" type="varchar(10)"/>
+            <column name="parent_id" type="varchar(32)" remarks="上级部门ID"/>
+            <column name="name" type="varchar(200)" remarks="岗位名称"/>
+            <column name="code" type="varchar(32)" remarks="岗位代码"/>
+            <column name="sort" type="int(2)" remarks="排序"/>
+            <column name="description" type="varchar(255)" remarks="描述"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
