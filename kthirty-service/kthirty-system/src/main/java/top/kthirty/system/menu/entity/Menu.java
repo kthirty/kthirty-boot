@@ -62,7 +62,7 @@ public class Menu extends LogicEntity {
      * 请求地址
      */
     @Schema(description = "请求地址")
-    private String url;
+    private String path;
 
     /**
      * 前端组件
