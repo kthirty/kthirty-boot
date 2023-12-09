@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import top.kthirty.core.boot.secure.SecureUtil;
 import top.kthirty.core.boot.secure.SysUser;
 import top.kthirty.core.secure.token.TokenInfo;
 import top.kthirty.core.secure.token.TokenUtil;
@@ -78,5 +79,17 @@ public class AuthServiceImpl implements AuthService {
                 .setPermissions(permissions);
         TokenInfo tokenInfo = TokenUtil.authorize(sysUser);
         return tokenInfo;
+    }
+
+    @Override
+    public List<Menu> menus() {
+        List<String> roles = SecureUtil.getRoles();
+        return menuService.queryChain()
+                .select(MENU.ALL_COLUMNS)
+                .join(ROLE_MENU_RL).on(ROLE_MENU_RL.MENU_ID.eq(MENU.ID))
+                .join(ROLE).on(ROLE_MENU_RL.ROLE_ID.eq(ROLE.ID))
+                .where(MENU.PATH.isNotNull())
+                .and(ROLE.CODE.in(roles))
+                .list();
     }
 }

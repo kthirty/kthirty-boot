@@ -14,6 +14,9 @@ import top.kthirty.core.web.base.BaseController;
 import top.kthirty.system.auth.model.AuthParam;
 import top.kthirty.system.auth.service.AuthService;
 import top.kthirty.system.auth.util.CaptchaHelper;
+import top.kthirty.system.menu.entity.Menu;
+
+import java.util.List;
 
 @RestController
 @Tag(name = "认证接口")
@@ -30,16 +33,23 @@ public class AuthController extends BaseController {
         return authService.token(authParam);
     }
 
+    @Operation(summary = "获取验证码")
     @GetMapping("code")
     @IgnoreSecure
     public String code(){
         return CaptchaHelper.generateCode();
     }
 
+    @Operation(summary = "获取当前用户信息")
     @GetMapping("info")
     public SysUser info(){
         return SecureUtil.getCurrentUser();
     }
 
+    @Operation(summary = "获取当前用户的菜单列表")
+    @GetMapping("menus")
+    public List<Menu> menus(){
+        return authService.menus();
+    }
 
 }
