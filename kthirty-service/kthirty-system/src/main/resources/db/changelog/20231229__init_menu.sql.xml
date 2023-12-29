@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="init_sys_menu" author="admin">
+        <insert tableName="sys_menu">
+            <column name="name" value="主页"/>
+            <column name="type" value="1"/>
+            <column name="code" value="A01"/>
+            <column name="code" value="A01"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

@@ -87,9 +87,11 @@ public class AuthServiceImpl implements AuthService {
         return menuService.queryChain()
                 .select(MENU.ALL_COLUMNS)
                 .join(ROLE_MENU_RL).on(ROLE_MENU_RL.MENU_ID.eq(MENU.ID))
-                .join(ROLE).on(ROLE_MENU_RL.ROLE_ID.eq(ROLE.ID))
+                .join(ROLE).on(ROLE_MENU_RL.ROLE_ID.eq(ROLE.ID)).and(ROLE.DELETED.eq("0"))
                 .where(MENU.PATH.isNotNull())
+                .and(MENU.DELETED.eq("1"))
                 .and(ROLE.CODE.in(roles))
+                .and(MENU.STATUS.eq("1"))
                 .list();
     }
 }

@@ -1,12 +1,9 @@
 package top.kthirty.system.menu.entity;
 
 import com.mybatisflex.annotation.Table;
+import lombok.*;
 import top.kthirty.core.db.base.entity.LogicEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * 菜单 实体类。
@@ -14,13 +11,14 @@ import lombok.NoArgsConstructor;
  * @author KTHIRTY
  * @since 2023-12-02
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "菜单")
 @Table(value = "sys_menu")
-public class Menu extends LogicEntity {
+public class Menu extends LogicEntity<String> {
 
     /**
      * 菜单名称

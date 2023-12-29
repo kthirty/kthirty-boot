@@ -2,9 +2,9 @@ server:
   port: 9001
 spring:
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/kthirty
-    username: kthirty
-    password: kthirty
+    url: jdbc:mysql://nas.kthirty.top:5006/kthirty
+    username: root
+    password: ${db-password}
   liquibase:
     clear-checksums: true
   data:
