@@ -32,18 +32,4 @@
             <column name="status" type="varchar(2)" remarks="状态(1启用/0禁用)"/>
         </createTable>
     </changeSet>
-    <changeSet id="sys_role_menu_rl" author="KTHIRTY">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="sys_role_menu_rl"/>
-            </not>
-        </preConditions>
-        <createTable tableName="sys_role_menu_rl" remarks="角色菜单关联表">
-            <column name="id" type="varchar(32)" remarks="主键">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="role_id" type="varchar(32)" remarks="角色ID"/>
-            <column name="menu_id" type="varchar(32)" remarks="菜单ID"/>
-        </createTable>
-    </changeSet>
 </databaseChangeLog>

@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
                 .where(ROLE.CODE.in(roles))
                 .list()
                 .stream()
-                .map(Role::getCodeName)
+                .map(Role::getEnName)
                 .toList();
         // 获取权限
         List<String> permissions = menuService.queryChain()

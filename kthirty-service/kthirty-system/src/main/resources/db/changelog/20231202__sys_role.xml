@@ -23,24 +23,18 @@
             <column name="code" type="varchar(32)" remarks="代码(上级关系)">
                 <constraints nullable="false" unique="true" uniqueConstraintName="sys_role_code"/>
             </column>
-            <column name="code_name" type="varchar(32)" remarks="角色代码">
-                <constraints nullable="false" unique="true" uniqueConstraintName="sys_role_code_name"/>
+            <column name="en_name" type="varchar(32)" remarks="角色代码">
+                <constraints nullable="false" unique="true" uniqueConstraintName="sys_role_en_name"/>
             </column>
             <column name="name" remarks="角色名" type="varchar(32)" >
                 <constraints nullable="false"/>
             </column>
             <column name="parent_id" type="varchar(32)" remarks="上级角色ID" defaultValue="0"/>
         </createTable>
-    </changeSet>
-    <!--初始化角色-->
-    <changeSet id="init_sys_role" author="KTHIRTY">
-        <preConditions onFail="MARK_RAN">
-            <tableIsEmpty tableName="sys_role"/>
-        </preConditions>
         <insert tableName="sys_role">
             <column name="id" value="1"/>
             <column name="code" value="A00"/>
-            <column name="code_name" value="administrator"/>
+            <column name="en_name" value="administrator"/>
             <column name="name" value="超级管理员"/>
         </insert>
     </changeSet>

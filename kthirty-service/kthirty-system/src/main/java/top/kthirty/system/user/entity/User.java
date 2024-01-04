@@ -97,9 +97,9 @@ public class User extends LogicEntity<String> {
     private String deptCode;
 
     /**
-     * 部门
+     * 角色代码
      */
-    @Schema(description = "部门")
+    @Schema(description = "角色")
     private String roleCode;
 
 }

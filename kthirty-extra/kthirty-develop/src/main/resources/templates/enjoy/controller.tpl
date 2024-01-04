@@ -60,12 +60,6 @@ import java.util.List;
 public class #(table.buildControllerClassName()) #if(controllerConfig.superClass)extends #(controllerConfig.buildSuperClassName()) #end {
     private final #(table.buildServiceClassName()) #(serviceVarName);
 
-    /**
-     * 添加#(tableComment)。
-     *
-     * @param #(entityVarName) #(tableComment)
-     * @return {@code true} 添加成功，{@code false} 添加失败
-     */
     @PostMapping("save")
     #if(withSwagger && swaggerVersion.getName() == "FOX")
     @ApiOperation("保存#(tableComment)")
@@ -77,12 +71,6 @@ public class #(table.buildControllerClassName()) #if(controllerConfig.superClass
         return #(serviceVarName).save(#(entityVarName));
     }
 
-    /**
-     * 根据主键删除#(tableComment)。
-     *
-     * @param id 主键
-     * @return {@code true} 删除成功，{@code false} 删除失败
-     */
     @DeleteMapping("remove/{id}")
     #if(withSwagger && swaggerVersion.getName() == "FOX")
     @ApiOperation("根据主键#(tableComment)")
@@ -94,12 +82,6 @@ public class #(table.buildControllerClassName()) #if(controllerConfig.superClass
         return #(serviceVarName).removeById(id);
     }
 
-    /**
-     * 根据主键更新#(tableComment)。
-     *
-     * @param #(entityVarName) #(tableComment)
-     * @return {@code true} 更新成功，{@code false} 更新失败
-     */
     @PutMapping("update")
     #if(withSwagger && swaggerVersion.getName() == "FOX")
     @ApiOperation("根据主键更新#(tableComment)")
@@ -111,11 +93,6 @@ public class #(table.buildControllerClassName()) #if(controllerConfig.superClass
         return #(serviceVarName).updateById(#(entityVarName));
     }
 
-    /**
-     * 查询所有#(tableComment)。
-     *
-     * @return 所有数据
-     */
     @GetMapping("list")
     #if(withSwagger && swaggerVersion.getName() == "FOX")
     @ApiOperation("查询所有#(tableComment)")
@@ -127,12 +104,6 @@ public class #(table.buildControllerClassName()) #if(controllerConfig.superClass
         return #(serviceVarName).list();
     }
 
-    /**
-     * 根据#(tableComment)主键获取详细信息。
-     *
-     * @param id #(tableComment)主键
-     * @return #(tableComment)详情
-     */
     @GetMapping("getInfo/{id}")
     #if(withSwagger && swaggerVersion.getName() == "FOX")
     @ApiOperation("根据主键获取#(tableComment)")
@@ -144,12 +115,6 @@ public class #(table.buildControllerClassName()) #if(controllerConfig.superClass
         return #(serviceVarName).getById(id);
     }
 
-    /**
-     * 分页查询#(tableComment)。
-     *
-     * @param page 分页对象
-     * @return 分页对象
-     */
     @GetMapping("page")
     #if(withSwagger && swaggerVersion.getName() == "FOX")
     @ApiOperation("分页查询#(tableComment)")

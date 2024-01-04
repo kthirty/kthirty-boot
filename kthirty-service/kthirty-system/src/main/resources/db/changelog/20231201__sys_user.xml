@@ -31,16 +31,7 @@
             <column name="sex" remarks="性别" type="char(1)"/>
             <column name="avatar" remarks="头像" type="varchar(2000)"/>
             <column name="status" remarks="状态" type="varchar(10)"/>
-            <column name="post_code" remarks="岗位" type="varchar(1000)"/>
-            <column name="dept_code" remarks="部门" type="varchar(1000)"/>
-            <column name="role_code" remarks="部门" type="varchar(1000)"/>
         </createTable>
-    </changeSet>
-    <!--初始化用户-->
-    <changeSet id="init_sys_user" author="KTHIRTY">
-        <preConditions onFail="MARK_RAN">
-            <tableIsEmpty tableName="sys_user"/>
-        </preConditions>
         <insert tableName="sys_user">
             <column name="id" value="1"/>
             <column name="username" value="admin"/>

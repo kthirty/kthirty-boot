@@ -32,7 +32,7 @@ public class Role extends LogicEntity {
      * 角色代码
      */
     @Schema(description = "角色代码")
-    private String codeName;
+    private String enName;
 
     /**
      * 角色名
