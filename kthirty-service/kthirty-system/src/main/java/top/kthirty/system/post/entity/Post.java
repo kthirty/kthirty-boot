@@ -1,4 +1,4 @@
-package top.kthirty.system.role.entity;
+package top.kthirty.system.post.entity;
 
 import com.mybatisflex.annotation.Table;
 import top.kthirty.core.db.base.entity.LogicEntity;
@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 /**
  * 岗位信息 实体类。
  *
- * @author KTHIRTY
- * @since 2023-12-02
+ * @author Thinkpad
+ * @since 2024-01-05
  */
 @Data
 @Builder

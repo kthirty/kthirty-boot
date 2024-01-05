@@ -1,13 +1,13 @@
-package top.kthirty.system.role.mapper;
+package top.kthirty.system.relation.mapper;
 
 import top.kthirty.core.db.base.mapper.BaseMapper;
-import top.kthirty.system.role.entity.RoleMenuRl;
+import top.kthirty.system.relation.entity.RoleMenuRl;
 
 /**
  * 角色菜单关联表 映射层。
  *
- * @author KTHIRTY
- * @since 2023-12-02
+ * @author Thinkpad
+ * @since 2024-01-05
  */
 public interface RoleMenuRlMapper extends BaseMapper<RoleMenuRl> {
 

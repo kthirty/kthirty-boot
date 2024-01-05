@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 /**
  * 部门信息 实体类。
  *
- * @author KTHIRTY
- * @since 2023-12-02
+ * @author Thinkpad
+ * @since 2024-01-05
  */
 @Data
 @Builder

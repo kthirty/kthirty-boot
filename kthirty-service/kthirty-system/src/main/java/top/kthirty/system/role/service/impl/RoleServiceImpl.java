@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 /**
  * 角色 服务层实现。
  *
- * @author KTHIRTY
- * @since 2023-12-02
+ * @author Thinkpad
+ * @since 2024-01-05
  */
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {

@@ -1,13 +1,13 @@
-package top.kthirty.system.role.service;
+package top.kthirty.system.relation.service;
 
 import top.kthirty.core.db.base.service.BaseService;
-import top.kthirty.system.role.entity.RoleMenuRl;
+import top.kthirty.system.relation.entity.RoleMenuRl;
 
 /**
  * 角色菜单关联表 服务层。
  *
- * @author KTHIRTY
- * @since 2023-12-02
+ * @author Thinkpad
+ * @since 2024-01-05
  */
 public interface RoleMenuRlService extends BaseService<RoleMenuRl> {
 

@@ -1,13 +1,13 @@
-package top.kthirty.system.role.service;
+package top.kthirty.system.post.service;
 
 import top.kthirty.core.db.base.service.BaseService;
-import top.kthirty.system.role.entity.Post;
+import top.kthirty.system.post.entity.Post;
 
 /**
  * 岗位信息 服务层。
  *
- * @author KTHIRTY
- * @since 2023-12-02
+ * @author Thinkpad
+ * @since 2024-01-05
  */
 public interface PostService extends BaseService<Post> {
 

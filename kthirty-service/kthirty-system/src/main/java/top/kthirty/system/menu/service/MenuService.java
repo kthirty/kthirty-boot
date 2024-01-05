@@ -6,8 +6,8 @@ import top.kthirty.system.menu.entity.Menu;
 /**
  * 菜单 服务层。
  *
- * @author KTHIRTY
- * @since 2023-12-02
+ * @author Thinkpad
+ * @since 2024-01-05
  */
 public interface MenuService extends BaseService<Menu> {
 

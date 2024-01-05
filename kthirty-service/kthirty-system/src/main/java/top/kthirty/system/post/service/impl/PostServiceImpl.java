@@ -1,16 +1,16 @@
-package top.kthirty.system.role.service.impl;
+package top.kthirty.system.post.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import top.kthirty.system.role.entity.Post;
-import top.kthirty.system.role.mapper.PostMapper;
-import top.kthirty.system.role.service.PostService;
+import top.kthirty.system.post.entity.Post;
+import top.kthirty.system.post.mapper.PostMapper;
+import top.kthirty.system.post.service.PostService;
 import org.springframework.stereotype.Service;
 
 /**
  * 岗位信息 服务层实现。
  *
- * @author KTHIRTY
- * @since 2023-12-02
+ * @author Thinkpad
+ * @since 2024-01-05
  */
 @Service
 public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements PostService {

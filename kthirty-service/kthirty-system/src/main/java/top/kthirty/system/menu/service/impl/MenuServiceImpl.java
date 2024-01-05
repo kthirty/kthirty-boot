@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 /**
  * 菜单 服务层实现。
  *
- * @author KTHIRTY
- * @since 2023-12-02
+ * @author Thinkpad
+ * @since 2024-01-05
  */
 @Service
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {

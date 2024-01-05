@@ -1,20 +1,19 @@
 package top.kthirty.system.user.entity;
 
 import com.mybatisflex.annotation.Table;
+import java.sql.Timestamp;
+import top.kthirty.core.db.base.entity.LogicEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import top.kthirty.core.db.base.entity.LogicEntity;
-
-import java.sql.Timestamp;
 
 /**
  * 用户信息 实体类。
  *
- * @author KTHIRTY
- * @since 2023-12-02
+ * @author Thinkpad
+ * @since 2024-01-05
  */
 @Data
 @Builder
@@ -22,7 +21,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Schema(description = "用户信息")
 @Table(value = "sys_user")
-public class User extends LogicEntity<String> {
+public class User extends LogicEntity {
 
     /**
      * 用户名
@@ -83,23 +82,5 @@ public class User extends LogicEntity<String> {
      */
     @Schema(description = "状态")
     private String status;
-
-    /**
-     * 岗位
-     */
-    @Schema(description = "岗位")
-    private String postCode;
-
-    /**
-     * 部门
-     */
-    @Schema(description = "部门")
-    private String deptCode;
-
-    /**
-     * 角色代码
-     */
-    @Schema(description = "角色")
-    private String roleCode;
 
 }

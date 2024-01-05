@@ -1,13 +1,13 @@
-package top.kthirty.system.role.mapper;
+package top.kthirty.system.post.mapper;
 
 import top.kthirty.core.db.base.mapper.BaseMapper;
-import top.kthirty.system.role.entity.Post;
+import top.kthirty.system.post.entity.Post;
 
 /**
  * 岗位信息 映射层。
  *
- * @author KTHIRTY
- * @since 2023-12-02
+ * @author Thinkpad
+ * @since 2024-01-05
  */
 public interface PostMapper extends BaseMapper<Post> {
 
