@@ -7,6 +7,8 @@ import com.mybatisflex.codegen.constant.GenTypeConst;
 import com.mybatisflex.codegen.generator.GeneratorFactory;
 import com.zaxxer.hikari.HikariDataSource;
 import top.kthirty.core.db.base.entity.LogicEntity;
+import top.kthirty.core.db.base.mapper.BaseMapper;
+import top.kthirty.core.db.base.service.BaseService;
 import top.kthirty.core.web.base.BaseController;
 
 import java.util.HashMap;
@@ -15,16 +17,18 @@ import java.util.Map;
 public class CodeGen {
     public static void main(String[] args) {
 
-        String basePath = "C:\\Users\\KTHIRTY\\IdeaProjects\\kthirty-boot\\kthirty-service\\kthirty-system";
+        String basePath = "D:\\System\\public\\kthirty-boot\\kthirty-service\\kthirty-system";
 
         String tablePrefix = "sys_";
         String basePackage = "top.kthirty.system.";
 
         Map<String,String> moduleTable = new HashMap<>();
-        moduleTable.put("role","sys_role,sys_role_menu_rl,sys_post");
+        moduleTable.put("role","sys_role");
         moduleTable.put("dept","sys_dept");
         moduleTable.put("menu","sys_menu");
         moduleTable.put("user","sys_user");
+        moduleTable.put("post","sys_post");
+        moduleTable.put("relation","sys_role_menu_rl,sys_user_dept_rl,sys_user_post_rl,sys_user_role_rl");
 
         moduleTable.forEach((model,tables) -> gen(basePath,basePackage+model,tablePrefix,tables.split(",")));
     }
@@ -32,9 +36,9 @@ public class CodeGen {
     private static void gen(String basePath, String basePackage, String tablePrefix, String[] tables) {
         //配置数据源
         HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/kthirty");
-        dataSource.setUsername("kthirty");
-        dataSource.setPassword("kthirty");
+        dataSource.setJdbcUrl("jdbc:mysql://nas.kthirty.top:5006/kthirty");
+        dataSource.setUsername("root");
+        dataSource.setPassword(System.getProperty("db-password"));
 
         GeneratorFactory.registerGenerator(GenTypeConst.ENTITY,new CustomEntityGenerator());
         // 创建配置内容
@@ -50,7 +54,7 @@ public class CodeGen {
 
 
         //设置生成 entity 并启用 Lombok
-//        globalConfig.setEntityGenerateEnable(true);
+        globalConfig.setEntityGenerateEnable(true);
         globalConfig.getEntityConfig()
                 .setImplInterfaces()
                 .setOverwriteEnable(true)
@@ -60,14 +64,14 @@ public class CodeGen {
                 .setWithLombok(true);
 
         //设置生成 mapper
-//        globalConfig.enableMapper().setSuperClass(BaseMapper.class);
-//        globalConfig.enableMapperXml().setOverwriteEnable(true).setFileSuffix("Mapper");
+        globalConfig.enableMapper().setSuperClass(BaseMapper.class);
+        globalConfig.enableMapperXml().setOverwriteEnable(true).setFileSuffix("Mapper");
 //
 
         // service
-//        globalConfig.enableService();
-//        globalConfig.enableServiceImpl();
-//        globalConfig.getServiceConfig().setSuperClass(BaseService.class);
+        globalConfig.enableService();
+        globalConfig.enableServiceImpl();
+        globalConfig.getServiceConfig().setSuperClass(BaseService.class);
         // controller
         globalConfig.enableController().setSuperClass(BaseController.class)
                 .setOverwriteEnable(true);
