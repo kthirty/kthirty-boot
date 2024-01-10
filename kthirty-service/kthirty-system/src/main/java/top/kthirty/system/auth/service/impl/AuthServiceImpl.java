@@ -86,8 +86,7 @@ public class AuthServiceImpl implements AuthService {
                 .select(MENU.ALL_COLUMNS)
                 .join(ROLE_MENU_RL).on(ROLE_MENU_RL.MENU_ID.eq(MENU.ID)).and(MENU.DELETED.eq("0"))
                 .join(ROLE).on(ROLE_MENU_RL.ROLE_CODE.eq(ROLE.CODE)).and(ROLE.DELETED.eq("0"))
-                .where(MENU.PATH.isNotNull())
-                .and(MENU.DELETED.eq("0"))
+                .where(MENU.DELETED.eq("0"))
                 .and(ROLE.CODE.in(roles))
                 .and(MENU.STATUS.eq("1"))
                 .list();
