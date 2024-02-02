@@ -40,6 +40,6 @@ public class CaptchaHelper {
         String clientId = WebUtil.getClientId();
         Assert.notBlank(clientId,"未知客户端");
         String redisCode = REDIS.get(KEY + clientId);
-        return StrUtil.equals(redisCode,code);
+        return StrUtil.equalsIgnoreCase(redisCode,code);
     }
 }

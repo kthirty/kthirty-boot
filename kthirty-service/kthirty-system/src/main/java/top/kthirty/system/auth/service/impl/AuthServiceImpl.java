@@ -10,6 +10,7 @@ import top.kthirty.core.secure.token.TokenUtil;
 import top.kthirty.core.secure.util.PasswordUtil;
 import top.kthirty.system.auth.model.AuthParam;
 import top.kthirty.system.auth.service.AuthService;
+import top.kthirty.system.auth.util.CaptchaHelper;
 import top.kthirty.system.menu.entity.Menu;
 import top.kthirty.system.menu.service.MenuService;
 import top.kthirty.system.relation.entity.UserRoleRl;
@@ -45,6 +46,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenInfo token(AuthParam authParam) {
+        Assert.isTrue(CaptchaHelper.validateCode(authParam.getCode()),"验证码错误");
         User user = userService.queryChain()
                 .where(USER.USERNAME.eq(authParam.getUsername()))
                 .and(USER.PASSWORD.eq(PasswordUtil.encrypt(authParam.getPassword())))
