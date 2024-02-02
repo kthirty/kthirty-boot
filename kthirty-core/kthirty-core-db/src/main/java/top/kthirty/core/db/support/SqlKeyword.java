@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.query.QueryWrapper;
+import top.kthirty.core.tool.Func;
 
 import java.util.Map;
 
@@ -22,9 +23,6 @@ public class SqlKeyword {
 	private static final String NOT_LIKE = "_notlike";
 	private static final String GT = "_gt";
 	private static final String LT = "_lt";
-	private static final String DATE_GT = "_dategt";
-	private static final String DATE_EQUAL = "_dateequal";
-	private static final String DATE_LT = "_datelt";
 	private static final String IS_NULL = "_null";
 	private static final String NOT_NULL = "_notnull";
 	private static final String IGNORE = "_ignore";
@@ -35,7 +33,7 @@ public class SqlKeyword {
 	 * @param query 查询字段
 	 * @param qw    查询包装类
 	 */
-	public static void buildCondition(Map<String, Object> query, QueryWrapper qw) {
+	public static void buildCondition(Map<String, String> query, QueryWrapper qw) {
 		if (CollUtil.isEmpty(query)) {
 			return;
 		}
@@ -43,6 +41,8 @@ public class SqlKeyword {
 			if (ObjectUtil.hasEmpty(k, v) || k.endsWith(IGNORE)) {
 				return;
 			}
+			k = filter(k);
+			v = filter(Func.toStr(v));
 			if (k.endsWith(EQUAL)) {
 				qw.eq(getColumn(k, EQUAL), v);
 			} else if (k.endsWith(NOT_EQUAL)) {
@@ -53,12 +53,6 @@ public class SqlKeyword {
 				qw.gt(getColumn(k, GT), v);
 			} else if (k.endsWith(LT)) {
 				qw.lt(getColumn(k, LT), v);
-			} else if (k.endsWith(DATE_GT)) {
-				qw.gt(getColumn(k, DATE_GT), v);
-			} else if (k.endsWith(DATE_EQUAL)) {
-				qw.eq(getColumn(k, DATE_EQUAL), v);
-			} else if (k.endsWith(DATE_LT)) {
-				qw.lt(getColumn(k, DATE_LT), v);
 			} else if (k.endsWith(IS_NULL)) {
 				qw.isNull(getColumn(k, IS_NULL));
 			} else if (k.endsWith(NOT_NULL)) {

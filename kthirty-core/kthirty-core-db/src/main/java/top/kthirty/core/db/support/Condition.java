@@ -42,7 +42,7 @@ public class Condition {
 	 * @param exclude 排除的查询条件
 	 * @return QueryWrapper
 	 */
-	public static QueryWrapper getQueryWrapper(Map<String, Object> query, Map<String, Object> exclude) {
+	public static QueryWrapper getQueryWrapper(Map<String, String> query, Map<String, Object> exclude) {
 		exclude.forEach((k, v) -> query.remove(k));
 		QueryWrapper qw = new QueryWrapper();
 		SqlKeyword.buildCondition(query, qw);

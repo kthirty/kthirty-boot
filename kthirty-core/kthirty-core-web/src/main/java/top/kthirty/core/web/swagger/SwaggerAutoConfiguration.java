@@ -1,22 +1,28 @@
-/*
 package top.kthirty.core.web.swagger;
 
-
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.AllArgsConstructor;
+import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import top.kthirty.core.boot.config.KthirtyBootConfiguration;
 
-*/
+
 /**
  * swagger配置
  *
  * @author Kthirty
- *//*
+ */
 
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(SwaggerProperties.class)
@@ -25,12 +31,27 @@ import top.kthirty.core.boot.config.KthirtyBootConfiguration;
 public class SwaggerAutoConfiguration {
 
     @Bean
+    public GlobalOpenApiCustomizer orderGlobalOpenApiCustomizer() {
+        return openApi -> {
+            // 全局添加鉴权参数
+            if (openApi.getPaths() != null) {
+                openApi.getPaths().forEach((s, pathItem) -> {
+                    pathItem.readOperations().forEach(operation -> {
+                        operation.addSecurityItem(new SecurityRequirement().addList(HttpHeaders.AUTHORIZATION));
+                    });
+                });
+            }
+
+        };
+    }
+
+    @Bean
     @ConditionalOnMissingBean(OpenAPI.class)
     public OpenAPI customOpenApi(SwaggerProperties swaggerProperties) {
         return new OpenAPI()
                 .info(new Info()
-                        .title("xitong ")
-                        .summary("系统管理")
+                        .title(swaggerProperties.getTitle())
+                        .summary(swaggerProperties.getDescription())
                         .contact(new Contact()
                                 .name(swaggerProperties.getContact().getName())
                                 .url(swaggerProperties.getContact().getUrl())
@@ -42,8 +63,9 @@ public class SwaggerAutoConfiguration {
                         .license(new License()
                                 .name(swaggerProperties.getLicense())
                                 .url(swaggerProperties.getLicenseUrl()))
-                        );
+                ).addSecurityItem(new SecurityRequirement().addList(HttpHeaders.AUTHORIZATION))
+                .components(new Components().addSecuritySchemes(HttpHeaders.AUTHORIZATION, new SecurityScheme()
+                        .name(HttpHeaders.AUTHORIZATION).type(SecurityScheme.Type.HTTP).scheme("bearer")));
     }
 
 }
-*/

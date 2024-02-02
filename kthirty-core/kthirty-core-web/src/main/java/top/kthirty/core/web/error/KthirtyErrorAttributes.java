@@ -27,12 +27,12 @@ public class KthirtyErrorAttributes extends DefaultErrorAttributes {
 
 	@Override
 	public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions options) {
-		String requestUri = this.getAttr(webRequest, "javax.servlet.error.request_uri");
+//		String requestUri = this.getAttr(webRequest, "javax.servlet.error.request_uri");
 		String status = this.getAttr(webRequest, "javax.servlet.error.status_code");
 		Throwable error = getError(webRequest);
 		R result;
 		if (error == null) {
-			log.error("URL:{} error status:{}", requestUri, status);
+//			log.error("URL:{} error status:{}", requestUri, status);
 			result = R.fail(SystemResultCode.FAILURE, "系统未知异常[HttpStatus]:" + status);
 		} else {
 			for (ErrorHandler errorHandler : errorHandlers) {

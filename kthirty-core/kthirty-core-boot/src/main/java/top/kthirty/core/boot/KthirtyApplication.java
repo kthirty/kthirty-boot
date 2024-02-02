@@ -2,6 +2,7 @@ package top.kthirty.core.boot;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.util.Assert;
@@ -30,10 +31,12 @@ public class KthirtyApplication {
         SpringApplicationBuilder builder = createSpringApplicationBuilder(new KthirtyAppInfo(appName, "", 8080), source, args);
         return builder.run(args);
     }
+
     public static ConfigurableApplicationContext run(Class<?> source, String... args) {
-        SpringApplicationBuilder builder = createSpringApplicationBuilder(new KthirtyAppInfo(source.getSimpleName(), "", 8080), source, args);
+        SpringApplicationBuilder builder = createSpringApplicationBuilder(new KthirtyAppInfo(StrUtil.removeSuffixIgnoreCase(source.getSimpleName(), "application").toUpperCase(), "", 8080), source, args);
         return builder.run(args);
     }
+
     public static ConfigurableApplicationContext run(KthirtyAppInfo kthirtyAppInfo, Class<?> source, String... args) {
         SpringApplicationBuilder builder = createSpringApplicationBuilder(kthirtyAppInfo, source, args);
         return builder.run(args);
@@ -64,9 +67,10 @@ public class KthirtyApplication {
                 .setArgs(CollUtil.newHashSet(args));
         // 添加启动类所在Package
         String appPackage = ClassUtils.getPackageName(launchInfo.getSource());
-        if(!ArrayUtil.contains(AppConstant.BASE_PACKAGES,appPackage)){
-            AppConstant.BASE_PACKAGES = ArrayUtil.append(AppConstant.BASE_PACKAGES,appPackage);
+        if (!ArrayUtil.contains(AppConstant.BASE_PACKAGES, appPackage)) {
+            AppConstant.addBasePackages(appPackage);
         }
+        AppConstant.LAUNCH_INFO = launchInfo;
         // 处理当前运行环境
         KthirtyBootUtils.processEnv(builder, launchInfo);
         // 处理Launcher
