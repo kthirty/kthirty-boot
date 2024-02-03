@@ -3,7 +3,6 @@ package top.kthirty.core.db.support;
 import com.mybatisflex.core.paginate.Page;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.apache.poi.ss.formula.functions.T;
 
 /**
  * 分页工具
@@ -12,7 +11,7 @@ import org.apache.poi.ss.formula.functions.T;
  */
 @Data
 @Accessors(chain = true)
-public class Query {
+public class Query<T> {
 
     /**
      * 当前页
@@ -25,6 +24,6 @@ public class Query {
     private Integer size;
 
     public Page<T> getPage() {
-        return Page.of(this.current, this.size);
+        return Condition.getPage(this);
     }
 }

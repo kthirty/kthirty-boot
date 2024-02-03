@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @Data
 public class OrgEntity<T> extends DataEntity<T>{
     @Column(value = "org_code")
-    private String orgCode;
+    protected String orgCode;
     @Column(isLogicDelete = true)
-    private Boolean deleted;
+    protected Boolean deleted;
 }

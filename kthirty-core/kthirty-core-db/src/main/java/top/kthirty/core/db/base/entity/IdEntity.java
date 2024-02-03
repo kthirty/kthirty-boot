@@ -13,5 +13,5 @@ public class IdEntity<T> extends BaseEntity {
      * 主键
      */
     @Id
-    private T id;
+    protected T id;
 }

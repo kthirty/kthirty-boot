@@ -12,8 +12,8 @@ import java.util.Map;
  * @author Kthirty
  */
 public class Condition {
-	private static final int DEFAULT_CURRENT = 1;
-	private static final int DEFAULT_SIZE = 10;
+	public static final int DEFAULT_CURRENT = 1;
+	public static final int DEFAULT_SIZE = 10;
 
 	/**
 	 * 转化成mybatis plus中的Page
