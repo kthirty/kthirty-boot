@@ -12,10 +12,4 @@ public class SystemApplication {
     }
 
 
-//    @Bean
-//    public GroupedOpenApi adminApi() {
-//        return GroupedOpenApi.builder()
-//                .group("系统管理")
-//                .pathsToMatch("/**").build();
-//    }
 }

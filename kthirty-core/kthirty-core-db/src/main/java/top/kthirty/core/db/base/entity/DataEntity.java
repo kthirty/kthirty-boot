@@ -28,22 +28,22 @@ public class DataEntity<T> extends IdEntity<String> {
      * 数据创建人
      */
     @Column
-    private String createBy;
+    protected String createBy;
     /**
      * 数据创建时间
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN, shape = JsonFormat.Shape.STRING)
     @Column
-    private Date createDate;
+    protected Date createDate;
     /**
      * 最后一次更新人
      */
     @Column
-    private String updateBy;
+    protected String updateBy;
     /**
      * 更新时间
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN, shape = JsonFormat.Shape.STRING)
     @Column
-    private Date updateDate;
+    protected Date updateDate;
 }

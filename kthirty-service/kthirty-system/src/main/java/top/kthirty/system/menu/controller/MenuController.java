@@ -1,25 +1,17 @@
 package top.kthirty.system.menu.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.beans.factory.annotation.Autowired;
-import lombok.AllArgsConstructor;
-import top.kthirty.core.db.support.Condition;
-import top.kthirty.core.db.support.Query;
-import top.kthirty.system.menu.entity.Menu;
-import top.kthirty.system.menu.service.MenuService;
-import org.springframework.web.bind.annotation.RestController;
-import top.kthirty.core.web.base.BaseController;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+import top.kthirty.core.web.base.BaseController;
+import top.kthirty.system.menu.entity.Menu;
+import top.kthirty.system.menu.entity.table.MenuTableDef;
+import top.kthirty.system.menu.service.MenuService;
 import top.kthirty.system.menu.vo.MenuQuery;
 
 import java.io.Serializable;
@@ -35,6 +27,7 @@ import java.util.List;
 @Tag(name = "菜单接口")
 @AllArgsConstructor
 @RequestMapping("/menu")
+@Slf4j
 public class MenuController extends BaseController {
     private final MenuService menuService;
 
@@ -70,8 +63,8 @@ public class MenuController extends BaseController {
 
     @GetMapping("page")
     @Operation(summary = "分页查询菜单", description = "分页查询菜单")
-    public Page<Menu> page(Menu menu,Page<Menu> page) {
-        return menuService.page(page);
+    public Page<Menu> page(MenuQuery query) {
+        return menuService.page(query.getPage(), MenuTableDef.MENU.NAME.like(query.getName()));
     }
 
 }
