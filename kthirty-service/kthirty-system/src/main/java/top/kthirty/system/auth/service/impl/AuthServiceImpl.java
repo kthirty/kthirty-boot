@@ -39,7 +39,6 @@ import static top.kthirty.system.user.entity.table.UserTableDef.USER;
 @AllArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final UserService userService;
-    private final RoleService roleService;
     private final MenuService menuService;
     private final UserRoleRlService userRoleRlService;
 

@@ -22,7 +22,7 @@ public class Condition {
 	 * @return IPage
 	 */
 	public static <T> Page<T> getPage(Query query) {
-        return new Page<>(ObjUtil.defaultIfNull(query.getCurrent(),DEFAULT_CURRENT), ObjUtil.defaultIfNull(query.getSize(), DEFAULT_SIZE));
+        return new Page<>(ObjUtil.defaultIfNull(query.getPageNumber(),DEFAULT_CURRENT), ObjUtil.defaultIfNull(query.getPageSize(), DEFAULT_SIZE));
 	}
 
 	/**

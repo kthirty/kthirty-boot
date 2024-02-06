@@ -73,8 +73,8 @@ public class RedisTemplateConfiguration {
 
 	@Bean(name = "redisUtil")
 	@ConditionalOnBean(RedisTemplate.class)
-	public RedisUtil redisUtils(RedisTemplate<String, Object> redisTemplate) {
-		return new RedisUtil(redisTemplate);
+	public RedisUtil redisUtils() {
+		return new RedisUtil();
 	}
 
 }

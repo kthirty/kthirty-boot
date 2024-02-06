@@ -9,7 +9,6 @@ import top.kthirty.core.boot.secure.SecureUtil;
 import top.kthirty.core.boot.secure.SysUser;
 import top.kthirty.core.secure.annotation.IgnoreSecure;
 import top.kthirty.core.secure.token.TokenInfo;
-import top.kthirty.core.tool.redis.RedisUtil;
 import top.kthirty.core.web.base.BaseController;
 import top.kthirty.system.auth.model.AuthParam;
 import top.kthirty.system.auth.service.AuthService;
@@ -24,7 +23,6 @@ import java.util.List;
 @RequestMapping("auth")
 public class AuthController extends BaseController {
     private final AuthService authService;
-    private final RedisUtil redisUtil;
 
     @PostMapping("token")
     @IgnoreSecure

@@ -16,12 +16,12 @@ public class Query<T> {
     /**
      * 当前页
      */
-    private Integer current;
+    private Integer pageNumber;
 
     /**
      * 每页的数量
      */
-    private Integer size;
+    private Integer pageSize;
 
     public Page<T> getPage() {
         return Condition.getPage(this);

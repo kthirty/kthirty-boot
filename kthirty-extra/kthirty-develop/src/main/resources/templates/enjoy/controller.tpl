@@ -93,17 +93,6 @@ public class #(table.buildControllerClassName()) #if(controllerConfig.superClass
         return #(serviceVarName).updateById(#(entityVarName));
     }
 
-    @GetMapping("list")
-    #if(withSwagger && swaggerVersion.getName() == "FOX")
-    @ApiOperation("查询所有#(tableComment)")
-    #end
-    #if(withSwagger && swaggerVersion.getName() == "DOC")
-    @Operation(summary = "查询所有#(tableComment)",description="查询所有#(tableComment)")
-    #end
-    public List<#(entityClassName)> list() {
-        return #(serviceVarName).list();
-    }
-
     @GetMapping("getInfo/{id}")
     #if(withSwagger && swaggerVersion.getName() == "FOX")
     @ApiOperation("根据主键获取#(tableComment)")

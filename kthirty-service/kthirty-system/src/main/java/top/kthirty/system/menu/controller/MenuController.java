@@ -1,6 +1,7 @@
 package top.kthirty.system.menu.controller;
 
 import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -8,6 +9,8 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import top.kthirty.core.db.support.Query;
+import top.kthirty.core.secure.annotation.PreAuth;
 import top.kthirty.core.web.base.BaseController;
 import top.kthirty.system.menu.entity.Menu;
 import top.kthirty.system.menu.entity.table.MenuTableDef;
@@ -49,12 +52,6 @@ public class MenuController extends BaseController {
         return menuService.updateById(menu);
     }
 
-    @GetMapping("list")
-    @Operation(summary = "查询所有菜单", description = "查询所有菜单")
-    public List<Menu> list() {
-        return menuService.list();
-    }
-
     @GetMapping("getInfo/{id}")
     @Operation(summary = "根据主键获取菜单", description = "根据主键获取菜单")
     public Menu getInfo(@PathVariable Serializable id) {
@@ -63,8 +60,8 @@ public class MenuController extends BaseController {
 
     @GetMapping("page")
     @Operation(summary = "分页查询菜单", description = "分页查询菜单")
-    public Page<Menu> page(MenuQuery query) {
-        return menuService.page(query.getPage(), MenuTableDef.MENU.NAME.like(query.getName()));
+    public Page<Menu> page(Query<Menu> query,Menu menu) {
+        return menuService.page(query.getPage(), QueryWrapper.create(menu));
     }
 
 }
