@@ -2,6 +2,7 @@ package top.kthirty.core.web.utils;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.http.Header;
 import cn.hutool.json.JSONUtil;
@@ -28,6 +29,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Miscellaneous utilities for web applications.
@@ -113,6 +116,15 @@ public class WebUtil extends org.springframework.web.util.WebUtils {
 	public static HttpServletRequest getRequest() {
 		RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
 		return (requestAttributes == null) ? null : ((ServletRequestAttributes) requestAttributes).getRequest();
+	}
+
+	public static Map<String,String> getParamterMap() {
+		Map<String,String> map = new HashMap<>();
+		HttpServletRequest request = getRequest();
+		if(request != null){
+			request.getParameterMap().forEach((k,v) -> map.put(k,Func.join(v)));
+		}
+		return map;
 	}
 
 	public static String getClientId(){

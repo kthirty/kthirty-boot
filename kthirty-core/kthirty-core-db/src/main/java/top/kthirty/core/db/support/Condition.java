@@ -3,8 +3,11 @@ package top.kthirty.core.db.support;
 import cn.hutool.core.util.ObjUtil;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
+import top.kthirty.core.tool.Func;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 分页工具
@@ -42,8 +45,10 @@ public class Condition {
 	 * @param exclude 排除的查询条件
 	 * @return QueryWrapper
 	 */
-	public static QueryWrapper getQueryWrapper(Map<String, String> query, Map<String, Object> exclude) {
-		exclude.forEach((k, v) -> query.remove(k));
+	public static QueryWrapper buildQuery(Map<String, String> query, String... exclude) {
+		if(Func.isNotEmpty(exclude)){
+			Arrays.stream(exclude).forEach(query::remove);
+		}
 		QueryWrapper qw = new QueryWrapper();
 		SqlKeyword.buildCondition(query, qw);
 		return qw;

@@ -5,8 +5,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
-import io.swagger.v3.oas.models.security.SecurityRequirement;
-import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.security.*;
 import lombok.AllArgsConstructor;
 import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -48,6 +47,12 @@ public class SwaggerAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(OpenAPI.class)
     public OpenAPI customOpenApi(SwaggerProperties swaggerProperties) {
+        OAuthFlows oAuthFlows = new OAuthFlows();
+        OAuthFlow oAuthFlow = new OAuthFlow();
+        oAuthFlow.setTokenUrl(swaggerProperties.getAuthorization().getTokenUrlList());
+        oAuthFlows.setPassword(oAuthFlow);
+
+
         return new OpenAPI()
                 .info(new Info()
                         .title(swaggerProperties.getTitle())
@@ -64,8 +69,13 @@ public class SwaggerAutoConfiguration {
                                 .name(swaggerProperties.getLicense())
                                 .url(swaggerProperties.getLicenseUrl()))
                 ).addSecurityItem(new SecurityRequirement().addList(HttpHeaders.AUTHORIZATION))
-                .components(new Components().addSecuritySchemes(HttpHeaders.AUTHORIZATION, new SecurityScheme()
-                        .name(HttpHeaders.AUTHORIZATION).type(SecurityScheme.Type.HTTP).scheme("bearer")));
+                .components(new Components()
+                        .addSecuritySchemes(HttpHeaders.AUTHORIZATION, new SecurityScheme()
+                                .flows(oAuthFlows)
+                                .name(HttpHeaders.AUTHORIZATION)
+                                .in(SecurityScheme.In.HEADER)
+                                .type(SecurityScheme.Type.OAUTH2)
+                                .scheme("bearer")));
     }
 
 }

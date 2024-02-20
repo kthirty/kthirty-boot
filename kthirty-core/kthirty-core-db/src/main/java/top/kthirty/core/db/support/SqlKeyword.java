@@ -2,6 +2,7 @@ package top.kthirty.core.db.support;
 
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.text.StrSplitter;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.query.QueryWrapper;
@@ -26,6 +27,7 @@ public class SqlKeyword {
 	private static final String IS_NULL = "_null";
 	private static final String NOT_NULL = "_notnull";
 	private static final String IGNORE = "_ignore";
+	private static final String IN = "_in";
 
 	/**
 	 * 条件构造器
@@ -57,6 +59,8 @@ public class SqlKeyword {
 				qw.isNull(getColumn(k, IS_NULL));
 			} else if (k.endsWith(NOT_NULL)) {
 				qw.isNotNull(getColumn(k, NOT_NULL));
+			} else if (k.endsWith(IN)) {
+				qw.in(getColumn(k, IN), StrSplitter.split(v,','));
 			} else {
 				qw.like(getColumn(k, LIKE), v);
 			}
