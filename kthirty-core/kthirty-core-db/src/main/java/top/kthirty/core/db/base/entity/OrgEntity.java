@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class OrgEntity<T> extends DataEntity<T>{
+public class OrgEntity extends DataEntity{
     @Column(value = "org_code")
     protected String orgCode;
     @Column(isLogicDelete = true)

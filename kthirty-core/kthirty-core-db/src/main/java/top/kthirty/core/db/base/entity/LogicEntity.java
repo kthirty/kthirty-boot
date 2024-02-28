@@ -13,7 +13,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @ToString
-public class LogicEntity extends IdEntity<String>{
+public class LogicEntity extends IdEntity{
 
     /**
      * 数据创建人

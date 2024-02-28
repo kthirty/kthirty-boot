@@ -22,7 +22,7 @@ import java.util.Date;
 @Data
 @ToString
 @NoArgsConstructor
-public class DataEntity<T> extends IdEntity<String> {
+public class DataEntity extends IdEntity {
 
     /**
      * 数据创建人

@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Schema(description = "角色菜单关联表")
 @Table(value = "sys_role_menu_rl")
-public class RoleMenuRl extends IdEntity<String> {
+public class RoleMenuRl extends IdEntity {
 
     /**
      * 角色代码

@@ -34,6 +34,6 @@ public class StartEventListener {
         System.out.printf("-----------Swagger Doc : [http://%s:%s%s/doc.html]-----------\n"
                 , INetUtil.getHostIp()
                 , localPort
-                , StrUtil.isNotBlank(contextPath) ? "/" + contextPath : "");
+                , StrUtil.isNotBlank(contextPath) ? contextPath : "");
     }
 }

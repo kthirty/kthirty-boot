@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Schema(description = "用户角色关联表")
 @Table(value = "sys_user_role_rl")
-public class UserRoleRl extends IdEntity<String> {
+public class UserRoleRl extends IdEntity {
 
     /**
      * 角色代码

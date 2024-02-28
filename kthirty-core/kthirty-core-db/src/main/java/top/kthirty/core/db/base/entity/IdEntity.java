@@ -4,14 +4,15 @@ import com.mybatisflex.annotation.Id;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.poi.ss.formula.functions.T;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @ToString
-public class IdEntity<T> extends BaseEntity {
+public class IdEntity extends BaseEntity {
     /**
      * 主键
      */
     @Id
-    protected T id;
+    protected String id;
 }
