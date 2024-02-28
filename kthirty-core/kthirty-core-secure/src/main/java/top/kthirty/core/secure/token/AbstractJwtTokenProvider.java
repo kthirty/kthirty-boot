@@ -13,7 +13,7 @@ import java.util.Map;
 @AllArgsConstructor
 public abstract class AbstractJwtTokenProvider implements TokenProvider{
     private final KthirtySecureProperties secureProperties;
-    private static final String USER_PREFIX = "jwt:user:";
+    private static final String USER_PREFIX = "auth:token:";
 
     interface ClaimKey{
         String TOKEN_TYPE = "token_type";
