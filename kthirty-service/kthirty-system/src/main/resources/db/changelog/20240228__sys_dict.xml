@@ -15,7 +15,7 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="code" type="varchar(32)" remarks="字典代码">
-                <constraints unique="true" nullable="false" uniqueConstraintName="sys_dict_code"/>
+                <constraints unique="true" nullable="false" uniqueConstraintName="sys_dict_uni_code"/>
             </column>
             <column name="name" type="varchar(100)" remarks="字典名称"/>
             <column name="description" type="varchar(200)" remarks="描述"/>
@@ -37,7 +37,8 @@
             </column>
             <column name="value" type="varchar(100)" remarks="字典值"/>
             <column name="label" type="varchar(100)" remarks="字典标签"/>
-            <column name="description" remarks="描述"/>
+            <column name="description" remarks="描述" type="varchar(200)"/>
+            <column name="sort" remarks="排序" type="varchar(200)"/>
             <column name="parent_id" remarks="父ID" defaultValue="0" type="varchar(32)"/>
             <column name="create_by" remarks="创建人" type="varchar(32)"/>
             <column name="update_by" remarks="更新人" type="varchar(32)"/>
