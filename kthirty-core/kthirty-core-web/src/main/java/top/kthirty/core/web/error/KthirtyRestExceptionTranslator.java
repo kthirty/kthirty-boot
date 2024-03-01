@@ -1,5 +1,8 @@
 package top.kthirty.core.web.error;
 
+import cn.hutool.core.annotation.AnnotationUtil;
+import cn.hutool.core.util.ReflectUtil;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,6 +34,7 @@ import top.kthirty.core.tool.api.SystemResultCode;
 import top.kthirty.core.tool.utils.StringPool;
 import top.kthirty.core.web.utils.WebUtil;
 
+import java.lang.reflect.Field;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -90,7 +94,17 @@ public class KthirtyRestExceptionTranslator {
 
 	private R handleError(BindingResult result) {
 		FieldError error = result.getFieldError();
-		String message = String.format("%s:%s", Objects.requireNonNull(error).getField(), error.getDefaultMessage());
+		String field = Objects.requireNonNull(error).getField();
+		if(result.getTarget() != null){
+			try{
+				Field fieldObj = ReflectUtil.getField(result.getTarget().getClass(), field);
+				Schema annotation = AnnotationUtil.getAnnotation(fieldObj, Schema.class);
+				if(annotation != null && Func.isNotBlank(annotation.description())){
+					field = annotation.description();
+				}
+			}catch (Throwable ignore){}
+		}
+		String message = String.format("%s:%s", field, error.getDefaultMessage());
 		return R.fail(SystemResultCode.PARAM_ERROR, message);
 	}
 

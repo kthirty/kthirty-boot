@@ -7,6 +7,8 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.annotation.Table;
 import com.mybatisflex.core.query.QueryChain;
+import com.mybatisflex.core.query.QueryColumn;
+import com.mybatisflex.core.query.QueryCondition;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.utils.RuleCodeUtil;
 
@@ -23,7 +25,7 @@ public class TreePath {
             Object one = QueryChain.of(obj.getClass())
                     .select(codeField)
                     .from(table.value())
-                    .where("id", parentId)
+                    .where( QueryCondition.create(new QueryColumn("id"),parentId))
                     .one();
             if(one != null){
                 parentCode = Convert.toStr(ReflectUtil.getFieldValue(one,codeField));

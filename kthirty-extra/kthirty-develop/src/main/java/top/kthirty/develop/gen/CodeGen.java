@@ -23,12 +23,7 @@ public class CodeGen {
         String basePackage = "top.kthirty.system.";
 
         Map<String,String> moduleTable = new HashMap<>();
-        moduleTable.put("role","sys_role");
-        moduleTable.put("dept","sys_dept");
-        moduleTable.put("menu","sys_menu");
-        moduleTable.put("user","sys_user");
-        moduleTable.put("post","sys_post");
-        moduleTable.put("relation","sys_role_menu_rl,sys_user_dept_rl,sys_user_post_rl,sys_user_role_rl");
+        moduleTable.put("dict","sys_dict,sys_dict_item");
 
         moduleTable.forEach((model,tables) -> gen(basePath,basePackage+model,tablePrefix,tables.split(",")));
     }

@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.AllArgsConstructor;
+import top.kthirty.system.relation.entity.RoleMenuRl;
+import top.kthirty.system.relation.entity.table.RoleMenuRlTableDef;
 import top.kthirty.system.role.entity.Role;
+import top.kthirty.system.role.entity.table.RoleTableDef;
 import top.kthirty.system.role.service.RoleService;
 import org.springframework.web.bind.annotation.RestController;
 import top.kthirty.core.web.base.BaseController;
@@ -18,8 +21,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
+import top.kthirty.system.role.vo.RoleConfigMenuVO;
+
 import java.io.Serializable;
 import java.util.List;
+
+import static top.kthirty.system.relation.entity.table.RoleMenuRlTableDef.ROLE_MENU_RL;
+import static top.kthirty.system.role.entity.table.RoleTableDef.ROLE;
 
 /**
  * 角色 控制层。
@@ -62,6 +70,17 @@ public class RoleController extends BaseController {
     @Operation(summary = "根据主键获取角色",description="根据主键获取角色")
     public Role getInfo(@PathVariable Serializable id) {
         return roleService.getById(id);
+    }
+
+    @GetMapping("menus/{id}")
+    @Operation(summary = "根据主键获取角色拥有的菜单",description="根据主键获取角色拥有的菜单")
+    public List<String> queryMenus(@PathVariable String id){
+        return roleService.queryMenus(id);
+    }
+    @PostMapping("configMenus")
+    @Operation(summary = "保存角色拥有的菜单",description="保存角色拥有的菜单")
+    public void saveMenus(@RequestBody @Valid RoleConfigMenuVO req){
+        roleService.saveMenus(req);
     }
 
     @GetMapping("page")

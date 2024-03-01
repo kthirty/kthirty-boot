@@ -13,8 +13,10 @@ import top.kthirty.core.db.support.Query;
 import top.kthirty.core.web.base.BaseController;
 import top.kthirty.system.menu.entity.Menu;
 import top.kthirty.system.menu.service.MenuService;
+import top.kthirty.system.role.entity.Role;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 菜单 控制层。
@@ -46,6 +48,12 @@ public class MenuController extends BaseController {
     @Operation(summary = "根据主键更新菜单", description = "根据主键更新菜单")
     public boolean update(@RequestBody @Parameter(description = "菜单主键") @Valid Menu menu) {
         return menuService.updateById(menu);
+    }
+
+    @GetMapping("list")
+    @Operation(summary = "查询所有菜单", description = "查询所有菜单")
+    public List<Menu> list() {
+        return menuService.list();
     }
 
     @GetMapping("getInfo/{id}")

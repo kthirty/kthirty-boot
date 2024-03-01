@@ -66,7 +66,7 @@ public class DefaultDictProvider implements DictProvider {
     public synchronized void put(String code, List<DictItem> items, long time) {
         String finalCode = dictProperties.getCacheKeyPrefix() + code;
         if (Func.notNull(redisUtil)) {
-            redisUtil.set(finalCode, items, time);
+            RedisUtil.set(finalCode, items, time);
         } else {
             cache.put(finalCode, items, time * 1000);
         }
@@ -92,9 +92,8 @@ public class DefaultDictProvider implements DictProvider {
             }
         }
         // 不支持查库
-        if (Func.isBlank(dictProperties.getDictSql())
-                || !dictProperties.isAutoDb()
-                || Util.isTableCode(code)) {
+        if (Util.isTableCode(code) && (Func.isBlank(dictProperties.getDictSql())
+                || !dictProperties.isAutoDb())) {
             return ListUtil.empty();
         }
         // 查库
