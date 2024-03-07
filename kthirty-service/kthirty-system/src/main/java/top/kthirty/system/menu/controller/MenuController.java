@@ -7,13 +7,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 import top.kthirty.core.db.support.Condition;
 import top.kthirty.core.db.support.Query;
 import top.kthirty.core.web.base.BaseController;
 import top.kthirty.system.menu.entity.Menu;
 import top.kthirty.system.menu.service.MenuService;
-import top.kthirty.system.role.entity.Role;
 
 import java.io.Serializable;
 import java.util.List;
@@ -51,6 +51,7 @@ public class MenuController extends BaseController {
     }
 
     @GetMapping("list")
+    @Cacheable(value = "menu:all")
     @Operation(summary = "查询所有菜单", description = "查询所有菜单")
     public List<Menu> list() {
         return menuService.list();

@@ -1,10 +1,8 @@
 package top.kthirty.core.tool.utils;
 
-import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
 import top.kthirty.core.tool.redis.RedisUtil;
@@ -20,7 +18,7 @@ import top.kthirty.core.tool.redis.RedisUtil;
  */
 @AllArgsConstructor
 public class RuleCodeUtil {
-    private static final String KEY_PRIFIX = "RuleCode";
+    private static final String KEY_PREFIX = "code";
     private final RedisUtil redisUtil;
     private final String category;
     private Handler handler;
@@ -45,7 +43,7 @@ public class RuleCodeUtil {
      */
     public String next(String prefix) {
         prefix = StrUtil.blankToDefault(prefix, StringPool.EMPTY);
-        String key = StrUtil.join(StringPool.COLON, KEY_PRIFIX, category, prefix);
+        String key = StrUtil.join(StringPool.COLON, KEY_PREFIX, category, prefix);
         String next = handler.next(redisUtil.get(key));
         redisUtil.set(key, next);
         return prefix + next;
