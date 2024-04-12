@@ -6,10 +6,15 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelWriter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellRangeAddress;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.excel.Excel;
 import top.kthirty.core.tool.utils.StringPool;
@@ -22,6 +27,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 @Slf4j
 public class ExcelHelper {
     /**
@@ -59,13 +65,13 @@ public class ExcelHelper {
     /**
      * 分组获取字段
      *
-     * @param clazz  源Clas
-     * @param groups 组
+     * @param clazz        源Clas
+     * @param groups       组
      * @param containsColl 包含List形式的字段
-     * @param <E>    实体类型
+     * @param <E>          实体类型
      * @return 所有符合分组的字段
      */
-    public static <E> List<Field> getFieldsByGroup(Class<E> clazz, String[] groups,boolean containsColl) {
+    public static <E> List<Field> getFieldsByGroup(Class<E> clazz, String[] groups, boolean containsColl) {
         Field[] fields = ReflectUtil.getFields(clazz, field -> AnnotationUtil.hasAnnotation(field, Excel.class)
                 && ArrayUtil.containsAny(AnnotationUtil.getAnnotation(field, Excel.class).group(), groups)
                 && (containsColl || !Collection.class.isAssignableFrom(field.getType())));
@@ -74,8 +80,9 @@ public class ExcelHelper {
         list = CollUtil.sort(list, Comparator.comparingInt(f -> AnnotationUtil.getAnnotation(f, Excel.class).sort()));
         return list;
     }
-    public static <E> List<Field> getFieldsByGroup(Class<E> clazz, String[] groups){
-        return getFieldsByGroup(clazz,groups,false);
+
+    public static <E> List<Field> getFieldsByGroup(Class<E> clazz, String[] groups) {
+        return getFieldsByGroup(clazz, groups, false);
     }
 
     /**
@@ -98,11 +105,11 @@ public class ExcelHelper {
             // 获取字段的泛型类型
             Class<?> typeArgument = getFieldGenericType(field);
             // 泛型非常规Class
-            if(!ClassUtil.isNormalClass(typeArgument)){
+            if (!ClassUtil.isNormalClass(typeArgument)) {
                 return false;
             }
             // 泛型为JdkClass
-            if(ClassUtil.isJdkClass(typeArgument)){
+            if (ClassUtil.isJdkClass(typeArgument)) {
                 return false;
             }
             // 泛型中不包含该分组需要的字段
@@ -113,10 +120,11 @@ public class ExcelHelper {
 
     /**
      * 获取字段的泛型类型
+     *
      * @param field 字段
      * @return 泛型类
      */
-    public static Class<?> getFieldGenericType(Field field){
+    public static Class<?> getFieldGenericType(Field field) {
         Type genericType = field.getGenericType();
         if (genericType instanceof ParameterizedType) {
             Type[] typeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
@@ -124,24 +132,102 @@ public class ExcelHelper {
         }
         return null;
     }
-    public static Map<String,String> getHeaderAlias(List<Field> fields){
+
+    public static Map<String, String> getHeaderAlias(List<Field> fields) {
         return fields.stream().collect(Collectors.toMap(ExcelHelper::getFieldTitle, Field::getName));
     }
 
-    public static String getClassTitle(Class<?> clazz){
+    public static String getClassTitle(Class<?> clazz) {
         Excel excel = AnnotationUtil.getAnnotation(clazz, Excel.class);
         return excel != null ? excel.title() : StringPool.EMPTY;
     }
 
-    public static void activeSheet(ExcelWriter writer,String sheetName){
-        if(writer.getSheet().getSheetName().equals(sheetName)){
+    public static void activeSheet(ExcelWriter writer, String sheetName) {
+        if (writer.getSheet().getSheetName().equals(sheetName)) {
             return;
         }
         writer.setSheet(sheetName);
         int lastRowNum = writer.getSheet().getLastRowNum();
-        if(lastRowNum != -1){
+        if (lastRowNum != -1) {
             writer.setCurrentRow(lastRowNum + 1);
         }
     }
 
+    /**
+     * 单元格向下合并
+     * @param writer ExcelWriter
+     * @param startRow 开始行
+     * @param endRow 结束行
+     */
+    public static void mergeToBottom(ExcelWriter writer, int startRow, int endRow) {
+        for (int rowNum = startRow; rowNum <= endRow; rowNum++) {
+            Row row = writer.getSheet().getRow(rowNum);
+            if (row != null) {
+                for (int col = 0; col < row.getLastCellNum(); col++) {
+                    if (needMerge(writer, rowNum, col, endRow)) {
+                        Cell cell = writer.getCell(col, rowNum);
+                        writer.merge(rowNum, writer.getRowCount() - 1, col, col, cell.getStringCellValue(), cell.getCellStyle());
+                    }
+                }
+            }
+
+        }
+    }
+
+    /**
+     * 是否为合并单元格
+     * @param sheet Sheet页
+     * @param row 行号
+     * @param column 列号
+     * @return true / false
+     */
+    public static boolean isMerge(Sheet sheet, int row, int column) {
+        int sheetMergeCount = sheet.getNumMergedRegions();
+        for (int i = 0; i < sheetMergeCount; i++) {
+            CellRangeAddress range = sheet.getMergedRegion(i);
+            int firstColumn = range.getFirstColumn();
+            int lastColumn = range.getLastColumn();
+            int firstRow = range.getFirstRow();
+            int lastRow = range.getLastRow();
+            //判断当前单元格是否在合并单元格区域内，是的话就是合并单元格
+            if ((row >= firstRow && row <= lastRow) && (column >= firstColumn && column <= lastColumn)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断该单元格是否需要合并，满足以下条件则需要合并
+     * 1. 此单元格有数据
+     * 2. 向下到计算结束行都没数据
+     * 3. 此单元格未合并过
+     * @param writer ExcelWriter
+     * @param rowNum 单元格行号
+     * @param colNum 单元格列号
+     * @param endRow 计算结束行号
+     * @return 是否需要合并
+     */
+    public static boolean needMerge(ExcelWriter writer, int rowNum, int colNum, int endRow) {
+        if (endRow <= rowNum || writer.getSheet().getRow(rowNum).getLastCellNum() <= colNum) {
+            return false;
+        }
+        // 已合并不处理
+        if (isMerge(writer.getSheet(), rowNum, colNum)) {
+            return false;
+        }
+        // 检查当前是否有数据
+        Cell cell = writer.getCell(colNum, rowNum);
+        if (cell == null || StrUtil.isBlank(cell.getStringCellValue())) {
+            return false;
+        }
+        // 检查下列行有数据
+        for (int i = rowNum + 1; i < writer.getRowCount(); i++) {
+            Cell nextRowCell = writer.getCell(colNum, i);
+            if (nextRowCell != null && StrUtil.isNotBlank(nextRowCell.getStringCellValue())) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

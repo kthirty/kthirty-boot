@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import java.lang.reflect.Field;
@@ -19,6 +20,8 @@ import java.lang.reflect.Field;
  */
 public interface CellStyleEditor {
     void edit(Param param);
+
+    CellStyle getStyle(Param param);
 
 
     @Data
