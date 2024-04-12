@@ -1,14 +1,9 @@
 package top.kthirty.core.tool.excel.exp;
 
 import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 import top.kthirty.core.tool.excel.handler.CellStyleEditor;
 import top.kthirty.core.tool.excel.support.ExcelHelper;
 import top.kthirty.core.tool.excel.support.ExcelParams;
@@ -59,21 +54,19 @@ public class SingleExportHandler<E> implements ExportHandler<E> {
             params.getCellStyleEditor().edit(CellStyleEditor.Param.builder().sheet(writer.getSheet()).row(context.currentRow).cell(context.currentCol).isHeader(false).field(field).build());
             context.addCol();
         });
+        int currentRow = context.currentRow;
         Arrays.stream(ExcelHelper.getSubTableFields(clazz, params.getGroups())).forEach(field -> {
-            int currentRow = context.currentRow;
+            context.currentRow = currentRow;
+            context.currentCol = writer.getSheet().getRow(currentRow).getLastCellNum();
             Collection<?> fieldValue = (Collection<?>) ReflectUtil.getFieldValue(obj, field);
             Class<?> genericType = ExcelHelper.getFieldGenericType(field);
             fieldValue.forEach(subItem -> {
-                log.info("write {} {} {} {}",ExcelHelper.getFieldTitle(field),JSONUtil.toJsonStr(subItem),context.currentRow,context.currentCol);
                 int currentCell = context.currentCol;
                 writeContent(writer, genericType, subItem);
                 context.addRow();
                 context.currentCol = currentCell;
             });
             context.subRow();
-            context.currentRow = currentRow;
-            context.currentCol = writer.getSheet().getRow(currentRow).getLastCellNum();
-            log.info("子类处理完成，将row设置为{},col设置为{}",context.currentRow,context.currentCol);
         });
     }
 
