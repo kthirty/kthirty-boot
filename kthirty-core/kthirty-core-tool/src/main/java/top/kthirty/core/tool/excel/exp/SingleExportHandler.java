@@ -5,6 +5,7 @@ import cn.hutool.poi.excel.ExcelWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.CellStyle;
 import top.kthirty.core.tool.excel.handler.CellStyleEditor;
+import top.kthirty.core.tool.excel.support.ExcelContext;
 import top.kthirty.core.tool.excel.support.ExcelHelper;
 import top.kthirty.core.tool.excel.support.ExcelParams;
 
@@ -21,22 +22,22 @@ import java.util.List;
 @Slf4j
 public class SingleExportHandler<E> implements ExportHandler<E> {
     private ExcelParams params;
-    private final Context context = new Context();
+    private final ExcelContext context = new ExcelContext();
 
     @Override
     public ExcelWriter write(List<E> list, Class<E> clazz, ExcelParams params) {
         this.params = params;
         ExcelWriter writer = new ExcelWriter(true);
         // 标题
-        context.headerStartRow = context.currentRow;
+        context.setHeaderStartRow(context.getCurrentRow());
         writeTitle(writer, clazz);
-        context.headerEndRow = writer.getRowCount() - 1;
-        ExcelHelper.mergeToBottom(writer, context.headerStartRow, context.headerEndRow);
+        context.setHeaderStartRow(writer.getRowCount() - 1);
+        ExcelHelper.mergeToBottom(writer, context.getHeaderStartRow(), context.getHeaderEndRow());
         // 开始写内容
         list.forEach(it -> {
             // 切换到最后一行
-            context.currentRow = writer.getRowCount();
-            context.currentCol = 0;
+            context.setCurrentRow(writer.getRowCount());
+            context.setCurrentCol(0);
             writeContent(writer, clazz, it);
         });
 
@@ -50,21 +51,25 @@ public class SingleExportHandler<E> implements ExportHandler<E> {
             if (params.getCellWriter() != null) {
                 fieldValue = params.getCellWriter().edit(obj, field.getName());
             }
-            writer.writeCellValue(context.currentCol, context.currentRow, fieldValue);
-            params.getCellStyleEditor().edit(CellStyleEditor.Param.builder().sheet(writer.getSheet()).row(context.currentRow).cell(context.currentCol).isHeader(false).field(field).build());
+            writer.writeCellValue(context.getCurrentCol(), context.getCurrentRow(), fieldValue);
+            params.getCellStyleEditor().edit(CellStyleEditor.Param.builder()
+                    .sheet(writer.getSheet())
+                    .row(context.getCurrentRow())
+                    .cell(context.getCurrentCol())
+                    .isHeader(false).field(field).build());
             context.addCol();
         });
-        int currentRow = context.currentRow;
+        int currentRow = context.getCurrentRow();
         Arrays.stream(ExcelHelper.getSubTableFields(clazz, params.getGroups())).forEach(field -> {
-            context.currentRow = currentRow;
-            context.currentCol = writer.getSheet().getRow(currentRow).getLastCellNum();
+            context.setCurrentRow(currentRow);
+            context.setCurrentCol(writer.getSheet().getRow(currentRow).getLastCellNum());
             Collection<?> fieldValue = (Collection<?>) ReflectUtil.getFieldValue(obj, field);
             Class<?> genericType = ExcelHelper.getFieldGenericType(field);
             fieldValue.forEach(subItem -> {
-                int currentCell = context.currentCol;
+                int currentCell = context.getCurrentCol();
                 writeContent(writer, genericType, subItem);
                 context.addRow();
-                context.currentCol = currentCell;
+                context.setCurrentCol(currentCell);
             });
             context.subRow();
         });
@@ -75,8 +80,12 @@ public class SingleExportHandler<E> implements ExportHandler<E> {
         List<Field> fields = ExcelHelper.getFieldsByGroup(clazz, params.getGroups());
         for (Field field : fields) {
             String title = ExcelHelper.getFieldTitle(field);
-            writer.writeCellValue(context.currentCol, context.currentRow, title);
-            params.getCellStyleEditor().edit(CellStyleEditor.Param.builder().sheet(writer.getSheet()).row(context.currentRow).cell(context.currentCol).isHeader(true).field(field).build());
+            writer.writeCellValue(context.getCurrentCol(), context.getCurrentRow(), title);
+            params.getCellStyleEditor().edit(CellStyleEditor.Param.builder()
+                    .sheet(writer.getSheet())
+                    .row(context.getCurrentRow())
+                    .cell(context.getCurrentCol())
+                    .isHeader(true).field(field).build());
             context.addCol();
         }
         // 读取Collection
@@ -84,43 +93,19 @@ public class SingleExportHandler<E> implements ExportHandler<E> {
         for (Field field : subFields) {
             // 切换到下一行开始书写子标题
             context.addRow();
-            int startCol = context.currentCol;
+            int startCol = context.getCurrentCol();
             writeTitle(writer, ExcelHelper.getFieldGenericType(field));
             context.subRow();
             // 合并单元格
             String title = ExcelHelper.getFieldTitle(field);
             context.subCol();
-            CellStyle style = params.getCellStyleEditor().getStyle(CellStyleEditor.Param.builder().sheet(writer.getSheet()).row(context.currentRow).cell(context.currentCol).isHeader(true).field(field).build());
-            writer.merge(context.currentRow, context.currentRow, startCol, context.currentCol, title, style);
+            CellStyle style = params.getCellStyleEditor().getStyle(CellStyleEditor.Param.builder()
+                    .sheet(writer.getSheet())
+                    .row(context.getCurrentRow())
+                    .cell(context.getCurrentCol())
+                    .isHeader(true).field(field).build());
+            writer.merge(context.getCurrentRow(), context.getCurrentRow(), startCol, context.getCurrentCol(), title, style);
             context.addCol();
         }
-    }
-}
-
-class Context {
-    int headerStartRow = 0;
-    int headerEndRow = 0;
-    int currentRow = 0;
-    int currentCol = 0;
-
-    public int addRow() {
-        return ++this.currentRow;
-    }
-
-    public int subRow() {
-        return --this.currentRow;
-    }
-
-    public int addCol() {
-        return ++this.currentCol;
-    }
-
-    public int subCol() {
-        return --this.currentCol;
-    }
-
-    public void nextRowStart() {
-        this.currentRow++;
-        this.currentCol = 0;
     }
 }

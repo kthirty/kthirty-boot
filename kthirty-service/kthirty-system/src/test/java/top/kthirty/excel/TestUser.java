@@ -1,5 +1,6 @@
 package top.kthirty.excel;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import top.kthirty.core.tool.excel.Excel;
@@ -9,6 +10,8 @@ import java.util.List;
 
 @Data
 @Accessors(chain = true)
+@Schema(title = "用户信息")
+@Excel(title = "用户信息")
 public class TestUser implements Serializable {
     @Excel(title = "姓名")
     private String name;

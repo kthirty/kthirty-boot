@@ -3,21 +3,20 @@ package top.kthirty.system.role.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.lang.Assert;
-import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import top.kthirty.core.tool.Func;
 import top.kthirty.system.relation.entity.RoleMenuRl;
+import top.kthirty.system.relation.service.MpRoleMenuRlService;
 import top.kthirty.system.relation.service.RoleMenuRlService;
 import top.kthirty.system.role.entity.Role;
 import top.kthirty.system.role.mapper.RoleMapper;
 import top.kthirty.system.role.service.RoleService;
-import org.springframework.stereotype.Service;
 import top.kthirty.system.role.vo.RoleConfigMenuVO;
 
 import java.util.List;
-import java.util.Timer;
 
 import static top.kthirty.system.relation.entity.table.RoleMenuRlTableDef.ROLE_MENU_RL;
 import static top.kthirty.system.role.entity.table.RoleTableDef.ROLE;
@@ -33,6 +32,7 @@ import static top.kthirty.system.role.entity.table.RoleTableDef.ROLE;
 @Slf4j
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
     private final RoleMenuRlService roleMenuRlService;
+    private final MpRoleMenuRlService mpRoleMenuRlService;
 
     @Override
     public List<String> queryMenus(String id) {
@@ -60,6 +60,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 //            roleMenuRls.forEach(roleMenuRlService::save);
              roleMenuRlService.saveBatch(roleMenuRls);
         }
-        log.info("add " + timer.intervalPretty());
+        log.info("add1 " + timer.intervalPretty());
+        if(Func.isNotEmpty(roleMenuRls)){
+            mpRoleMenuRlService.saveBatch(roleMenuRls);
+        }
+        log.info("add2 " + timer.intervalPretty());
     }
 }

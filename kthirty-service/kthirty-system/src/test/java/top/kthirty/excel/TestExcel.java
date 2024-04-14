@@ -2,7 +2,8 @@ package top.kthirty.excel;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import top.kthirty.core.test.BaseKthirtyTest;
 import top.kthirty.core.test.KthirtyTest;
@@ -11,20 +12,30 @@ import top.kthirty.core.tool.excel.support.ExcelParams;
 import top.kthirty.core.tool.excel.support.ExcelStyle;
 import top.kthirty.system.SystemApplication;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 @KthirtyTest(appName = "system", classes = SystemApplication.class)
+@Slf4j
 public class TestExcel extends BaseKthirtyTest {
 
     @Test
     public void test1() {
-        List<TestUser> list = getUser(1);
+        List<TestUser> list = getUser(2);
         BufferedOutputStream outputStream = FileUtil.getOutputStream("/System/Desktop/test.xlsx");
         ExcelParams excelParams = new ExcelParams();
         excelParams.setStyle(ExcelStyle.SINGLE);
         ExcelUtil.exp(list, TestUser.class, outputStream, excelParams);
+    }
+    @Test
+    public void test2(){
+        BufferedInputStream inputStream = FileUtil.getInputStream("/System/Desktop/test.xlsx");
+        ExcelParams excelParams = new ExcelParams();
+        excelParams.setStyle(ExcelStyle.SINGLE);
+        List<TestUser> users = ExcelUtil.imp(inputStream, TestUser.class, excelParams);
+        log.info("读取数据:\n{}"+ JSONUtil.toJsonPrettyStr(users));
     }
 
     private List<TestUser> getUser(int i) {

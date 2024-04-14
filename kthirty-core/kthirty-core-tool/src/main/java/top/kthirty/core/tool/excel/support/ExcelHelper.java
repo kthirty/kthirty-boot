@@ -17,7 +17,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.excel.Excel;
-import top.kthirty.core.tool.utils.StringPool;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -46,6 +45,27 @@ public class ExcelHelper {
         return -1;
     }
 
+    public static String getValue(Sheet sheet, int row, int col) {
+        if(sheet.getLastRowNum() <= row || sheet.getRow(row).getLastCellNum() <= col){
+            return null;
+        }
+        if (isMerge(sheet, row, col)) {
+            int sheetMergeCount = sheet.getNumMergedRegions();
+            for (int i = 0; i < sheetMergeCount; i++) {
+                CellRangeAddress range = sheet.getMergedRegion(i);
+                int firstColumn = range.getFirstColumn();
+                int lastColumn = range.getLastColumn();
+                int firstRow = range.getFirstRow();
+                int lastRow = range.getLastRow();
+                //判断当前单元格是否在合并单元格区域内，是的话就是合并单元格
+                if ((row >= firstRow && row <= lastRow) && (col >= firstColumn && col <= lastColumn)) {
+                    return sheet.getRow(firstRow).getCell(firstColumn).getStringCellValue();
+                }
+            }
+        }
+        return sheet.getRow(row).getCell(col).getStringCellValue();
+    }
+
     /**
      * 获取字段标注Title
      *
@@ -60,6 +80,14 @@ public class ExcelHelper {
             return AnnotationUtil.getAnnotation(field, Schema.class).title();
         }
         return field.getName();
+    }
+    public static Field getFieldByTitle(Class<?> clazz,String title) {
+        Field[] fields = ReflectUtil.getFields(clazz, it -> getFieldTitle(it).equals(title));
+        if(ArrayUtil.isEmpty(fields)){
+            return null;
+        }else{
+            return fields[0];
+        }
     }
 
     /**
@@ -139,7 +167,14 @@ public class ExcelHelper {
 
     public static String getClassTitle(Class<?> clazz) {
         Excel excel = AnnotationUtil.getAnnotation(clazz, Excel.class);
-        return excel != null ? excel.title() : StringPool.EMPTY;
+        if(excel != null){
+            return excel.title();
+        }
+        Schema schema = AnnotationUtil.getAnnotation(clazz, Schema.class);
+        if(schema != null){
+            return schema.title();
+        }
+        return ClassUtil.getClassName(clazz,true);
     }
 
     public static void activeSheet(ExcelWriter writer, String sheetName) {
@@ -155,9 +190,10 @@ public class ExcelHelper {
 
     /**
      * 单元格向下合并
-     * @param writer ExcelWriter
+     *
+     * @param writer   ExcelWriter
      * @param startRow 开始行
-     * @param endRow 结束行
+     * @param endRow   结束行
      */
     public static void mergeToBottom(ExcelWriter writer, int startRow, int endRow) {
         for (int rowNum = startRow; rowNum <= endRow; rowNum++) {
@@ -176,8 +212,9 @@ public class ExcelHelper {
 
     /**
      * 是否为合并单元格
-     * @param sheet Sheet页
-     * @param row 行号
+     *
+     * @param sheet  Sheet页
+     * @param row    行号
      * @param column 列号
      * @return true / false
      */
@@ -202,6 +239,7 @@ public class ExcelHelper {
      * 1. 此单元格有数据
      * 2. 向下到计算结束行都没数据
      * 3. 此单元格未合并过
+     *
      * @param writer ExcelWriter
      * @param rowNum 单元格行号
      * @param colNum 单元格列号

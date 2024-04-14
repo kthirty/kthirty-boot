@@ -25,15 +25,7 @@ public class DbStartListener implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args)  {
-        accountMapper.selectListByQuery(QueryWrapper.create()
-                        .where(AccountTableDef.ACCOUNT.USER_NAME.isNotNull()))
-                .forEach(item -> {
-                    Console.log(JsonUtil.toJson(item));
-                    Map<String, Object> map = JsonUtil.toMap(JsonUtil.toJson(item));
-                    if(map != null){
-                        Console.log(map.get("typeLabel"), DictUtil.getValue("type", Func.toStr(map.get("typeLabel"))));
-                    }
-                });
+
 
     }
 }
