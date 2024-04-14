@@ -45,25 +45,25 @@ public class ExcelHelper {
         return -1;
     }
 
-    public static String getValue(Sheet sheet, int row, int col) {
-        if(sheet.getLastRowNum() <= row || sheet.getRow(row).getLastCellNum() <= col){
+    public static Object getValue(ExcelReader reader, int row, int col) {
+        if(reader.getRowCount() <= row || reader.getOrCreateRow(row).getLastCellNum() <= col){
             return null;
         }
-        if (isMerge(sheet, row, col)) {
-            int sheetMergeCount = sheet.getNumMergedRegions();
+        if (isMerge(reader.getSheet(), row, col)) {
+            int sheetMergeCount = reader.getSheet().getNumMergedRegions();
             for (int i = 0; i < sheetMergeCount; i++) {
-                CellRangeAddress range = sheet.getMergedRegion(i);
+                CellRangeAddress range = reader.getSheet().getMergedRegion(i);
                 int firstColumn = range.getFirstColumn();
                 int lastColumn = range.getLastColumn();
                 int firstRow = range.getFirstRow();
                 int lastRow = range.getLastRow();
                 //判断当前单元格是否在合并单元格区域内，是的话就是合并单元格
                 if ((row >= firstRow && row <= lastRow) && (col >= firstColumn && col <= lastColumn)) {
-                    return sheet.getRow(firstRow).getCell(firstColumn).getStringCellValue();
+                    return reader.readCellValue(col,row);
                 }
             }
         }
-        return sheet.getRow(row).getCell(col).getStringCellValue();
+        return reader.readCellValue(col,row);
     }
 
     /**

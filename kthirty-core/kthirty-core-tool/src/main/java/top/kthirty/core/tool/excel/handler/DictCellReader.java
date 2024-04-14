@@ -4,6 +4,7 @@ import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.cell.CellUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.dict.Dict;
@@ -35,7 +36,7 @@ public class DictCellReader implements CellReader {
     @Override
     public Object edit(Cell cell, Object value) {
         // 读取标题
-        Object headerCellValue = reader.readCellValue(cell.getColumnIndex(), headerRowIndex);
+        Object headerCellValue = CellUtil.getCellValue(reader.getCell(cell.getColumnIndex(),headerRowIndex));
         if(headerCellValue.getClass() == String.class){
             String title = Func.toStr(headerCellValue);
             // 获取对应的字段并包含Dict注解
