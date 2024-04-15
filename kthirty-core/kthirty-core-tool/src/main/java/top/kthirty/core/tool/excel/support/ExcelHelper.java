@@ -11,20 +11,19 @@ import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelWriter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.math3.stat.inference.TestUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.excel.Excel;
+import top.kthirty.core.tool.utils.StringPool;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -46,7 +45,7 @@ public class ExcelHelper {
     }
 
     public static Object getValue(ExcelReader reader, int row, int col) {
-        if(reader.getRowCount() <= row || reader.getOrCreateRow(row).getLastCellNum() <= col){
+        if (reader.getRowCount() <= row || reader.getOrCreateRow(row).getLastCellNum() <= col) {
             return null;
         }
         if (isMerge(reader.getSheet(), row, col)) {
@@ -59,11 +58,11 @@ public class ExcelHelper {
                 int lastRow = range.getLastRow();
                 //判断当前单元格是否在合并单元格区域内，是的话就是合并单元格
                 if ((row >= firstRow && row <= lastRow) && (col >= firstColumn && col <= lastColumn)) {
-                    return reader.readCellValue(col,row);
+                    return reader.readCellValue(col, row);
                 }
             }
         }
-        return reader.readCellValue(col,row);
+        return reader.readCellValue(col, row);
     }
 
     /**
@@ -81,13 +80,30 @@ public class ExcelHelper {
         }
         return field.getName();
     }
-    public static Field getFieldByTitle(Class<?> clazz,String title) {
-        Field[] fields = ReflectUtil.getFields(clazz, it -> getFieldTitle(it).equals(title));
-        if(ArrayUtil.isEmpty(fields)){
-            return null;
-        }else{
-            return fields[0];
+
+    /**
+     * 通过标题获取Field
+     * @param clazz Class
+     * @param title 标题（支持多层,例如 用户信息.账户信息.账户变更记录.账户变更前余额
+     * @return Field
+     */
+    public static Field getFieldByTitle(Class<?> clazz, String title) {
+        if(StrUtil.contains(title,StringPool.DOT)){
+            String currentTitle = StrUtil.subBefore(title, StringPool.DOT, false);
+            String nextTitle = StrUtil.subAfter(title, StringPool.DOT, false);
+            Field field = Arrays.stream(ReflectUtil.getFields(clazz, it -> getFieldTitle(it).equals(currentTitle))).findFirst().orElse(null);
+            if(field != null){
+                Class<?> fieldGenericType = getFieldGenericType(field);
+                if(fieldGenericType != null){
+                    return getFieldByTitle(fieldGenericType,nextTitle);
+                }else {
+                    return null;
+                }
+            }else{
+                return null;
+            }
         }
+        return Arrays.stream(ReflectUtil.getFields(clazz, it -> getFieldTitle(it).equals(title))).findFirst().orElse(null);
     }
 
     /**
@@ -167,14 +183,14 @@ public class ExcelHelper {
 
     public static String getClassTitle(Class<?> clazz) {
         Excel excel = AnnotationUtil.getAnnotation(clazz, Excel.class);
-        if(excel != null){
+        if (excel != null) {
             return excel.title();
         }
         Schema schema = AnnotationUtil.getAnnotation(clazz, Schema.class);
-        if(schema != null){
+        if (schema != null) {
             return schema.title();
         }
-        return ClassUtil.getClassName(clazz,true);
+        return ClassUtil.getClassName(clazz, true);
     }
 
     public static void activeSheet(ExcelWriter writer, String sheetName) {

@@ -8,12 +8,14 @@ import org.junit.jupiter.api.Test;
 import top.kthirty.core.test.BaseKthirtyTest;
 import top.kthirty.core.test.KthirtyTest;
 import top.kthirty.core.tool.excel.ExcelUtil;
+import top.kthirty.core.tool.excel.support.ExcelHelper;
 import top.kthirty.core.tool.excel.support.ExcelParams;
 import top.kthirty.core.tool.excel.support.ExcelStyle;
 import top.kthirty.system.SystemApplication;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class TestExcel extends BaseKthirtyTest {
         ExcelParams excelParams = new ExcelParams();
         excelParams.setStyle(ExcelStyle.SINGLE);
         List<TestUser> users = ExcelUtil.imp(inputStream, TestUser.class, excelParams);
-        log.info("读取数据:\n{}"+ JSONUtil.toJsonPrettyStr(users));
+        log.info("读取数据:\n{}", JSONUtil.toJsonPrettyStr(users));
     }
 
     private List<TestUser> getUser(int i) {

@@ -1,7 +1,11 @@
 package top.kthirty.core.tool.excel.handler;
 
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.cell.CellEditor;
+import org.apache.poi.ss.usermodel.Cell;
+
+import java.lang.reflect.Field;
 
 /**
  * <p>
@@ -16,9 +20,7 @@ public interface CellReader extends CellEditor {
      * 初始化
      * @author Kthirty
      * @since 2023/11/26
-     * @param headerRowIndex 标题行号
-     * @param reader 当前读取器
-     * @param clazz 实体
+     * @param getFieldFunc 通过单元格获取对应的字段
      */
-    void init(int headerRowIndex, ExcelReader reader, Class<?> clazz);
+    void init(Func1<Cell, Field> getFieldFunc);
 }

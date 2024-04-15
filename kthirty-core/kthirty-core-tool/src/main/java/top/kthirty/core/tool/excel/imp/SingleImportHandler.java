@@ -59,7 +59,7 @@ public class SingleImportHandler<E> implements ImportHandler<E>{
         context.setCurrentRow(context.getHeaderEndRow() + 1);
         // 初始化reader
         if(ObjUtil.isNotNull(params.getCellReader())){
-            params.getCellReader().init(context.getHeaderEndRow(),reader,clazz);
+            params.getCellReader().init(cell -> ExcelHelper.getFieldByTitle(clazz,title.get(cell.getColumnIndex())));
             reader.setCellEditor(params.getCellReader());
         }
         // 开始读取
@@ -72,7 +72,6 @@ public class SingleImportHandler<E> implements ImportHandler<E>{
             // 本行修改过下标的标题集合
             List<String> currentLineModifyIndexTitles = new ArrayList<>();
             Row row = context.getRow();
-            List<Object> objects = reader.readRow(context.getCurrentRow());
             for (int currentCol = 0; currentCol < row.getLastCellNum(); currentCol++) {
                 context.setCurrentCol(currentCol);
                 Object value = ExcelHelper.getValue(reader, context.getCurrentRow(), context.getCurrentCol());
