@@ -1,9 +1,11 @@
 package top.kthirty.core.tool.excel.support;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
+@Slf4j
 @Data
 public class ExcelContext {
     private Sheet sheet;
@@ -34,5 +36,9 @@ public class ExcelContext {
     }
     public Row getRow(){
         return sheet.getRow(currentRow);
+    }
+
+    public void print() {
+        log.info("current {} {}",currentRow,currentCol);
     }
 }

@@ -1,30 +1,37 @@
 package top.kthirty.excel;
 
+import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import top.kthirty.core.test.BaseKthirtyTest;
 import top.kthirty.core.test.KthirtyTest;
 import top.kthirty.core.tool.excel.ExcelUtil;
-import top.kthirty.core.tool.excel.support.ExcelHelper;
 import top.kthirty.core.tool.excel.support.ExcelParams;
 import top.kthirty.core.tool.excel.support.ExcelStyle;
 import top.kthirty.system.SystemApplication;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 @KthirtyTest(appName = "system", classes = SystemApplication.class)
 @Slf4j
 public class TestExcel extends BaseKthirtyTest {
+    public static void main(String[] args) {
+        List<TestUser> users = new ArrayList<>();
+        BeanPath.create("[0].name").set(users,"test1");
+        BeanPath.create("[0].accounts.name").set(users,"testAccount1");
+        log.info(JSONUtil.toJsonPrettyStr(users));
+    }
 
     @Test
     public void test1() {
+        FileUtil.del("/System/Desktop/test.xlsx");
         List<TestUser> list = getUser(2);
         BufferedOutputStream outputStream = FileUtil.getOutputStream("/System/Desktop/test.xlsx");
         ExcelParams excelParams = new ExcelParams();
@@ -38,6 +45,27 @@ public class TestExcel extends BaseKthirtyTest {
         excelParams.setStyle(ExcelStyle.SINGLE);
         List<TestUser> users = ExcelUtil.imp(inputStream, TestUser.class, excelParams);
         log.info("读取数据:\n{}", JSONUtil.toJsonPrettyStr(users));
+    }
+    @Test
+    public void test3(){
+        FileUtil.del("/System/Desktop/test.xlsx");
+        List<TestUser> list = getUser(2);
+        BufferedOutputStream outputStream = FileUtil.getOutputStream("/System/Desktop/test.xlsx");
+        ExcelParams excelParams = new ExcelParams();
+        excelParams.setStyle(ExcelStyle.SINGLE);
+        ExcelUtil.exp(list, TestUser.class, outputStream, excelParams);
+
+        BufferedInputStream inputStream = FileUtil.getInputStream("/System/Desktop/test.xlsx");
+        List<TestUser> users = ExcelUtil.imp(inputStream, TestUser.class, excelParams);
+        String org = JSONUtil.toJsonPrettyStr(list);
+        String read = JSONUtil.toJsonPrettyStr(users);
+        log.info("equals {}" ,StrUtil.equals(org,read));
+        log.info(org);
+        log.info(read);
+    }
+    @Test
+    public void testDict(){
+        // todo 测试数据字典
     }
 
     private List<TestUser> getUser(int i) {
@@ -59,7 +87,7 @@ public class TestExcel extends BaseKthirtyTest {
             list.add(new TestAccount()
                     .setRecords(getRecord(5))
                     .setName("张"+i1)
-                    .setBalance(RandomUtil.randomDouble(1, 100)));
+                    .setBalance(1D * RandomUtil.randomInt(1, 100)));
         }
         return list;
     }
@@ -78,8 +106,8 @@ public class TestExcel extends BaseKthirtyTest {
         List<TestAccountRecord> list = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             list.add(new TestAccountRecord().setRemarks("Remarks"+i)
-                    .setBeforeBalance(RandomUtil.randomDouble(1, 100))
-                    .setAfterBalance(RandomUtil.randomDouble(1, 100))
+                    .setBeforeBalance(1D * RandomUtil.randomInt(1, 100))
+                    .setAfterBalance(1D * RandomUtil.randomInt(1, 100))
             );
         }
         return list;

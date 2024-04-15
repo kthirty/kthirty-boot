@@ -9,9 +9,9 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelWriter;
+import cn.hutool.poi.excel.cell.CellUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.math3.stat.inference.TestUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -104,6 +104,32 @@ public class ExcelHelper {
             }
         }
         return Arrays.stream(ReflectUtil.getFields(clazz, it -> getFieldTitle(it).equals(title))).findFirst().orElse(null);
+    }
+
+    /**
+     * 获取属性路径
+     * @param clazz class
+     * @param title 中文标题
+     * @return 属性全路径
+     */
+    public static String getFieldPathByTitle(Class<?> clazz, String title) {
+        if(StrUtil.contains(title,StringPool.DOT)){
+            String currentTitle = StrUtil.subBefore(title, StringPool.DOT, false);
+            String nextTitle = StrUtil.subAfter(title, StringPool.DOT, false);
+            Field field = Arrays.stream(ReflectUtil.getFields(clazz, it -> getFieldTitle(it).equals(currentTitle))).findFirst().orElse(null);
+            if(field != null){
+                Class<?> fieldGenericType = getFieldGenericType(field);
+                if(fieldGenericType != null){
+                    return field.getName()+ StringPool.DOT + getFieldPathByTitle(fieldGenericType,nextTitle);
+                }else {
+                    return null;
+                }
+            }else{
+                return null;
+            }
+        }
+        Field field = Arrays.stream(ReflectUtil.getFields(clazz, it -> getFieldTitle(it).equals(title))).findFirst().orElse(null);
+        return field == null ? null : field.getName();
     }
 
     /**
@@ -218,7 +244,7 @@ public class ExcelHelper {
                 for (int col = 0; col < row.getLastCellNum(); col++) {
                     if (needMerge(writer, rowNum, col, endRow)) {
                         Cell cell = writer.getCell(col, rowNum);
-                        writer.merge(rowNum, writer.getRowCount() - 1, col, col, cell.getStringCellValue(), cell.getCellStyle());
+                        writer.merge(rowNum, writer.getRowCount() - 1, col, col, CellUtil.getCellValue(cell), cell.getCellStyle());
                     }
                 }
             }

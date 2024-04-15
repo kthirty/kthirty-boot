@@ -31,7 +31,7 @@ public class SingleExportHandler<E> implements ExportHandler<E> {
         // 标题
         context.setHeaderStartRow(context.getCurrentRow());
         writeTitle(writer, clazz);
-        context.setHeaderStartRow(writer.getRowCount() - 1);
+        context.setHeaderEndRow(writer.getRowCount() - 1);
         ExcelHelper.mergeToBottom(writer, context.getHeaderStartRow(), context.getHeaderEndRow());
         // 开始写内容
         list.forEach(it -> {

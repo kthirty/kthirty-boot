@@ -1,5 +1,6 @@
 package top.kthirty.core.tool.excel.imp;
 
+import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -10,7 +11,6 @@ import org.apache.poi.ss.usermodel.Row;
 import top.kthirty.core.tool.excel.support.ExcelContext;
 import top.kthirty.core.tool.excel.support.ExcelHelper;
 import top.kthirty.core.tool.excel.support.ExcelParams;
-import top.kthirty.core.tool.jackson.JsonUtil;
 import top.kthirty.core.tool.utils.StringPool;
 
 import java.io.InputStream;
@@ -43,20 +43,7 @@ public class SingleImportHandler<E> implements ImportHandler<E>{
                 .findFirst()
                 .ifPresentOrElse(it -> context.setHeaderEndRow(it.getLastRow()),() -> context.setHeaderEndRow(startRow));
         // 读取标题并建立标题联系
-        Row headerEndRow = reader.getSheet().getRow(context.getHeaderEndRow());
-        for (int col = 0; col < headerEndRow.getLastCellNum(); col++) {
-            List<String> tempTitles = new ArrayList<>();
-            for (int currentRow = context.getHeaderStartRow(); currentRow <= context.getHeaderEndRow(); currentRow++) {
-                String value = StrUtil.toString(ExcelHelper.getValue(reader, currentRow, col));
-                if(StrUtil.isNotBlank(value) && !CollUtil.contains(tempTitles,value)){
-                    tempTitles.add(value);
-                }
-            }
-            tempTitles.add(0,ExcelHelper.getClassTitle(clazz));
-            title.add(StrUtil.join(StringPool.DOT,tempTitles));
-        }
-        log.info("已读取到标题\n{}",StrUtil.join(StringPool.NEWLINE,title));
-        context.setCurrentRow(context.getHeaderEndRow() + 1);
+        readTitle(clazz, reader);
         // 初始化reader
         if(ObjUtil.isNotNull(params.getCellReader())){
             params.getCellReader().init(cell -> ExcelHelper.getFieldByTitle(clazz,title.get(cell.getColumnIndex())));
@@ -66,7 +53,6 @@ public class SingleImportHandler<E> implements ImportHandler<E>{
         List<E> result = new ArrayList<>();
         Map<String,Integer> titleIndex = new HashMap<>();
         title.stream().map(it -> StrUtil.subBefore(it,StringPool.DOT,true)).distinct().forEach(it -> titleIndex.put(it,-1));
-        log.debug("titleIndex {}", JsonUtil.toJson(titleIndex));
 
         while(context.getCurrentRow() < reader.getRowCount()){
             // 本行修改过下标的标题集合
@@ -91,35 +77,51 @@ public class SingleImportHandler<E> implements ImportHandler<E>{
                     title.stream()
                             .map(it -> StrUtil.subBefore(it,StringPool.DOT,true))
                             .distinct()
-                            .filter(it -> StrUtil.startWith(it,objTitle+StringPool.DOT))
+                            .filter(it -> StrUtil.startWith(it, objTitle +StringPool.DOT))
                             .forEach(it -> {
                                 titleIndex.put(it,0);
                                 currentLineModifyIndexTitles.add(it);
                             });
-                    log.info("==========计算标题下标{} {}========",context.getCurrentRow(),context.getCurrentCol());
-                    log.info("value {}",value);
-                    log.info("fullTitle {}",fullTitle);
-                    log.info("objTitle {}",objTitle);
-                    log.info("titleIndex {}",JsonUtil.toJson(titleIndex));
-                    log.info("currentLineModifyIndexTitles {}",JsonUtil.toJson(currentLineModifyIndexTitles));
-                    log.info("==========计算标题下标{} {}========",context.getCurrentRow(),context.getCurrentCol());
                 }
-
+                // 设置读取到的属性
+                String beanPropPath = getBeanPropPath(clazz, fullTitle, titleIndex);
+                if(StrUtil.isNotBlank(beanPropPath)){
+                    BeanPath.create(beanPropPath).set(result,value);
+                }
             }
             // 本行结束
             currentLineModifyIndexTitles.clear();
             context.addRow();
-
-
-
         }
-        for (int i = 0; i < title.size(); i++) {
-            log.info("{} {}",i,title.get(i));
-        }
-        // todo 单Sheet页导入逻辑
-//        throw new RuntimeException("尚未实现");
-        return null;
+        return result;
     }
+
+    private String getBeanPropPath(Class<E> clazz, String fullTitle, Map<String, Integer> titleIndex) {
+        List<Integer> indexList = new ArrayList<>();
+        String fullPath = ExcelHelper.getFieldPathByTitle(clazz, StrUtil.subAfter(fullTitle,StringPool.DOT,false));
+        while (StrUtil.contains(fullTitle,StringPool.DOT)){
+            fullTitle = StrUtil.subBefore(fullTitle,StringPool.DOT,true);
+            indexList.add(0,titleIndex.get(fullTitle));
+        }
+        return StrUtil.format("[{}]."+StrUtil.replace(fullPath, StringPool.DOT, "[{}]."), indexList.toArray());
+    }
+
+    private void readTitle(Class<E> clazz, ExcelReader reader) {
+        Row headerEndRow = reader.getSheet().getRow(context.getHeaderEndRow());
+        for (int col = 0; col < headerEndRow.getLastCellNum(); col++) {
+            List<String> tempTitles = new ArrayList<>();
+            for (int currentRow = context.getHeaderStartRow(); currentRow <= context.getHeaderEndRow(); currentRow++) {
+                String value = StrUtil.toString(ExcelHelper.getValue(reader, currentRow, col));
+                if(StrUtil.isNotBlank(value) && !CollUtil.contains(tempTitles,value)){
+                    tempTitles.add(value);
+                }
+            }
+            tempTitles.add(0,ExcelHelper.getClassTitle(clazz));
+            title.add(StrUtil.join(StringPool.DOT,tempTitles));
+        }
+        context.setCurrentRow(context.getHeaderEndRow() + 1);
+    }
+
     @SneakyThrows
     private String getPath(Class<?> clazz,String title){
         if(clazz == null){
