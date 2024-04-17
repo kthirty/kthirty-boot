@@ -18,8 +18,7 @@ import java.lang.reflect.Field;
  * @author KThirty
  * @since 2023/11/26
  */
-public class DictCellReader implements CellReader {
-    private Func1<Cell,Field> getFieldFunc;
+public class DictCellReader extends CellReader {
 
     @Override
     public Object edit(Cell cell, Object value) {
@@ -28,18 +27,15 @@ public class DictCellReader implements CellReader {
             Field field = getFieldFunc.callWithRuntimeException(cell);
             if(field != null){
                 Dict dict = AnnotationUtil.getAnnotation(field, Dict.class);
-                String code = StrUtil.blankToDefault(dict.code(), field.getName());
-                String dictValue = DictUtil.getValue(code, Func.toStr(value));
-                if(Func.isNotBlank(dictValue)){
-                    return dictValue;
+                if(dict != null){
+                    String code = StrUtil.blankToDefault(dict.code(), field.getName());
+                    String dictValue = DictUtil.getValue(code, Func.toStr(value));
+                    if(Func.isNotBlank(dictValue)){
+                        return dictValue;
+                    }
                 }
             }
         }
         return value;
-    }
-
-    @Override
-    public void init(Func1<Cell, Field> getFieldFunc) {
-        this.getFieldFunc = getFieldFunc;
     }
 }

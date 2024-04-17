@@ -69,7 +69,7 @@ public class MultipleExportHandler<E> implements ExportHandler<E> {
                 ExcelHelper.activeSheet(writer, sheetName);
                 // 写入主表数据
                 E currentObj = records.get(i);
-                int currentSeq = i + 1;
+                int currentSeq = writer.getRowCount();
                 List<Object> dataRow = new ArrayList<>(fieldNames.stream().map(fieldName -> params.getCellWriter().edit(currentObj, fieldName)).toList());
                 // 单元格修改器
                 List<CellStyleEditor.Param> styleParams = new ArrayList<>();

@@ -15,12 +15,17 @@ import java.lang.reflect.Field;
  * @author KThirty
  * @since 2023/11/26
  */
-public interface CellReader extends CellEditor {
+public abstract class CellReader implements CellEditor {
+    protected Func1<Cell,Field> getFieldFunc;
+
     /**
      * 初始化
+     *
+     * @param getFieldFunc 通过单元格获取对应的字段
      * @author Kthirty
      * @since 2023/11/26
-     * @param getFieldFunc 通过单元格获取对应的字段
      */
-    void init(Func1<Cell, Field> getFieldFunc);
+    public void init(Func1<Cell, Field> getFieldFunc) {
+        this.getFieldFunc = getFieldFunc;
+    }
 }

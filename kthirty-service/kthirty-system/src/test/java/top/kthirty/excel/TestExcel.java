@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import top.kthirty.core.test.BaseKthirtyTest;
 import top.kthirty.core.test.KthirtyTest;
+import top.kthirty.core.tool.dict.DictItem;
+import top.kthirty.core.tool.dict.DictUtil;
 import top.kthirty.core.tool.excel.ExcelUtil;
 import top.kthirty.core.tool.excel.support.ExcelParams;
 import top.kthirty.core.tool.excel.support.ExcelStyle;
@@ -63,6 +65,28 @@ public class TestExcel extends BaseKthirtyTest {
         log.info(org);
         log.info(read);
     }
+
+    @Test
+    public void test4(){
+        List<DictItem> sexDict= new ArrayList<>();
+        sexDict.add(DictItem.builder().value("1").label("男").build());
+        sexDict.add(DictItem.builder().value("2").label("女").build());
+        sexDict.add(DictItem.builder().value("3").label("未知").build());
+        DictUtil.add("sex",sexDict);
+        String filePath = "/System/Desktop/test1.xlsx";
+        ExcelParams excelParams = new ExcelParams();
+        excelParams.setStyle(ExcelStyle.MULTIPLE);
+//        FileUtil.del(filePath);
+//        List<TestUser> list = getUser(5);
+//        BufferedOutputStream outputStream = FileUtil.getOutputStream(filePath);
+
+//        ExcelUtil.exp(list, TestUser.class, outputStream, excelParams);
+
+        BufferedInputStream inputStream = FileUtil.getInputStream(filePath);
+        List<TestUser> users = ExcelUtil.imp(inputStream, TestUser.class, excelParams);
+        String read = JSONUtil.toJsonPrettyStr(users);
+        log.info(read);
+    }
     @Test
     public void testDict(){
         // todo 测试数据字典
@@ -74,6 +98,7 @@ public class TestExcel extends BaseKthirtyTest {
             TestUser testUser = new TestUser();
             testUser.setName("张三"+i+"-"+i1);
             testUser.setAge(20);
+            testUser.setSex(RandomUtil.randomEle(new String[]{"1","2","3"}));
             testUser.setAccounts(getTestAccount(2));
             testUser.setAddresses(getAddress(3));
             list.add(testUser);

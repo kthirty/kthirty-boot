@@ -3,6 +3,7 @@ package top.kthirty.excel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import top.kthirty.core.tool.dict.Dict;
 import top.kthirty.core.tool.excel.Excel;
 
 import java.io.Serializable;
@@ -17,6 +18,9 @@ public class TestUser implements Serializable {
     private String name;
     @Excel(title = "年龄")
     private Integer age;
+    @Dict
+    @Excel(title = "性别")
+    private String sex;
     @Excel(title = "账户列表")
     private List<TestAccount> accounts;
     @Excel(title = "地址列表")
