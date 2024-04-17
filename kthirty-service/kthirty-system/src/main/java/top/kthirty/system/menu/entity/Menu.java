@@ -1,12 +1,9 @@
 package top.kthirty.system.menu.entity;
 
 import com.mybatisflex.annotation.Table;
+import lombok.*;
 import top.kthirty.core.db.base.entity.LogicEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * 菜单 实体类。

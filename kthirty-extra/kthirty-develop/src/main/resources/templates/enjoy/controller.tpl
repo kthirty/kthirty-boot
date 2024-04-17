@@ -5,14 +5,7 @@
 package #(packageConfig.controllerPackage);
 
 import com.mybatisflex.core.paginate.Page;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import lombok.AllArgsConstructor;
 import #(packageConfig.entityPackage).#(entityClassName);
 import #(packageConfig.servicePackage).#(table.buildServiceClassName());
@@ -23,6 +16,8 @@ import org.springframework.stereotype.Controller;
 #end
 #if(controllerConfig.superClass != null)
 import #(controllerConfig.buildSuperClassImport());
+import top.kthirty.core.db.support.Condition;
+import top.kthirty.core.db.support.Query;
 #end
 #if(withSwagger && swaggerVersion.getName() == "FOX")
 import io.swagger.annotations.Api;
@@ -111,8 +106,19 @@ public class #(table.buildControllerClassName()) #if(controllerConfig.superClass
     #if(withSwagger && swaggerVersion.getName() == "DOC")
     @Operation(summary = "分页查询#(tableComment)",description="分页查询#(tableComment)")
     #end
-    public Page<#(entityClassName)> page(#if(withSwagger && swaggerVersion.getName() == "FOX")@ApiParam("分页信息") #end #if(withSwagger && swaggerVersion.getName() == "DOC")@Parameter(description="分页信息")#end Page<#(entityClassName)> page) {
-        return #(serviceVarName).page(page);
+    public Page<#(entityClassName)> page(#if(withSwagger && swaggerVersion.getName() == "FOX")@ApiParam("分页信息") #end #if(withSwagger && swaggerVersion.getName() == "DOC")@Parameter(description="分页信息")#end Query<#(entityClassName)> query,#(entityClassName) #(entityVarName)) {
+        return #(serviceVarName).page(query.getPage(), Condition.getWrapper(#(entityVarName)));
+    }
+
+    @GetMapping("list")
+    #if(withSwagger && swaggerVersion.getName() == "FOX")
+    @ApiOperation("查询所有#(tableComment)")
+    #end
+    #if(withSwagger && swaggerVersion.getName() == "DOC")
+    @Operation(summary = "查询所有#(tableComment)",description="查询所有#(tableComment)")
+    #end
+    public List<#(entityClassName)> list(#(entityClassName) #(entityVarName)) {
+        return #(serviceVarName).list(Condition.getWrapper(#(entityVarName)));
     }
 
 }

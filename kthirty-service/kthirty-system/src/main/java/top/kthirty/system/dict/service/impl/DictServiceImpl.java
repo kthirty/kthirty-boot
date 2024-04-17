@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  *  服务层实现。
  *
  * @author Thinkpad
- * @since 2024-03-01
+ * @since 2024-04-17
  */
 @Service
 public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements DictService {

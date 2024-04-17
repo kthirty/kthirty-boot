@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
  *  实体类。
  *
  * @author Thinkpad
- * @since 2024-03-01
+ * @since 2024-04-17
  */
 @Data
 @Builder

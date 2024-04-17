@@ -32,12 +32,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.5</version>
-        </dependency>
-
-        <dependency>
             <groupId>top.kthirty</groupId>
             <artifactId>kthirty-core-test</artifactId>
             <version>1.0-SNAPSHOT</version>

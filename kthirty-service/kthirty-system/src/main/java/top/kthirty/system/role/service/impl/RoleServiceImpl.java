@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import top.kthirty.core.tool.Func;
 import top.kthirty.system.relation.entity.RoleMenuRl;
-import top.kthirty.system.relation.service.MpRoleMenuRlService;
 import top.kthirty.system.relation.service.RoleMenuRlService;
 import top.kthirty.system.role.entity.Role;
 import top.kthirty.system.role.mapper.RoleMapper;
@@ -32,7 +31,6 @@ import static top.kthirty.system.role.entity.table.RoleTableDef.ROLE;
 @Slf4j
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
     private final RoleMenuRlService roleMenuRlService;
-    private final MpRoleMenuRlService mpRoleMenuRlService;
 
     @Override
     public List<String> queryMenus(String id) {
@@ -52,18 +50,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         timer.start();
         Role role = getById(req.getRoleId());
         Assert.notNull(role,"角色不存在");
-        log.info("role" + timer.intervalPretty());
         roleMenuRlService.remove(ROLE_MENU_RL.ROLE_CODE.eq(role.getCode()));
-        log.info("remove " + timer.intervalPretty());
         List<RoleMenuRl> roleMenuRls = req.getMenus().stream().map(it -> RoleMenuRl.builder().menuId(it).roleCode(role.getCode()).build()).toList();
         if(Func.isNotEmpty(roleMenuRls)){
-//            roleMenuRls.forEach(roleMenuRlService::save);
              roleMenuRlService.saveBatch(roleMenuRls);
         }
-        log.info("add1 " + timer.intervalPretty());
-        if(Func.isNotEmpty(roleMenuRls)){
-            mpRoleMenuRlService.saveBatch(roleMenuRls);
-        }
-        log.info("add2 " + timer.intervalPretty());
     }
 }

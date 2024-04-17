@@ -1,6 +1,5 @@
 package top.kthirty.system.relation.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.mybatisflex.annotation.Table;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -21,7 +20,6 @@ import top.kthirty.core.db.base.entity.IdEntity;
 @AllArgsConstructor
 @Schema(description = "角色菜单关联表")
 @Table(value = "sys_role_menu_rl")
-@TableName("sys_role_menu_rl")
 public class RoleMenuRl extends IdEntity {
 
     /**

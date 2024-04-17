@@ -1,23 +1,19 @@
 package top.kthirty.system.dict.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.beans.factory.annotation.Autowired;
-import lombok.AllArgsConstructor;
-import top.kthirty.system.dict.entity.Dict;
-import top.kthirty.system.dict.service.DictService;
-import org.springframework.web.bind.annotation.RestController;
-import top.kthirty.core.web.base.BaseController;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.web.bind.annotation.*;
+import top.kthirty.core.db.support.Condition;
+import top.kthirty.core.db.support.Query;
+import top.kthirty.core.web.base.BaseController;
+import top.kthirty.system.dict.entity.Dict;
+import top.kthirty.system.dict.service.DictService;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,7 +21,7 @@ import java.util.List;
  *  控制层。
  *
  * @author Thinkpad
- * @since 2024-03-01
+ * @since 2024-04-17
  */
 @RestController
 @Tag(name = "接口")
@@ -60,8 +56,14 @@ public class DictController extends BaseController {
 
     @GetMapping("page")
     @Operation(summary = "分页查询",description="分页查询")
-    public Page<Dict> page(@Parameter(description="分页信息")Page<Dict> page) {
-        return dictService.page(page);
+    public Page<Dict> page(@Parameter(description="分页信息")Query<Dict> query,Dict dict) {
+        return dictService.page(query.getPage(), Condition.getWrapper(dict));
+    }
+
+    @GetMapping("list")
+    @Operation(summary = "查询所有",description="查询所有")
+    public List<Dict> list(Dict dict) {
+        return dictService.list(Condition.getWrapper(dict));
     }
 
 }

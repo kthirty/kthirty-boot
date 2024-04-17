@@ -1,5 +1,7 @@
 package top.kthirty.core.web.swagger;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -15,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import top.kthirty.core.boot.config.KthirtyBootConfiguration;
+import top.kthirty.core.tool.Func;
 
 
 /**
@@ -47,11 +50,21 @@ public class SwaggerAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(OpenAPI.class)
     public OpenAPI customOpenApi(SwaggerProperties swaggerProperties) {
-        OAuthFlows oAuthFlows = new OAuthFlows();
-        OAuthFlow oAuthFlow = new OAuthFlow();
-        oAuthFlow.setTokenUrl(swaggerProperties.getAuthorization().getTokenUrlList());
-        oAuthFlows.setPassword(oAuthFlow);
 
+        SecurityScheme scheme = new SecurityScheme()
+                .name(HttpHeaders.AUTHORIZATION)
+                .in(SecurityScheme.In.HEADER)
+                .scheme("bearer");
+        if(StrUtil.isNotBlank(swaggerProperties.getAuthorization().getTokenUrlList())){
+            scheme.type(SecurityScheme.Type.OAUTH2);
+            OAuthFlows oAuthFlows = new OAuthFlows();
+            OAuthFlow oAuthFlow = new OAuthFlow();
+            oAuthFlow.setTokenUrl(swaggerProperties.getAuthorization().getTokenUrlList());
+            oAuthFlows.setPassword(oAuthFlow);
+            scheme.flows(oAuthFlows);
+        }else{
+            scheme.type(SecurityScheme.Type.HTTP);
+        }
 
         return new OpenAPI()
                 .info(new Info()
@@ -70,12 +83,7 @@ public class SwaggerAutoConfiguration {
                                 .url(swaggerProperties.getLicenseUrl()))
                 ).addSecurityItem(new SecurityRequirement().addList(HttpHeaders.AUTHORIZATION))
                 .components(new Components()
-                        .addSecuritySchemes(HttpHeaders.AUTHORIZATION, new SecurityScheme()
-                                .flows(oAuthFlows)
-                                .name(HttpHeaders.AUTHORIZATION)
-                                .in(SecurityScheme.In.HEADER)
-                                .type(SecurityScheme.Type.OAUTH2)
-                                .scheme("bearer")));
+                        .addSecuritySchemes(HttpHeaders.AUTHORIZATION, scheme));
     }
 
 }

@@ -33,7 +33,7 @@ public class CodeGen {
         HikariDataSource dataSource = new HikariDataSource();
         dataSource.setJdbcUrl("jdbc:mysql://nas.kthirty.top:5006/kthirty");
         dataSource.setUsername("root");
-        dataSource.setPassword(System.getProperty("db-password"));
+        dataSource.setPassword(System.getenv("KTHIRTY_PASSWORD"));
 
         GeneratorFactory.registerGenerator(GenTypeConst.ENTITY,new CustomEntityGenerator());
         // 创建配置内容

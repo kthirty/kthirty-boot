@@ -1,19 +1,14 @@
 package top.kthirty.system.dict.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import lombok.AllArgsConstructor;
 import top.kthirty.system.dict.entity.DictItem;
 import top.kthirty.system.dict.service.DictItemService;
 import org.springframework.web.bind.annotation.RestController;
 import top.kthirty.core.web.base.BaseController;
+import top.kthirty.core.db.support.Condition;
+import top.kthirty.core.db.support.Query;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,12 +20,12 @@ import java.util.List;
  *  控制层。
  *
  * @author Thinkpad
- * @since 2024-03-01
+ * @since 2024-04-17
  */
 @RestController
 @Tag(name = "接口")
 @AllArgsConstructor
-@RequestMapping("/dict/item")
+@RequestMapping("/dictItem")
 public class DictItemController extends BaseController {
     private final DictItemService dictItemService;
 
@@ -60,8 +55,14 @@ public class DictItemController extends BaseController {
 
     @GetMapping("page")
     @Operation(summary = "分页查询",description="分页查询")
-    public Page<DictItem> page(@Parameter(description="分页信息")Page<DictItem> page) {
-        return dictItemService.page(page);
+    public Page<DictItem> page(@Parameter(description="分页信息")Query<DictItem> query,DictItem dictItem) {
+        return dictItemService.page(query.getPage(), Condition.getWrapper(dictItem));
+    }
+
+    @GetMapping("list")
+    @Operation(summary = "查询所有",description="查询所有")
+    public List<DictItem> list(DictItem dictItem) {
+        return dictItemService.list(Condition.getWrapper(dictItem));
     }
 
 }

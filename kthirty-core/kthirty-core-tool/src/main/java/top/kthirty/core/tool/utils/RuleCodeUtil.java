@@ -18,8 +18,7 @@ import top.kthirty.core.tool.redis.RedisUtil;
  */
 @AllArgsConstructor
 public class RuleCodeUtil {
-    private static final String KEY_PREFIX = "code";
-    private final RedisUtil redisUtil;
+    private static final String KEY_PREFIX = "rule:code";
     private final String category;
     private Handler handler;
 
@@ -33,7 +32,7 @@ public class RuleCodeUtil {
     public static RuleCodeUtil getInstance(Handler handler, String category) {
         Assert.notNull(handler, "处理器不可为空");
         Assert.notBlank(category, "分类不可为空");
-        return new RuleCodeUtil(SpringUtil.getBeanSafe(RedisUtil.class), category, handler);
+        return new RuleCodeUtil(category, handler);
     }
 
     /**
@@ -44,8 +43,8 @@ public class RuleCodeUtil {
     public String next(String prefix) {
         prefix = StrUtil.blankToDefault(prefix, StringPool.EMPTY);
         String key = StrUtil.join(StringPool.COLON, KEY_PREFIX, category, prefix);
-        String next = handler.next(redisUtil.get(key));
-        redisUtil.set(key, next);
+        String next = handler.next(RedisUtil.get(key));
+        RedisUtil.set(key, next);
         return prefix + next;
     }
 
