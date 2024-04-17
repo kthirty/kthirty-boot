@@ -87,10 +87,6 @@ public class TestExcel extends BaseKthirtyTest {
         String read = JSONUtil.toJsonPrettyStr(users);
         log.info(read);
     }
-    @Test
-    public void testDict(){
-        // todo 测试数据字典
-    }
 
     private List<TestUser> getUser(int i) {
         List<TestUser> list = new ArrayList<>();
