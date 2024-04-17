@@ -6,7 +6,7 @@ import top.kthirty.system.relation.entity.RoleMenuRl;
 /**
  * 角色菜单关联表 映射层。
  *
- * @author Thinkpad
+ * @author KThirty
  * @since 2024-01-05
  */
 public interface RoleMenuRlMapper extends BaseMapper<RoleMenuRl> {

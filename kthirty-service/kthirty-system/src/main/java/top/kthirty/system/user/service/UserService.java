@@ -6,7 +6,7 @@ import top.kthirty.system.user.entity.User;
 /**
  * 用户信息 服务层。
  *
- * @author Thinkpad
+ * @author KThirty
  * @since 2024-01-05
  */
 public interface UserService extends BaseService<User> {

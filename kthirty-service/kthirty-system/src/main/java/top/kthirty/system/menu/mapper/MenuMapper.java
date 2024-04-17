@@ -6,7 +6,7 @@ import top.kthirty.system.menu.entity.Menu;
 /**
  * 菜单 映射层。
  *
- * @author Thinkpad
+ * @author KThirty
  * @since 2024-01-05
  */
 public interface MenuMapper extends BaseMapper<Menu> {

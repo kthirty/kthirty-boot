@@ -6,7 +6,7 @@ import top.kthirty.system.post.entity.Post;
 /**
  * 岗位信息 映射层。
  *
- * @author Thinkpad
+ * @author KThirty
  * @since 2024-01-05
  */
 public interface PostMapper extends BaseMapper<Post> {

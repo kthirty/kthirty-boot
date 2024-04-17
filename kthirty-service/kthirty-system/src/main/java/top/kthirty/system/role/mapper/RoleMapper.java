@@ -6,7 +6,7 @@ import top.kthirty.system.role.entity.Role;
 /**
  * 角色 映射层。
  *
- * @author Thinkpad
+ * @author KThirty
  * @since 2024-01-05
  */
 public interface RoleMapper extends BaseMapper<Role> {

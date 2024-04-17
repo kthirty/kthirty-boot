@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 /**
  * 菜单 实体类。
  *
- * @author Thinkpad
+ * @author KThirty
  * @since 2024-01-05
  */
 @Data

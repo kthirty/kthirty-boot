@@ -11,7 +11,7 @@ import top.kthirty.core.db.base.entity.IdEntity;
 /**
  * 角色菜单关联表 实体类。
  *
- * @author Thinkpad
+ * @author KThirty
  * @since 2024-01-05
  */
 @Data

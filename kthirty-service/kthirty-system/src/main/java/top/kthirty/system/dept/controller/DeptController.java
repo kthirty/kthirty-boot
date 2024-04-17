@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * 部门信息 控制层。
  *
- * @author Thinkpad
+ * @author KThirty
  * @since 2024-01-05
  */
 @RestController

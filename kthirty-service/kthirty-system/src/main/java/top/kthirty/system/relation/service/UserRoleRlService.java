@@ -6,7 +6,7 @@ import top.kthirty.system.relation.entity.UserRoleRl;
 /**
  * 用户角色关联表 服务层。
  *
- * @author Thinkpad
+ * @author KThirty
  * @since 2024-01-05
  */
 public interface UserRoleRlService extends BaseService<UserRoleRl> {

@@ -10,7 +10,7 @@ import top.kthirty.system.dept.service.DeptService;
 /**
  * 部门信息 服务层实现。
  *
- * @author Thinkpad
+ * @author KThirty
  * @since 2024-01-05
  */
 @Service

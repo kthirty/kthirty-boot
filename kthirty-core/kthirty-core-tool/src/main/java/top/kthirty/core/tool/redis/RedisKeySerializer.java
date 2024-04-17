@@ -21,15 +21,17 @@ import java.util.Objects;
 public class RedisKeySerializer implements RedisSerializer<Object> {
 	private final Charset charset;
 	private final ConversionService converter;
+	private final String prefix;
 
-	public RedisKeySerializer() {
-		this(StandardCharsets.UTF_8);
+	public RedisKeySerializer(String prefix) {
+		this(StandardCharsets.UTF_8,prefix);
 	}
 
-	public RedisKeySerializer(Charset charset) {
+	public RedisKeySerializer(Charset charset,String prefix) {
 		Objects.requireNonNull(charset, "Charset must not be null");
 		this.charset = charset;
 		this.converter = DefaultConversionService.getSharedInstance();
+		this.prefix = prefix;
 	}
 
 	@Override
@@ -53,6 +55,7 @@ public class RedisKeySerializer implements RedisSerializer<Object> {
 		} else {
 			key = converter.convert(object, String.class);
 		}
+		key = prefix + key;
 		return key.getBytes(this.charset);
 	}
 

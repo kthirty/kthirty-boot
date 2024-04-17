@@ -23,7 +23,7 @@ import static top.kthirty.system.role.entity.table.RoleTableDef.ROLE;
 /**
  * 角色 服务层实现。
  *
- * @author Thinkpad
+ * @author KThirty
  * @since 2024-01-05
  */
 @Service

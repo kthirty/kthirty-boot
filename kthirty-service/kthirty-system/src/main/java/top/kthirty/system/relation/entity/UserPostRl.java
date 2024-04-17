@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 /**
  * 用户岗位关联表 实体类。
  *
- * @author Thinkpad
+ * @author KThirty
  * @since 2024-01-05
  */
 @Data

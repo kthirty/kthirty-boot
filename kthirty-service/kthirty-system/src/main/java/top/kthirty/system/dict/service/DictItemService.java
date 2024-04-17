@@ -6,7 +6,7 @@ import top.kthirty.system.dict.entity.DictItem;
 /**
  *  服务层。
  *
- * @author Thinkpad
+ * @author KThirty
  * @since 2024-04-17
  */
 public interface DictItemService extends BaseService<DictItem> {

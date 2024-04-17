@@ -32,7 +32,7 @@ import static top.kthirty.system.role.entity.table.RoleTableDef.ROLE;
 /**
  * 角色 控制层。
  *
- * @author Thinkpad
+ * @author KThirty
  * @since 2024-01-05
  */
 @RestController

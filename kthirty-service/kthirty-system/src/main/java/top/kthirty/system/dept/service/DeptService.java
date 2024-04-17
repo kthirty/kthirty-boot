@@ -6,7 +6,7 @@ import top.kthirty.system.dept.entity.Dept;
 /**
  * 部门信息 服务层。
  *
- * @author Thinkpad
+ * @author KThirty
  * @since 2024-01-05
  */
 public interface DeptService extends BaseService<Dept> {

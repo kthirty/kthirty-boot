@@ -6,7 +6,7 @@ import top.kthirty.system.relation.entity.UserRoleRl;
 /**
  * 用户角色关联表 映射层。
  *
- * @author Thinkpad
+ * @author KThirty
  * @since 2024-01-05
  */
 public interface UserRoleRlMapper extends BaseMapper<UserRoleRl> {

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 角色 服务层。
  *
- * @author Thinkpad
+ * @author KThirty
  * @since 2024-01-05
  */
 public interface RoleService extends BaseService<Role> {

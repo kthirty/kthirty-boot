@@ -10,12 +10,14 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.SpringProperties;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.*;
+import top.kthirty.core.tool.utils.StringPool;
 
 import java.time.Duration;
 
@@ -47,9 +49,11 @@ public class RedisTemplateConfiguration {
 
     @Bean(name = "redisTemplate")
     @ConditionalOnMissingBean(RedisTemplate.class)
+    @ConditionalOnBean(RedisSerializer.class)
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory, RedisSerializer<Object> redisSerializer) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        RedisKeySerializer redisKeySerializer = new RedisKeySerializer();
+        String applicationName = SpringProperties.getProperty("spring.application.name");
+        RedisKeySerializer redisKeySerializer = new RedisKeySerializer(applicationName + StringPool.COLON);
         // key 序列化
         redisTemplate.setKeySerializer(redisKeySerializer);
         redisTemplate.setHashKeySerializer(redisKeySerializer);
@@ -62,7 +66,8 @@ public class RedisTemplateConfiguration {
 
     @Bean
     @ConditionalOnMissingBean({CacheManager.class})
-    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory,RedisTemplate<String, Object> redisTemplate) {
+    @ConditionalOnBean(RedisTemplate.class)
+    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory, RedisTemplate<String, Object> redisTemplate) {
         RedisSerializer<?> keySerializer = redisTemplate.getKeySerializer();
         RedisSerializer<?> valueSerializer = redisTemplate.getValueSerializer();
         RedisSerializationContext.SerializationPair<?> keySerializationPair = RedisSerializationContext.SerializationPair.fromSerializer(keySerializer);

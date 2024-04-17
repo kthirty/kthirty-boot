@@ -7,8 +7,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 import top.kthirty.core.db.support.Condition;
 import top.kthirty.core.db.support.Query;
@@ -22,7 +20,7 @@ import java.util.List;
 /**
  * 菜单 控制层。
  *
- * @author Thinkpad
+ * @author KThirty
  * @since 2024-01-05
  */
 @RestController
@@ -46,14 +44,12 @@ public class MenuController extends BaseController {
     }
 
     @PutMapping("update")
-    @CacheEvict(value = "menu:all",allEntries = true)
     @Operation(summary = "根据主键更新菜单", description = "根据主键更新菜单")
     public boolean update(@RequestBody @Parameter(description = "菜单主键") @Valid Menu menu) {
         return menuService.updateById(menu);
     }
 
     @GetMapping("list")
-    @Cacheable(value = "menu:all",key = "#menu.toString()")
     @Operation(summary = "查询所有菜单", description = "查询所有菜单")
     public List<Menu> list(Menu menu) {
         return menuService.list(Condition.getWrapper(menu));
