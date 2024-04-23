@@ -4,14 +4,11 @@ server:
     context-path: /sys
 spring:
   datasource:
-    url: jdbc:mysql://localhost:5006/kthirty
-    username: root
+    url: jdbc:mysql://mysql.kthirty.top:7091/test2024
+    username: test2024
     password: ${KTHIRTY_PASSWORD}
   data:
     redis:
       host: redis.kthirty.top
       port: 5008
       password: ${KTHIRTY_PASSWORD}
-
-  liquibase:
-    clear-checksums: true

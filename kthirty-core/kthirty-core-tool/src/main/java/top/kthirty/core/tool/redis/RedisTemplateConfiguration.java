@@ -1,5 +1,6 @@
 package top.kthirty.core.tool.redis;
 
+import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -10,16 +11,18 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.SpringProperties;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.*;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import top.kthirty.core.tool.utils.StringPool;
 
 import java.time.Duration;
+import java.util.Locale;
 
 /**
  * <p>
@@ -52,7 +55,7 @@ public class RedisTemplateConfiguration {
     @ConditionalOnBean(RedisSerializer.class)
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory, RedisSerializer<Object> redisSerializer) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        String applicationName = SpringProperties.getProperty("spring.application.name");
+        String applicationName = SpringUtil.getProperty("spring.application.name").toLowerCase(Locale.ROOT);
         RedisKeySerializer redisKeySerializer = new RedisKeySerializer(applicationName + StringPool.COLON);
         // key 序列化
         redisTemplate.setKeySerializer(redisKeySerializer);

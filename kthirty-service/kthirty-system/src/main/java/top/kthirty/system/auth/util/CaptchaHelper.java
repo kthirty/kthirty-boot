@@ -9,7 +9,7 @@ import top.kthirty.core.web.utils.WebUtil;
 import java.util.concurrent.TimeUnit;
 
 public class CaptchaHelper {
-    private static final String KEY = "sys:auth:captcha:";
+    private static final String KEY = "auth:captcha:";
     private static final String BASE64_PREFIX = "data:image/png;base64,";
 
     /**

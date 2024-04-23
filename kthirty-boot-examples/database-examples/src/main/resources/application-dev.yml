@@ -1,5 +1,10 @@
 spring:
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/kthirty
-    username: kthirty
-    password: kthirty
+    url: jdbc:mysql://mysql.kthirty.top:7091/test2024
+    username: test2024
+    password: ${KTHIRTY_PASSWORD}
+  data:
+    redis:
+      host: kthirty.top
+      port: 5008
+      password: ${KTHIRTY_PASSWORD}
