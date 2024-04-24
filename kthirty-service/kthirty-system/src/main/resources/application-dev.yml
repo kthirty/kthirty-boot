@@ -7,6 +7,8 @@ spring:
     url: jdbc:mysql://mysql.kthirty.top:7091/test2024
     username: test2024
     password: ${KTHIRTY_PASSWORD}
+    hikari:
+      max-lifetime: 1800000
   data:
     redis:
       host: redis.kthirty.top

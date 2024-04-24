@@ -10,8 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.context.annotation.Configuration;
 import top.kthirty.core.db.base.entity.BaseEntity;
-import top.kthirty.core.db.base.entity.DataEntity;
 import top.kthirty.core.db.listener.OperatingListener;
+
 @Slf4j
 @Configuration
 @AutoConfigureBefore(MybatisFlexAutoConfiguration.class)
