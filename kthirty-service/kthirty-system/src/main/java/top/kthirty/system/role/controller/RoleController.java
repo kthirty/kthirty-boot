@@ -38,7 +38,7 @@ import static top.kthirty.system.role.entity.table.RoleTableDef.ROLE;
 @RestController
 @Tag(name = "角色接口")
 @AllArgsConstructor
-@RequestMapping("/role")
+@RequestMapping("/sys/role")
 public class RoleController extends BaseController {
     private final RoleService roleService;
 

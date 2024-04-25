@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @Tag(name = "认证接口")
 @AllArgsConstructor
-@RequestMapping("auth")
+@RequestMapping("/sys/auth")
 public class AuthController extends BaseController {
     private final AuthService authService;
 

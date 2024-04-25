@@ -26,7 +26,7 @@ import java.util.List;
 @RestController
 @Tag(name = "接口")
 @AllArgsConstructor
-@RequestMapping("/dict")
+@RequestMapping("/sys/dict")
 public class DictController extends BaseController {
     private final DictService dictService;
 

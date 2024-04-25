@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @Tag(name = "用户信息接口")
 @AllArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/sys/user")
 public class UserController extends BaseController {
     private final UserService userService;
 

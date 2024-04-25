@@ -1,13 +1,15 @@
 package top.kthirty.core.web.swagger;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
-import io.swagger.v3.oas.models.security.*;
+import io.swagger.v3.oas.models.security.OAuthFlow;
+import io.swagger.v3.oas.models.security.OAuthFlows;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.AllArgsConstructor;
 import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -17,7 +19,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import top.kthirty.core.boot.config.KthirtyBootConfiguration;
-import top.kthirty.core.tool.Func;
 
 
 /**

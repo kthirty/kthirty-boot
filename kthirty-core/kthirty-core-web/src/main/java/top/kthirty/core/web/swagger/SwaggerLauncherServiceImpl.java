@@ -1,13 +1,15 @@
 package top.kthirty.core.web.swagger;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.lang.ClassScanner;
+import cn.hutool.core.util.ReflectUtil;
 import net.dreamlu.mica.auto.annotation.AutoService;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.core.Ordered;
 import top.kthirty.core.boot.constant.AppConstant;
 import top.kthirty.core.boot.constant.EnvEnum;
 import top.kthirty.core.boot.launch.KthirtyLaunchInfo;
 import top.kthirty.core.boot.launch.LauncherService;
+
+import java.util.Set;
 
 /**
  * 初始化Swagger配置
@@ -31,15 +33,17 @@ public class SwaggerLauncherServiceImpl implements LauncherService {
 		launchInfo.addProperties("knife4j.setting.enableFooter", "false");
 		launchInfo.addProperties("knife4j.setting.enableFooterCustom", "true");
 		launchInfo.addProperties("knife4j.setting.footerCustomContent", "2021 - Now By KTHIRTY");
-		launchInfo.addProperties("springdoc.group-configs[0].group", StrUtil.blankToDefault(AppConstant.LAUNCH_INFO.getDescription(),AppConstant.LAUNCH_INFO.getAppName()));
-		launchInfo.addProperties("springdoc.group-configs[0].paths-to-match", "/**");
-		launchInfo.addProperties("springdoc.group-configs[0].packages-to-scan", AppConstant.basePackages());
+		int i = 0;
+		Set<Class<?>> registerSet = ClassScanner.scanAllPackageBySuper(AppConstant.basePackages(), SwaggerRegister.class);
+		for (Class<?> aClass : registerSet) {
+			SwaggerRegister register = (SwaggerRegister)ReflectUtil.newInstance(aClass);
+			launchInfo.addProperties("springdoc.group-configs["+i+"].group", register.group());
+			launchInfo.addProperties("springdoc.group-configs["+i+"].paths-to-match", register.pathsToMatch());
+			launchInfo.addProperties("springdoc.group-configs["+i+"].packages-to-scan", register.packagesToScan());
+			i++;
+		}
 		// 默认展开query
 		launchInfo.addProperties("springdoc.default-flat-param-object", true);
 	}
 
-	@Override
-	public int getOrder() {
-		return Ordered.LOWEST_PRECEDENCE;
-	}
 }

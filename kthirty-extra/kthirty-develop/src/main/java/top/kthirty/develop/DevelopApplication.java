@@ -1,4 +1,6 @@
 package top.kthirty.develop;
 
-public class DevelopApplication {
+import top.kthirty.core.web.swagger.SwaggerRegister;
+
+public class DevelopApplication implements SwaggerRegister {
 }

@@ -26,7 +26,7 @@ import java.util.List;
 @RestController
 @Tag(name = "菜单接口")
 @AllArgsConstructor
-@RequestMapping("/menu")
+@RequestMapping("/sys/menu")
 @Slf4j
 public class MenuController extends BaseController {
     private final MenuService menuService;

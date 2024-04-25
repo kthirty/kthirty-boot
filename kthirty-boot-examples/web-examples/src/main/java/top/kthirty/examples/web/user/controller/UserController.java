@@ -17,7 +17,7 @@ import java.util.List;
 
 @Tag(name = "用户管理")
 @RestController
-@RequestMapping("user")
+@RequestMapping("/sys/user")
 @AllArgsConstructor
 public class UserController extends BaseController   {
     private final SysUserMapper sysUserMapper;

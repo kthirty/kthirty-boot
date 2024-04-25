@@ -30,7 +30,7 @@ import java.util.List;
 @RestController
 @Tag(name = "部门信息接口")
 @AllArgsConstructor
-@RequestMapping("/dept")
+@RequestMapping("/sys/dept")
 public class DeptController extends BaseController {
     private final DeptService deptService;
 

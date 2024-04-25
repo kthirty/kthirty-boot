@@ -30,7 +30,7 @@ import java.util.List;
 @RestController
 @Tag(name = "岗位信息接口")
 @AllArgsConstructor
-@RequestMapping("/post")
+@RequestMapping("/sys/post")
 public class PostController extends BaseController {
     private final PostService postService;
 

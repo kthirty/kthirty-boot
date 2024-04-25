@@ -33,7 +33,7 @@ public class KthirtyApplication {
     }
 
     public static ConfigurableApplicationContext run(Class<?> source, String... args) {
-        SpringApplicationBuilder builder = createSpringApplicationBuilder(new KthirtyAppInfo(StrUtil.removeSuffixIgnoreCase(source.getSimpleName(), "application").toUpperCase(), "", 8080), source, args);
+        SpringApplicationBuilder builder = createSpringApplicationBuilder(new KthirtyAppInfo(StrUtil.toUnderlineCase(StrUtil.removeSuffixIgnoreCase(source.getSimpleName(), "application")).toUpperCase(), "", 8080), source, args);
         return builder.run(args);
     }
 
