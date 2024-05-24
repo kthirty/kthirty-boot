@@ -1,14 +1,22 @@
 package top.kthirty.system.auth.service.impl;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.tree.Tree;
+import cn.hutool.core.lang.tree.TreeNode;
+import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.text.StrPool;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import top.kthirty.core.boot.secure.SecureUtil;
 import top.kthirty.core.boot.secure.SysUser;
+import top.kthirty.core.db.support.TreePath;
 import top.kthirty.core.secure.token.TokenInfo;
 import top.kthirty.core.secure.token.TokenUtil;
 import top.kthirty.core.secure.util.PasswordUtil;
+import top.kthirty.core.tool.Func;
+import top.kthirty.core.tool.jackson.JsonUtil;
+import top.kthirty.core.tool.support.Kv;
+import top.kthirty.core.tool.utils.BeanUtil;
 import top.kthirty.core.tool.utils.StringPool;
 import top.kthirty.system.auth.model.AuthParam;
 import top.kthirty.system.auth.service.AuthService;
@@ -82,15 +90,29 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public List<Menu> menus() {
+    public List<Tree<String>> menus() {
         List<String> roles = SecureUtil.getRoles();
-        return menuService.queryChain()
+        List<TreeNode<String>> list = menuService.queryChain()
                 .select(MENU.ALL_COLUMNS)
                 .join(ROLE_MENU_RL).on(ROLE_MENU_RL.MENU_ID.eq(MENU.ID)).and(MENU.DELETED.eq("0"))
                 .join(ROLE).on(ROLE_MENU_RL.ROLE_CODE.eq(ROLE.CODE)).and(ROLE.DELETED.eq("0"))
                 .where(MENU.DELETED.eq("0"))
                 .and(ROLE.CODE.in(roles))
                 .and(MENU.STATUS.eq("1"))
-                .list();
+                .list()
+                .stream().map(it -> {
+                    TreeNode<String> treeNode = new TreeNode<>();
+                    treeNode.setParentId(it.getParentId());
+                    treeNode.setId(it.getId());
+                    treeNode.setWeight(Func.toInt(it.getSort(),0));
+                    treeNode.setExtra(BeanUtil.toMap(it));
+                    treeNode.getExtra().put("routeMeta", Kv.init()
+                            .set("title",it.getName())
+                            .set("hideMenu",false)
+                            .set("hideBreadcrumb",false)
+                            .set("icon",it.getIcon()));
+                    return treeNode;
+                }).toList();
+        return TreeUtil.build(list, "0");
     }
 }

@@ -1,5 +1,6 @@
 package top.kthirty.system.auth.controller;
 
+import cn.hutool.core.lang.tree.Tree;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -60,7 +61,7 @@ public class AuthController extends BaseController {
 
     @Operation(summary = "获取当前用户的菜单列表")
     @GetMapping("menus")
-    public List<Menu> menus(){
+    public  List<Tree<String>> menus(){
         return authService.menus();
     }
 
