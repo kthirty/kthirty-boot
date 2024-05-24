@@ -1,6 +1,7 @@
 package top.kthirty.system.auth.service.impl;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.text.StrPool;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import top.kthirty.core.boot.secure.SecureUtil;
@@ -8,14 +9,13 @@ import top.kthirty.core.boot.secure.SysUser;
 import top.kthirty.core.secure.token.TokenInfo;
 import top.kthirty.core.secure.token.TokenUtil;
 import top.kthirty.core.secure.util.PasswordUtil;
+import top.kthirty.core.tool.utils.StringPool;
 import top.kthirty.system.auth.model.AuthParam;
 import top.kthirty.system.auth.service.AuthService;
-import top.kthirty.system.auth.util.CaptchaHelper;
 import top.kthirty.system.menu.entity.Menu;
 import top.kthirty.system.menu.service.MenuService;
 import top.kthirty.system.relation.entity.UserRoleRl;
 import top.kthirty.system.relation.service.UserRoleRlService;
-import top.kthirty.system.role.service.RoleService;
 import top.kthirty.system.user.entity.User;
 import top.kthirty.system.user.service.UserService;
 
@@ -45,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenInfo token(AuthParam authParam) {
-        Assert.isTrue(CaptchaHelper.validateCode(authParam.getCode()),"验证码错误");
+//        Assert.isTrue(CaptchaHelper.validateCode(authParam.getCode()),"验证码错误");
         User user = userService.queryChain()
                 .where(USER.USERNAME.eq(authParam.getUsername()))
                 .and(USER.PASSWORD.eq(PasswordUtil.encrypt(authParam.getPassword())))
@@ -64,6 +64,7 @@ public class AuthServiceImpl implements AuthService {
                 .join(ROLE_MENU_RL).on(ROLE_MENU_RL.MENU_ID.eq(MENU.ID))
                 .join(ROLE).on(ROLE_MENU_RL.ROLE_CODE.eq(ROLE.CODE))
                 .where(MENU.PERMISSION.isNotNull())
+                .and(MENU.PERMISSION.ne(StringPool.EMPTY))
                 .and(ROLE.CODE.in(roles))
                 .list()
                 .stream()

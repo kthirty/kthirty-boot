@@ -21,6 +21,6 @@ public interface IResultCode extends Serializable {
      *
      * @return int
      */
-    String getCode();
+    Integer getCode();
 
 }

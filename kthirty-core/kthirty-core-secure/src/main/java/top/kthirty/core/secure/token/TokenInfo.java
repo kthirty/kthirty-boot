@@ -13,4 +13,8 @@ public class TokenInfo {
     private Integer expiresIn;
     @Schema(title = "许可证")
     private String license = "Powered by KTHIRTY";
+    @Schema(title = "用户名")
+    private String username;
+    @Schema(title = "用户ID")
+    private String userId;
 }

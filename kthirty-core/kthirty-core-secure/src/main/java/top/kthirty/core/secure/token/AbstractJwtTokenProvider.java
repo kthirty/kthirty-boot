@@ -29,6 +29,8 @@ public abstract class AbstractJwtTokenProvider implements TokenProvider{
         Assert.hasText(username, "用来生成Token的用户登录名不可为空");
         TokenInfo tokenInfo = new TokenInfo();
         Map<String, Object> claim = new HashMap<>();
+        tokenInfo.setUsername(username);
+        tokenInfo.setUserId(sysUser.getId());
         claim.put(JwtCacheTokenProvider.ClaimKey.USERNAME, username);
         claim.put(JwtCacheTokenProvider.ClaimKey.TOKEN_TYPE, JwtCacheTokenProvider.ClaimKey.ACCESS_TOKEN);
         // AccessToken
