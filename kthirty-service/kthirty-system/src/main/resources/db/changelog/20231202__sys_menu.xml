@@ -25,17 +25,16 @@
             <column name="type" type="varchar(2)" remarks="类型(1菜单,2权限)">
                 <constraints nullable="false"/>
             </column>
-            <column name="code" type="varchar(32)" remarks="菜单CODE">
-                <constraints nullable="false"/>
-            </column>
             <column name="permission" type="varchar(100)" remarks="权限标识"/>
             <column name="parent_id" type="varchar(32)" remarks="上级ID" defaultValue="0"/>
             <column name="sort" type="int(2)" remarks="排序" defaultValue="0"/>
             <column name="path" type="varchar(100)" remarks="请求地址"/>
             <column name="component" type="varchar(100)" remarks="前端组件"/>
+            <column name="component_name" type="varchar(100)" remarks="前端组件名称"/>
             <column name="icon" type="varchar(100)" remarks="图标"/>
             <column name="description" type="varchar(255)" remarks="描述"/>
             <column name="status" type="varchar(2)" remarks="状态(1启用/0禁用)"/>
+            <column name="show" type="varchar(2)" remarks="是否显示(1显示/0隐藏)"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

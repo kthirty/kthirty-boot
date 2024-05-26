@@ -31,14 +31,8 @@ public class Menu extends LogicEntity {
     /**
      * 类型(1菜单,2权限)
      */
-    @Schema(description = "类型(1菜单,2权限)")
+    @Schema(description = "类型(0目录,1菜单,2权限)")
     private String type;
-
-    /**
-     * 菜单CODE
-     */
-    @Schema(description = "菜单CODE")
-    private String code;
 
     /**
      * 权限标识
@@ -69,6 +63,11 @@ public class Menu extends LogicEntity {
      */
     @Schema(description = "前端组件")
     private String component;
+    /**
+     * 前端组件名
+     */
+    @Schema(description = "前端组件名称")
+    private String componentName;
 
     /**
      * 图标
@@ -87,5 +86,10 @@ public class Menu extends LogicEntity {
      */
     @Schema(description = "状态(1启用/0禁用)")
     private String status;
+    /**
+     * 是否显示(1显示/0隐藏)
+     */
+    @Schema(description = "状态(1显示/0隐藏)")
+    private String show;
 
 }

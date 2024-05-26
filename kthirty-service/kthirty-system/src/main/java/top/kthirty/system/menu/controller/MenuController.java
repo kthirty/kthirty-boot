@@ -1,5 +1,6 @@
 package top.kthirty.system.menu.controller;
 
+import cn.hutool.core.lang.tree.Tree;
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -49,10 +50,10 @@ public class MenuController extends BaseController {
         return menuService.updateById(menu);
     }
 
-    @GetMapping("list")
+    @GetMapping("tree")
     @Operation(summary = "查询所有菜单", description = "查询所有菜单")
-    public List<Menu> list(Menu menu) {
-        return menuService.list(Condition.getWrapper(menu));
+    public List<Tree<String>> tree(Menu menu) {
+        return menuService.tree(Condition.getWrapper(menu));
     }
 
     @GetMapping("getInfo/{id}")

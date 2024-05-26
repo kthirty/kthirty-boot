@@ -6,7 +6,7 @@ spring:
     username: test2024
     password: ${KTHIRTY_PASSWORD}
     hikari:
-      max-lifetime: 1800000
+      max-lifetime: 18000000000
   data:
     redis:
       host: redis.kthirty.top
