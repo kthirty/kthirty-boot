@@ -8,20 +8,18 @@ import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import top.kthirty.core.test.BaseKthirtyTest;
-import top.kthirty.core.test.KthirtyTest;
 import top.kthirty.core.tool.dict.DictItem;
 import top.kthirty.core.tool.dict.DictUtil;
 import top.kthirty.core.tool.excel.ExcelUtil;
 import top.kthirty.core.tool.excel.support.ExcelParams;
 import top.kthirty.core.tool.excel.support.ExcelStyle;
-import top.kthirty.system.SystemApplication;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-@KthirtyTest(appName = "system", classes = SystemApplication.class)
+//@KthirtyTest(appName = "system", classes = SystemApplication.class)
 @Slf4j
 public class TestExcel extends BaseKthirtyTest {
     public static void main(String[] args) {

@@ -49,13 +49,14 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Spring Projects-->
-        <spring-boot.version>3.0.2</spring-boot.version>
-        <spring-cloud.version>2022.0.0</spring-cloud.version>
-        <spring-cloud-alibaba.verion>2022.0.0.0</spring-cloud-alibaba.verion>
+        <spring-boot.version>3.3.0</spring-boot.version>
+        <spring-cloud.version>2023.0.1</spring-cloud.version>
+        <spring-cloud-alibaba.verion>2023.0.1.0</spring-cloud-alibaba.verion>
         <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
         <!-- Tools-->
         <hutool.version>5.8.27</hutool.version>
@@ -65,8 +66,8 @@
         <redission.version>3.16.5</redission.version>
         <jjwt.version>0.12.3</jjwt.version>
         <!--DB-->
-        <mybatis-flex.version>1.7.5</mybatis-flex.version>
-        <mybatis-spring.version>3.0.1</mybatis-spring.version>
+        <mybatis-flex.version>1.8.9</mybatis-flex.version>
+        <mybatis-spring.version>3.0.3</mybatis-spring.version>
     </properties>
     <dependencies>
         <dependency>
@@ -182,6 +183,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.6.2</version>
                 <configuration>
+                    <additionalOptions>-Xdoclint:none</additionalOptions>
                     <show>private</show>
                     <nohelp>true</nohelp>
                     <charset>UTF-8</charset>

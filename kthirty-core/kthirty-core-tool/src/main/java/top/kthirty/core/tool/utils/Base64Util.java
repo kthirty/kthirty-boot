@@ -1,11 +1,13 @@
 package top.kthirty.core.tool.utils;
 
+import cn.hutool.core.codec.Base64;
+
 /**
  * Base64工具
  *
  * @author Kthirty
  */
-public class Base64Util extends org.springframework.util.Base64Utils {
+public class Base64Util{
 
 	/**
 	 * 编码
@@ -14,7 +16,7 @@ public class Base64Util extends org.springframework.util.Base64Utils {
 	 * @return {String}
 	 */
 	public static String encode(String value) {
-		return Base64Util.encode(value, Charsets.UTF_8);
+		return Base64.encode(value, Charsets.UTF_8);
 	}
 
 	/**
@@ -25,8 +27,7 @@ public class Base64Util extends org.springframework.util.Base64Utils {
 	 * @return {String}
 	 */
 	public static String encode(String value, java.nio.charset.Charset charset) {
-		byte[] val = value.getBytes(charset);
-		return new String(Base64Util.encode(val), charset);
+		return Base64.encode(value,charset);
 	}
 
 	/**
@@ -36,7 +37,7 @@ public class Base64Util extends org.springframework.util.Base64Utils {
 	 * @return {String}
 	 */
 	public static String encodeUrlSafe(String value) {
-		return Base64Util.encodeUrlSafe(value, Charsets.UTF_8);
+		return Base64.encodeUrlSafe(value, Charsets.UTF_8);
 	}
 
 	/**
@@ -47,8 +48,7 @@ public class Base64Util extends org.springframework.util.Base64Utils {
 	 * @return {String}
 	 */
 	public static String encodeUrlSafe(String value, java.nio.charset.Charset charset) {
-		byte[] val = value.getBytes(charset);
-		return new String(Base64Util.encodeUrlSafe(val), charset);
+		return Base64.encodeUrlSafe(value,charset);
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class Base64Util extends org.springframework.util.Base64Utils {
 	 * @return {String}
 	 */
 	public static String decode(String value) {
-		return Base64Util.decode(value, Charsets.UTF_8);
+		return decode(value, Charsets.UTF_8);
 	}
 
 	/**
@@ -69,9 +69,7 @@ public class Base64Util extends org.springframework.util.Base64Utils {
 	 * @return {String}
 	 */
 	public static String decode(String value, java.nio.charset.Charset charset) {
-		byte[] val = value.getBytes(charset);
-		byte[] decodedValue = Base64Util.decode(val);
-		return new String(decodedValue, charset);
+		return new String(Base64.decode(value),charset);
 	}
 
 	/**
@@ -81,7 +79,7 @@ public class Base64Util extends org.springframework.util.Base64Utils {
 	 * @return {String}
 	 */
 	public static String decodeUrlSafe(String value) {
-		return Base64Util.decodeUrlSafe(value, Charsets.UTF_8);
+		return decodeUrlSafe(value, Charsets.UTF_8);
 	}
 
 	/**
@@ -93,7 +91,7 @@ public class Base64Util extends org.springframework.util.Base64Utils {
 	 */
 	public static String decodeUrlSafe(String value, java.nio.charset.Charset charset) {
 		byte[] val = value.getBytes(charset);
-		byte[] decodedValue = Base64Util.decodeUrlSafe(val);
+		byte[] decodedValue = Base64.decode(val);
 		return new String(decodedValue, charset);
 	}
 }
