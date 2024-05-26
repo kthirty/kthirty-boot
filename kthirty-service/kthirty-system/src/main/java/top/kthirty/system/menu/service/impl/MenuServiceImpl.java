@@ -7,6 +7,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import top.kthirty.core.db.support.TreePath;
+import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.support.Kv;
 import top.kthirty.core.tool.utils.BeanUtil;
 import top.kthirty.system.menu.entity.Menu;
@@ -34,7 +35,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         List<TreeNode<String>> nodes = list(wrapper).stream().map(it -> {
             TreeNode<String> node = new TreeNode<>();
             Kv extra = Kv.init().setAll(BeanUtil.toMap(it)).setAll(it.jsonAnyGetter());
-            node.setWeight("sort").setExtra(extra);
+            node.setWeight(Func.toInt(it.getSort(),0)).setExtra(extra);
             return node;
         }).toList();
         return TreeUtil.build(nodes, "0");

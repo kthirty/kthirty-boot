@@ -29,7 +29,7 @@ public class CoreDbLaunchImpl implements LauncherService {
         launchInfo.addProperties("spring.datasource.hikari.minimum-idle","5");
         launchInfo.addProperties("spring.datasource.hikari.idle-timeout","600000");
         launchInfo.addProperties("spring.datasource.hikari.maximum-pool-size","10");
-        launchInfo.addProperties("spring.datasource.hikari.max-lifetime","18000000");
+        launchInfo.addProperties("spring.datasource.hikari.max-lifetime","120000");
         launchInfo.addProperties("spring.datasource.hikari.connection-timeout","30000");
         launchInfo.addProperties("spring.datasource.hikari.auto-commit",true);
         launchInfo.addProperties("mybatis-flex.global-config.print-banner",false);

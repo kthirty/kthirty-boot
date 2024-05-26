@@ -4,19 +4,16 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
-import cn.hutool.core.text.StrPool;
+import cn.hutool.core.util.BooleanUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import top.kthirty.core.boot.secure.SecureUtil;
 import top.kthirty.core.boot.secure.SysUser;
-import top.kthirty.core.db.support.TreePath;
 import top.kthirty.core.secure.token.TokenInfo;
 import top.kthirty.core.secure.token.TokenUtil;
 import top.kthirty.core.secure.util.PasswordUtil;
 import top.kthirty.core.tool.Func;
-import top.kthirty.core.tool.jackson.JsonUtil;
 import top.kthirty.core.tool.support.Kv;
-import top.kthirty.core.tool.utils.BeanUtil;
 import top.kthirty.core.tool.utils.StringPool;
 import top.kthirty.system.auth.model.AuthParam;
 import top.kthirty.system.auth.service.AuthService;
@@ -104,13 +101,15 @@ public class AuthServiceImpl implements AuthService {
                     TreeNode<String> treeNode = new TreeNode<>();
                     treeNode.setParentId(it.getParentId());
                     treeNode.setId(it.getId());
-                    treeNode.setWeight(Func.toInt(it.getSort(),0));
-                    treeNode.setExtra(BeanUtil.toMap(it));
-                    treeNode.getExtra().put("routeMeta", Kv.init()
-                            .set("title",it.getName())
-                            .set("hideMenu",false)
-                            .set("hideBreadcrumb",false)
-                            .set("icon",it.getIcon()));
+                    treeNode.setName(it.getComponentName());
+                    treeNode.setWeight(Func.toInt(it.getSort(), 0));
+                    Kv extra = Kv.init().set("meta", Kv.init()
+                                    .set("title", it.getName())
+                                    .set("hideMenu", !BooleanUtil.toBoolean(it.getShow()))
+                                    .set("icon", it.getIcon()))
+                            .set("path",it.getPath())
+                            .set("component",it.getComponent());
+                    treeNode.setExtra(extra);
                     return treeNode;
                 }).toList();
         return TreeUtil.build(list, "0");
