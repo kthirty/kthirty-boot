@@ -1,5 +1,6 @@
 package top.kthirty.system.dept.controller;
 
+import cn.hutool.core.lang.tree.Tree;
 import com.mybatisflex.core.paginate.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,10 +53,10 @@ public class DeptController extends BaseController {
         return deptService.updateById(dept);
     }
 
-    @GetMapping("list")
-    @Operation(summary = "查询所有部门信息",description="查询所有部门信息")
-    public List<Dept> list() {
-        return deptService.list();
+    @GetMapping("tree")
+    @Operation(summary = "查询所有部门信息树",description="查询所有部门信息树")
+    public List<Tree<String>> tree() {
+        return deptService.tree();
     }
 
     @GetMapping("getInfo/{id}")

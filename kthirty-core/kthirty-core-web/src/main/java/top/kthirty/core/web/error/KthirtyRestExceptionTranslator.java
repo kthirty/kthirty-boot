@@ -4,6 +4,7 @@ import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.util.ReflectUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolation;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.api.R;
 import top.kthirty.core.tool.api.SystemResultCode;
@@ -119,10 +121,9 @@ public class KthirtyRestExceptionTranslator {
 		return R.fail(SystemResultCode.PARAM_ERROR, message);
 	}
 
-	@ExceptionHandler(NoHandlerFoundException.class)
+	@ExceptionHandler({NoHandlerFoundException.class, NoResourceFoundException.class})
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public R handleError(NoHandlerFoundException e) {
-		log.error("404没找到请求:{}", e.getMessage());
+	public R handleError(ServletException e) {
 		return R.fail(SystemResultCode.NOT_FOUND, e.getMessage());
 	}
 

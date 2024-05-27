@@ -85,7 +85,7 @@
     <logger name="org.apache.shiro" level="INFO"/>
     <logger name="org.mybatis.spring" level="INFO"/>
     <logger name="org.springframework" level="INFO"/>
-    <logger name="org.springframework.context" level="WARN"/>
+    <logger name="org.springframework.context" level="ERROR"/>
     <logger name="org.springframework.beans" level="WARN"/>
     <logger name="org.apache.ibatis.io" level="INFO"/>
     <logger name="org.apache.velocity" level="INFO"/>

@@ -5,13 +5,14 @@ spring:
     url: jdbc:mysql://mysql.kthirty.top:7091/test2024
     username: test2024
     password: ${KTHIRTY_PASSWORD}
-    hikari:
-      max-lifetime: 120000
   data:
     redis:
       host: redis.kthirty.top
       port: 5008
       password: ${KTHIRTY_PASSWORD}
+
+  liquibase:
+    show-summary: off
 #springdoc:
 #  group-configs:
 #    - packages-to-scan: top.kthirty.develop
