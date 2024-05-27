@@ -1,5 +1,6 @@
 package top.kthirty.core.web.api;
 
+import cn.hutool.core.collection.CollUtil;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.Order;
@@ -12,8 +13,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.api.R;
+import top.kthirty.core.web.utils.ClassUtil;
 
 import java.lang.annotation.Annotation;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -50,6 +55,12 @@ public class KthirtyResponseBodyAdvice implements ResponseBodyAdvice<Object> {
         }
         if(o instanceof String){
             return Func.toJson(R.success(o));
+        }
+        // 返回值为Collection且值为null，自动返回空数组
+        if(methodParameter.getMethod() != null
+                && methodParameter.getMethod().getReturnType() == List.class
+                && o == null){
+            return R.success(Collections.EMPTY_LIST);
         }
         if(Objects.isNull(o) && methodParameter.getMethod() != null && methodParameter.getMethod().getReturnType() == String.class){
             return Func.toJson(R.success());
