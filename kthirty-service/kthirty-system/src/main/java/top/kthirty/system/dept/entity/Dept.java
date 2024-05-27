@@ -1,12 +1,9 @@
 package top.kthirty.system.dept.entity;
 
 import com.mybatisflex.annotation.Table;
+import lombok.*;
 import top.kthirty.core.db.base.entity.LogicEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * 部门信息 实体类。
@@ -14,6 +11,7 @@ import lombok.NoArgsConstructor;
  * @author KThirty
  * @since 2024-01-05
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @NoArgsConstructor

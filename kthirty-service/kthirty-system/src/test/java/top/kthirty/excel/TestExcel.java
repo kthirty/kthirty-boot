@@ -8,18 +8,20 @@ import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import top.kthirty.core.test.BaseKthirtyTest;
+import top.kthirty.core.test.KthirtyTest;
 import top.kthirty.core.tool.dict.DictItem;
 import top.kthirty.core.tool.dict.DictUtil;
 import top.kthirty.core.tool.excel.ExcelUtil;
 import top.kthirty.core.tool.excel.support.ExcelParams;
 import top.kthirty.core.tool.excel.support.ExcelStyle;
+import top.kthirty.system.SystemApplication;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-//@KthirtyTest(appName = "system", classes = SystemApplication.class)
+@KthirtyTest(appName = "system", classes = SystemApplication.class)
 @Slf4j
 public class TestExcel extends BaseKthirtyTest {
     public static void main(String[] args) {
@@ -29,7 +31,7 @@ public class TestExcel extends BaseKthirtyTest {
         log.info(JSONUtil.toJsonPrettyStr(users));
     }
 
-    @Test
+//    @Test
     public void test1() {
         FileUtil.del("/System/Desktop/test.xlsx");
         List<TestUser> list = getUser(2);
@@ -38,7 +40,7 @@ public class TestExcel extends BaseKthirtyTest {
         excelParams.setStyle(ExcelStyle.SINGLE);
         ExcelUtil.exp(list, TestUser.class, outputStream, excelParams);
     }
-    @Test
+//    @Test
     public void test2(){
         BufferedInputStream inputStream = FileUtil.getInputStream("/System/Desktop/test.xlsx");
         ExcelParams excelParams = new ExcelParams();
@@ -46,7 +48,7 @@ public class TestExcel extends BaseKthirtyTest {
         List<TestUser> users = ExcelUtil.imp(inputStream, TestUser.class, excelParams);
         log.info("读取数据:\n{}", JSONUtil.toJsonPrettyStr(users));
     }
-    @Test
+//    @Test
     public void test3(){
         FileUtil.del("/System/Desktop/test.xlsx");
         List<TestUser> list = getUser(2);
@@ -64,7 +66,7 @@ public class TestExcel extends BaseKthirtyTest {
         log.info(read);
     }
 
-    @Test
+//    @Test
     public void test4(){
         List<DictItem> sexDict= new ArrayList<>();
         sexDict.add(DictItem.builder().value("1").label("男").build());

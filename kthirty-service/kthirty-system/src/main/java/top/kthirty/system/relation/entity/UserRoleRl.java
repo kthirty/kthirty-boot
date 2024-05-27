@@ -1,13 +1,10 @@
 package top.kthirty.system.relation.entity;
 
 import com.mybatisflex.annotation.Table;
+import lombok.*;
 import top.kthirty.core.db.base.entity.IdEntity;
 import top.kthirty.core.db.base.entity.LogicEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * 用户角色关联表 实体类。
@@ -15,6 +12,7 @@ import lombok.NoArgsConstructor;
  * @author KThirty
  * @since 2024-01-05
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @NoArgsConstructor
