@@ -62,7 +62,7 @@ public class KthirtyApplication {
                 .setAppName(kthirtyAppInfo.getApplicationName())
                 .setSource(source)
                 .setPort(kthirtyAppInfo.getPort() == null ? 8080 : kthirtyAppInfo.getPort())
-                .setCustomLaunchers(kthirtyAppInfo.getCustomLaunchers())
+                .setCustomLaunchers(CollUtil.list(true,kthirtyAppInfo.getCustomLaunchers()))
                 .setDescription(kthirtyAppInfo.getDescription())
                 .setArgs(CollUtil.newHashSet(args));
         // 添加启动类所在Package

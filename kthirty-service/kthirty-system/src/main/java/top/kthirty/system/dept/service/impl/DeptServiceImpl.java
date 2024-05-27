@@ -6,6 +6,7 @@ import cn.hutool.core.lang.tree.TreeUtil;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import top.kthirty.core.db.support.TreePath;
+import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.support.Kv;
 import top.kthirty.core.tool.utils.BeanUtil;
 import top.kthirty.system.dept.entity.Dept;
@@ -30,13 +31,14 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     @Override
     public List<Tree<String>> tree() {
-        return TreeUtil.build(list().stream()
+        List<TreeNode<String>> treeNodes = list().stream()
                 .map(it -> new TreeNode<String>()
                         .setId(it.getId())
                         .setWeight(it.getSort())
                         .setName(it.getName())
-                        .setParentId(it.getParentId())
+                        .setParentId(Func.blankToDefault(it.getParentId(), "0"))
                         .setExtra(Kv.init().setAll(it.jsonAnyGetter()).setAll(BeanUtil.toMap(it))))
-                .toList(),"0");
+                .toList();
+        return TreeUtil.build(treeNodes,"0");
     }
 }

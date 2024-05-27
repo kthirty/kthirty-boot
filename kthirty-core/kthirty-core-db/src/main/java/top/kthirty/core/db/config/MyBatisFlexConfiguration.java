@@ -31,6 +31,6 @@ public class MyBatisFlexConfiguration implements MyBatisFlexCustomizer {
         flexGlobalConfig.registerUpdateListener(new OperatingListener(), BaseEntity.class);
         // Sql审计功能
         AuditManager.setAuditEnable(true);
-        AuditManager.setMessageCollector(auditMessage -> log.debug("{},{}ms", auditMessage.getFullSql(), auditMessage.getElapsedTime()));
+        AuditManager.setMessageCollector(auditMessage -> log.debug("{} ,count {},{}ms", auditMessage.getFullSql(), auditMessage.getQueryCount(), auditMessage.getElapsedTime()));
     }
 }

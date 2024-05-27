@@ -33,11 +33,11 @@ public class KthirtyAppInfo {
     /**
      * 默认运行端口
      */
-    private Integer port = 8080;
+    private Integer port;
     /**
      * 自定义处理器
      */
-    private List<LauncherService> customLaunchers = new ArrayList<>();
+    private List<LauncherService> customLaunchers;
 
     public KthirtyAppInfo(String applicationName, String description, Integer port) {
         this.applicationName = applicationName;

@@ -1463,4 +1463,7 @@ public class Func {
     }
 
 
+    public static String blankToDefault(String str, String defaultVal) {
+        return StrUtil.blankToDefault(str,defaultVal);
+    }
 }

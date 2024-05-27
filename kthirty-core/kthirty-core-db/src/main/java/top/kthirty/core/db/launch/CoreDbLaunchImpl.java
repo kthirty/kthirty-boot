@@ -29,7 +29,7 @@ public class CoreDbLaunchImpl implements LauncherService {
         launchInfo.addProperties("spring.datasource.hikari.minimum-idle","5");
         launchInfo.addProperties("spring.datasource.hikari.idle-timeout","30000");
         launchInfo.addProperties("spring.datasource.hikari.maximum-pool-size","10");
-        launchInfo.addProperties("spring.datasource.hikari.max-lifetime","1000000");
+        launchInfo.addProperties("spring.datasource.hikari.max-lifetime","100000");
         launchInfo.addProperties("spring.datasource.hikari.pool-name","SpringBootHikariCP");
         launchInfo.addProperties("spring.datasource.hikari.connection-timeout","30000");
         launchInfo.addProperties("spring.datasource.hikari.leak-detection-threshold","15000");
