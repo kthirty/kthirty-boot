@@ -15,7 +15,7 @@
             <column name="id" type="varchar(32)" remarks="主键">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="role_code" type="varchar(32)" remarks="角色代码"/>
+            <column name="role_id" type="varchar(32)" remarks="角色代码"/>
             <column name="menu_id" type="varchar(32)" remarks="菜单ID"/>
         </createTable>
     </changeSet>
@@ -30,7 +30,7 @@
             <column name="id" type="varchar(32)" remarks="主键">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="role_code" type="varchar(32)" remarks="角色代码"/>
+            <column name="role_id" type="varchar(32)" remarks="角色代码"/>
             <column name="user_id" type="varchar(32)" remarks="用户ID"/>
         </createTable>
     </changeSet>

@@ -126,7 +126,7 @@ public class SecureConfiguration {
             @Override
             public R handle(Throwable e, HttpServletResponse response) {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                return R.fail(SystemResultCode.NOT_LOGIN);
+                return R.fail(SystemResultCode.NOT_LOGIN,e.getMessage());
             }
         };
     }
@@ -146,7 +146,7 @@ public class SecureConfiguration {
             @Override
             public R handle(Throwable e, HttpServletResponse response) {
                 response.setStatus(HttpStatus.FORBIDDEN.value());
-                return R.fail(SystemResultCode.UN_AUTHORIZED);
+                return R.fail(SystemResultCode.UN_AUTHORIZED,e.getMessage());
             }
         };
     }
