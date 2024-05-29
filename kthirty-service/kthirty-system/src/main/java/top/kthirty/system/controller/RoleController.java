@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import lombok.AllArgsConstructor;
+import top.kthirty.core.db.support.Condition;
 import top.kthirty.system.entity.Role;
 import top.kthirty.system.service.RoleService;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,8 +56,8 @@ public class RoleController extends BaseController {
 
     @GetMapping("list")
     @Operation(summary = "查询所有角色",description="查询所有角色")
-    public List<Role> list() {
-        return roleService.list();
+    public List<Role> list(Role role) {
+        return roleService.list(Condition.getWrapper(role));
     }
 
     @GetMapping("getInfo/{id}")
@@ -78,8 +79,8 @@ public class RoleController extends BaseController {
 
     @GetMapping("page")
     @Operation(summary = "分页查询角色",description="分页查询角色")
-    public Page<Role> page(@Parameter(description="分页信息")Page<Role> page) {
-        return roleService.page(page);
+    public Page<Role> page(@Parameter(description="分页信息")Page<Role> page,Role role) {
+        return roleService.page(page,Condition.getWrapper(role));
     }
 
 }

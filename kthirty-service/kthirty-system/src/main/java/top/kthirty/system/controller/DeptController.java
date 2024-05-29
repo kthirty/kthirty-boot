@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import lombok.AllArgsConstructor;
+import top.kthirty.core.db.support.Condition;
 import top.kthirty.system.entity.Dept;
 import top.kthirty.system.service.DeptService;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,8 +67,8 @@ public class DeptController extends BaseController {
 
     @GetMapping("page")
     @Operation(summary = "分页查询部门信息",description="分页查询部门信息")
-    public Page<Dept> page(@Parameter(description="分页信息")Page<Dept> page) {
-        return deptService.page(page);
+    public Page<Dept> page(@Parameter(description="分页信息")Page<Dept> page,Dept dept) {
+        return deptService.page(page, Condition.getWrapper(dept));
     }
 
 }
