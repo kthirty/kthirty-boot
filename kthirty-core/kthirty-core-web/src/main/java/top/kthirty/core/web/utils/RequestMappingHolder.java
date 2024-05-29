@@ -33,7 +33,7 @@ public class RequestMappingHolder implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        RequestMappingHandlerMapping handlerMapping = applicationContext.getBean(RequestMappingHandlerMapping.class);
+        RequestMappingHandlerMapping handlerMapping = applicationContext.getBean("requestMappingHandlerMapping",RequestMappingHandlerMapping.class);
         handlerMethod = handlerMapping.getHandlerMethods();
     }
 

@@ -17,8 +17,8 @@ import top.kthirty.system.model.RoleConfigMenuVO;
 
 import java.util.List;
 
-import static top.kthirty.system.relation.entity.table.RoleMenuRlTableDef.ROLE_MENU_RL;
-import static top.kthirty.system.role.entity.table.RoleTableDef.ROLE;
+import static top.kthirty.system.entity.table.RoleMenuRlTableDef.ROLE_MENU_RL;
+import static top.kthirty.system.entity.table.RoleTableDef.ROLE;
 
 /**
  * 角色 服务层实现。
