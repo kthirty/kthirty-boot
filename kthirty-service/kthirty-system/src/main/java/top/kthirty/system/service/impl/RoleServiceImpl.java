@@ -46,8 +46,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public void saveMenus(RoleConfigMenuVO req) {
-        TimeInterval timer = DateUtil.timer();
-        timer.start();
         Role role = getById(req.getRoleId());
         Assert.notNull(role,"角色不存在");
         roleMenuRlService.remove(ROLE_MENU_RL.ROLE_ID.eq(role.getId()));
