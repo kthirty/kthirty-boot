@@ -1,6 +1,5 @@
 package top.kthirty.core.tool.excel.imp;
 
-import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.func.Func1;
@@ -15,15 +14,12 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import top.kthirty.core.tool.Func;
-import top.kthirty.core.tool.dict.Dict;
-import top.kthirty.core.tool.excel.Excel;
 import top.kthirty.core.tool.excel.support.ExcelHelper;
 import top.kthirty.core.tool.excel.support.ExcelParams;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -74,7 +70,7 @@ public class MultipleImportHandler<E> implements ImportHandler<E> {
         // 类型转换
         List<E> result = new ArrayList<>(records.size());
         for (Map item : records) {
-            E bean = BeanUtil.mapToBean(item, clazz, false, CopyOptions.create().setIgnoreError(true));
+            E bean = BeanUtil.toBean(item,clazz,CopyOptions.create().ignoreError().ignoreCase());
             // 处理子类
             Field[] subTableFields = getSubTableFields(clazz, params.getGroups());
             if (Func.isNotEmpty(subTableFields)) {

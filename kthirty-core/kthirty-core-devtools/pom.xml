@@ -11,7 +11,8 @@
 
     <artifactId>kthirty-core-devtools</artifactId>
     <name>${project.artifactId}</name>
-    <description>本依赖存在只是为了添加META-INF</description>
+    <description>本依赖存在只是为了添加META-INF,本来应该添加到db模块中，但是db 的 auto-service 会覆盖META-INFO文件夹</description>
+    <packaging>jar</packaging>
 
 
 </project>
