@@ -12,11 +12,16 @@ import org.springframework.web.bind.annotation.*;
 import top.kthirty.core.db.support.Condition;
 import top.kthirty.core.db.support.Query;
 import top.kthirty.core.web.base.BaseController;
+import top.kthirty.system.entity.DataPermission;
 import top.kthirty.system.entity.Menu;
+import top.kthirty.system.entity.table.DataPermissionTableDef;
+import top.kthirty.system.service.DataPermissionService;
 import top.kthirty.system.service.MenuService;
 
 import java.io.Serializable;
 import java.util.List;
+
+import static top.kthirty.system.entity.table.DataPermissionTableDef.DATA_PERMISSION;
 
 /**
  * 菜单 控制层。
@@ -31,6 +36,7 @@ import java.util.List;
 @Slf4j
 public class MenuController extends BaseController {
     private final MenuService menuService;
+    private final DataPermissionService dataPermissionService;
 
     @PostMapping("save")
     @Operation(summary = "保存菜单", description = "保存菜单")
@@ -68,4 +74,15 @@ public class MenuController extends BaseController {
         return menuService.page(query.getPage(), Condition.getWrapper(menu));
     }
 
+    @GetMapping("dataPermission/{id}")
+    @Operation(summary = "查询菜单的数据权限列表")
+    public List<DataPermission> queryDataPermission(@PathVariable String id,DataPermission dataPermission) {
+        return dataPermissionService.list(Condition.getWrapper(dataPermission).eq(DATA_PERMISSION.MENU_ID.getAlias(),id));
+    }
+
+    @PutMapping("saveDataPermission")
+    @Operation(summary = "保存菜单的数据权限")
+    public void saveDataPermission(@RequestBody DataPermission dataPermission) {
+        dataPermissionService.saveOrUpdate(dataPermission);
+    }
 }

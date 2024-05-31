@@ -1,5 +1,6 @@
 package top.kthirty.system.controller;
 
+import cn.hutool.core.lang.tree.Tree;
 import com.mybatisflex.core.paginate.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import lombok.AllArgsConstructor;
+import top.kthirty.core.db.support.Condition;
 import top.kthirty.system.entity.Post;
 import top.kthirty.system.service.PostService;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,10 +53,10 @@ public class PostController extends BaseController {
         return postService.updateById(post);
     }
 
-    @GetMapping("list")
+    @GetMapping("tree")
     @Operation(summary = "查询所有岗位信息",description="查询所有岗位信息")
-    public List<Post> list() {
-        return postService.list();
+    public List<Tree<String>> tree(Post post) {
+        return postService.tree(Condition.getWrapper(post));
     }
 
     @GetMapping("getInfo/{id}")

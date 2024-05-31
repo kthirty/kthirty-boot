@@ -1,5 +1,7 @@
 package top.kthirty.develop.gen;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import com.mybatisflex.codegen.Generator;
 import com.mybatisflex.codegen.config.EntityConfig;
 import com.mybatisflex.codegen.config.GlobalConfig;
@@ -17,22 +19,22 @@ import java.util.Map;
 public class CodeGen {
     public static void main(String[] args) {
 
-        String basePath = "D:\\System\\public\\kthirty-boot\\kthirty-service\\kthirty-system";
+        String basePath = FileUtil.getParent(ResourceUtil.getResource("").getFile(),4) + "/kthirty-service/kthirty-system";
 
         String tablePrefix = "sys_";
-        String basePackage = "top.kthirty.system.";
+        String basePackage = "top.kthirty.system";
 
         Map<String,String> moduleTable = new HashMap<>();
-        moduleTable.put("dict","sys_dict,sys_dict_item");
+        moduleTable.put("","sys_data_permission,sys_user_data_permission");
 
-        moduleTable.forEach((model,tables) -> gen(basePath,basePackage+model,tablePrefix,tables.split(",")));
+        moduleTable.forEach((model,tables) -> gen(basePath,basePackage,tablePrefix,tables.split(",")));
     }
 
     private static void gen(String basePath, String basePackage, String tablePrefix, String[] tables) {
         //配置数据源
         HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl("jdbc:mysql://nas.kthirty.top:5006/kthirty");
-        dataSource.setUsername("root");
+        dataSource.setJdbcUrl("jdbc:mysql://mysql.kthirty.top:7091/test2024");
+        dataSource.setUsername("test2024");
         dataSource.setPassword(System.getenv("KTHIRTY_PASSWORD"));
 
         GeneratorFactory.registerGenerator(GenTypeConst.ENTITY,new CustomEntityGenerator());
@@ -68,8 +70,7 @@ public class CodeGen {
         globalConfig.enableServiceImpl();
         globalConfig.getServiceConfig().setSuperClass(BaseService.class);
         // controller
-        globalConfig.enableController().setSuperClass(BaseController.class)
-                .setOverwriteEnable(true);
+//        globalConfig.enableController().setSuperClass(BaseController.class).setOverwriteEnable(true);
 
         Generator generator = new Generator(dataSource, globalConfig);
         generator.generate();

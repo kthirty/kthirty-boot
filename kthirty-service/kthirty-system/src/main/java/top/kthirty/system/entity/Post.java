@@ -27,7 +27,7 @@ public class Post extends LogicEntity {
     private String status;
 
     /**
-     * 上级部门ID
+     * 上级岗位ID
      */
     @Schema(description = "上级岗位ID")
     private String parentId;

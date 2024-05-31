@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="sys_data_permission" author="admin">
+        <preConditions>
+            <not>
+                <tableExists tableName="sys_data_permission"/>
+            </not>
+        </preConditions>
+        <createTable tableName="sys_data_permission" remarks="数据权限">
+            <column name="id" type="varchar(32)" remarks="主键">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="create_by" remarks="创建人" type="varchar(32)"/>
+            <column name="update_by" remarks="更新人" type="varchar(32)"/>
+            <column name="create_date" remarks="创建时间" type="timestamp" defaultValueDate="current_timestamp"/>
+            <column name="update_date" remarks="更新时间" type="timestamp" defaultValueDate="current_timestamp"/>
+            <column name="deleted" remarks="删除标记" type="tinyint" defaultValueBoolean="false"/>
+            <column name="menu_id" type="varchar(32)" remarks="菜单ID"/>
+            <column name="type" type="varchar(10)" remarks="限制类型(删除限制/修改限制/查询限制)"/>
+            <column name="rule_type" type="varchar(10)" remarks="限制规则(预设规则/自定义规则)"/>
+            <column name="rule_detail" type="varchar(500)" remarks="限制规则详情"/>
+            <column name="mapper_method" type="varchar(100)" remarks="Mapper方法全路径"/>
+            <column name="remarks" type="varchar(500)" remarks="备注"/>
+        </createTable>
+        <createTable tableName="sys_user_data_permission">
+            <column name="id" type="varchar(32)" remarks="主键">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="varchar(32)" remarks="用户ID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data_permission_id" type="varchar(32)" remarks="数据权限ID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
