@@ -4,6 +4,7 @@ import com.mybatisflex.annotation.Table;
 import lombok.*;
 import top.kthirty.core.db.base.entity.LogicEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import top.kthirty.core.tool.dict.Dict;
 
 /**
  *  实体类。
@@ -16,7 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "")
+@Schema(description = "字典详情")
 @Table(value = "sys_dict_item")
 public class DictItem extends LogicEntity {
 
@@ -25,12 +26,6 @@ public class DictItem extends LogicEntity {
      */
     @Schema(description = "字典代码")
     private String code;
-
-    /**
-     * 字典ID
-     */
-    @Schema(description = "字典ID")
-    private String dictId;
 
     /**
      * 字典值
@@ -61,5 +56,10 @@ public class DictItem extends LogicEntity {
      */
     @Schema(description = "父ID")
     private String parentId;
+
+
+    @Schema(description = "是否有效")
+    @Dict(code = "enable_status")
+    private String status;
 
 }

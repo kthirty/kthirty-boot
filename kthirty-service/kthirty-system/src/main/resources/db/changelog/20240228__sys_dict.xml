@@ -35,11 +35,11 @@
             <column name="code" type="varchar(32)" remarks="字典代码">
                 <constraints nullable="false" />
             </column>
-            <column name="dict_id" type="varchar(32)" remarks="字典ID"/>
             <column name="value" type="varchar(100)" remarks="字典值"/>
             <column name="label" type="varchar(100)" remarks="字典标签"/>
             <column name="description" remarks="描述" type="varchar(200)"/>
             <column name="sort" remarks="排序" type="int"/>
+            <column name="status" remarks="状态" type="varchar(10)"/>
             <column name="parent_id" remarks="父ID" defaultValue="0" type="varchar(32)"/>
             <column name="create_by" remarks="创建人" type="varchar(32)"/>
             <column name="update_by" remarks="更新人" type="varchar(32)"/>
@@ -47,23 +47,6 @@
             <column name="update_date" remarks="更新时间" type="timestamp" defaultValueDate="current_timestamp"/>
             <column name="deleted" remarks="删除标记" type="tinyint" defaultValueBoolean="false"/>
         </createTable>
-      <!--  <createTable tableName="sys_dict_table">
-            <column name="id" type="varchar(32)" remarks="主键">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="dict_id" type="varchar(32)" remarks="字典ID"/>
-            <column name="table_name" type="varchar(100)" remarks="表名"/>
-            <column name="label_field" type="varchar(100)" remarks="字典标签字段"/>
-            <column name="value_field" type="varchar(100)" remarks="字典值字段" />
-            <column name="parent_id_field" type="varchar(100)" remarks="自关联字段" />
-            <column name="sort" remarks="排序规则" type="varchar(100)"/>
-            <column name="create_by" remarks="创建人" type="varchar(32)"/>
-            <column name="update_by" remarks="更新人" type="varchar(32)"/>
-            <column name="create_date" remarks="创建时间" type="timestamp" defaultValueDate="current_timestamp"/>
-            <column name="update_date" remarks="更新时间" type="timestamp" defaultValueDate="current_timestamp"/>
-            <column name="deleted" remarks="删除标记" type="tinyint" defaultValueBoolean="false"/>
-        </createTable>-->
-
 
         <createIndex tableName="sys_dict_item" indexName="sys_dict_item_code">
             <column name="code"/>

@@ -13,7 +13,7 @@ public class KthirtyDictProperties {
     /**
      * 数据字典查询sql
      */
-    private String dictSql = "select id,parent_id,label,value,weight from sys_dict_item where code = ?";
+    private String dictSql = "select id,parent_id,label,value from sys_dict_item where code = ?";
     /**
      * 缓存时间，默认两小时
      */

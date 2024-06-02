@@ -32,7 +32,7 @@ public interface DictFiller {
                         String code = StrUtil.blankToDefault(dict.code(), field.getName());
                         String value = Func.toStr(ReflectUtil.getFieldValue(this, field));
                         String fieldName = StrUtil.format(dict.fieldName(), field.getName());
-                        if (Func.isNoneBlank(value, fieldName)) {
+                        if (Func.isNoneBlank(value, fieldName,dict.fieldName())) {
                             map.put(fieldName, DictUtil.getLabel(code, value,dict.splitBy()));
                         }
                     });
