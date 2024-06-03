@@ -1,11 +1,13 @@
 package top.kthirty.core.tool.dict;
 
 import cn.hutool.core.annotation.AnnotationUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import top.kthirty.core.tool.Func;
+import top.kthirty.core.tool.utils.StringPool;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,10 +33,9 @@ public interface DictFiller {
                         Dict dict = AnnotationUtil.getAnnotation(field, Dict.class);
                         String code = StrUtil.blankToDefault(dict.code(), field.getName());
                         String value = Func.toStr(ReflectUtil.getFieldValue(this, field));
+                        Assert.notBlank(dict.fieldName(),"字段名不可为空");
                         String fieldName = StrUtil.format(dict.fieldName(), field.getName());
-                        if (Func.isNoneBlank(value, fieldName,dict.fieldName())) {
-                            map.put(fieldName, DictUtil.getLabel(code, value,dict.splitBy()));
-                        }
+                        map.put(fieldName, DictUtil.getLabel(code, value,dict.splitBy()));
                     });
             // 无参数有返回值方法，且包含数据字典注解
             Arrays.stream(ReflectUtil.getMethods(getClass(), m ->
@@ -48,10 +49,9 @@ public interface DictFiller {
                         Dict dict = AnnotationUtil.getAnnotation(method, Dict.class);
                         String code =StrUtil.blankToDefault(dict.code(), method.getName());
                         String value = Func.toStr(ReflectUtil.invoke(this,method));
+                        Assert.notBlank(dict.fieldName(),"字段名不可为空");
                         String fieldName = StrUtil.format(dict.fieldName(), name);
-                        if (Func.isNoneBlank(value, fieldName)) {
-                            map.put(fieldName, DictUtil.getLabel(code, value,dict.splitBy()));
-                        }
+                        map.put(fieldName, DictUtil.getLabel(code, value,dict.splitBy()));
                     });
         }catch (Exception e){
             DictUtil.LOGGER.error("字典填充器错误",e);

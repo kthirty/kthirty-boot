@@ -19,7 +19,7 @@ public interface DictProvider {
      * @author KThirty
      * @since 2023/11/22
      */
-    void removeCache(String code,String value);
+    void removeCache(String code);
 
     /**
      * 添加缓存

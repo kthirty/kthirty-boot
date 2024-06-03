@@ -26,6 +26,10 @@ import java.util.concurrent.TimeUnit;
 public class RedisUtil implements ApplicationContextAware {
 	private static RedisTemplate<String, Object> redisTemplate;
 
+	public static boolean isAvailable(){
+		return redisTemplate != null;
+	}
+
 	//=============================common============================
 
 	/**

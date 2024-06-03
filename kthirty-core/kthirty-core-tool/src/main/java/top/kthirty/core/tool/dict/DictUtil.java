@@ -71,19 +71,14 @@ public class DictUtil {
      * 删除缓存
      *
      * @param code  字典code
-     * @param value 字典值（为空删除所有）
      */
-    public static void remove(String code, String value) {
+    public static void remove(String code) {
         Assert.notNull(DICT_PROVIDER, "字典解析器不存在");
-        DICT_PROVIDER.removeCache(code, value);
+        DICT_PROVIDER.removeCache(code);
     }
 
     public static void add(String code, List<DictItem> items) {
         add(code, items, 0);
-    }
-
-    public static void remove(String code) {
-        remove(code, null);
     }
 
     public static String getValue(String code, String label) {

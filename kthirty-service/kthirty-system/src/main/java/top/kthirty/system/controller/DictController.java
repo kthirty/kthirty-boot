@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * @since 2024-04-17
  */
 @RestController
-@Tag(name = "接口")
+@Tag(name = "数据字典")
 @AllArgsConstructor
 @RequestMapping("/sys/dict")
 public class DictController extends BaseController {
@@ -42,37 +42,37 @@ public class DictController extends BaseController {
     private final DictItemService dictItemService;
 
     @PostMapping("save")
-    @Operation(summary = "保存", description = "保存")
+    @Operation(summary = "保存数据字典", description = "保存数据字典")
     public boolean save(@RequestBody @Parameter(description = "") @Valid Dict dict) {
         return dictService.save(dict);
     }
 
     @DeleteMapping("remove/{id}")
-    @Operation(summary = "根据主键", description = "根据主键")
+    @Operation(summary = "根据主键删除数据字典", description = "根据主键删除数据字典")
     public boolean remove(@PathVariable @Parameter(description = "主键") Serializable id) {
         return dictService.removeById(id);
     }
 
     @PutMapping("update")
-    @Operation(summary = "根据主键更新", description = "根据主键更新")
+    @Operation(summary = "根据主键更新数据字典", description = "根据主键更新数据字典")
     public boolean update(@RequestBody @Parameter(description = "主键") @Valid Dict dict) {
         return dictService.updateById(dict);
     }
 
     @GetMapping("getInfo/{id}")
-    @Operation(summary = "根据主键获取", description = "根据主键获取")
+    @Operation(summary = "根据主键获取数据字典", description = "根据主键获取数据字典")
     public Dict getInfo(@PathVariable Serializable id) {
         return dictService.getById(id);
     }
 
     @GetMapping("page")
-    @Operation(summary = "分页查询", description = "分页查询")
+    @Operation(summary = "分页查询数据字典", description = "分页查询数据字典")
     public Page<Dict> page(@Parameter(description = "分页信息") Query<Dict> query, Dict dict) {
         return dictService.page(query.getPage(), Condition.getWrapper(dict));
     }
 
     @GetMapping("list")
-    @Operation(summary = "查询所有", description = "查询所有")
+    @Operation(summary = "查询所有数据字典", description = "查询所有数据字典")
     public List<Dict> list(Dict dict) {
         return dictService.list(Condition.getWrapper(dict));
     }

@@ -4,6 +4,7 @@ import com.mybatisflex.annotation.Table;
 import lombok.*;
 import top.kthirty.core.db.base.entity.LogicEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import top.kthirty.core.tool.dict.Dict;
 
 /**
  * 部门信息 实体类。
@@ -24,18 +25,21 @@ public class Dept extends LogicEntity {
      * 状态(1/0)
      */
     @Schema(description = "状态(1/0)")
+    @Dict(code = "enable_status")
     private String status;
 
     /**
      * 机构类型10公司，20组织机构，30岗位
      */
     @Schema(description = "机构类型10公司，20组织机构，30岗位")
+    @Dict(code = "dept_category")
     private Integer category;
 
     /**
      * 上级部门ID
      */
     @Schema(description = "上级部门ID")
+    @Dict(code = "sys_dept:id:name")
     private String parentId;
 
     /**
