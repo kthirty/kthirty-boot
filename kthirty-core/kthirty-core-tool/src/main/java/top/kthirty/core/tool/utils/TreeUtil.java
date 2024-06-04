@@ -68,7 +68,6 @@ public class TreeUtil extends cn.hutool.core.lang.tree.TreeUtil {
         Set<String> parentIds = list.parallelStream().map(it -> Convert.toStr(ReflectUtil.getFieldValue(it, config.getParentIdKey()))).collect(Collectors.toSet());
         Set<String> ids = list.parallelStream().map(it -> Convert.toStr(ReflectUtil.getFieldValue(it, config.getIdKey()))).collect(Collectors.toSet());
         parentIds.removeAll(ids);
-        StaticLog.info("计算顶级耗时{}",timer.intervalPretty());
         // 构建TreeNode
         List<TreeNode<String>> treeNodes = list.stream().map(it -> {
             Map<String, Object> beanMap = BeanUtil.toMap(it);
@@ -87,12 +86,10 @@ public class TreeUtil extends cn.hutool.core.lang.tree.TreeUtil {
                 TimeInterval timer1 = DateUtil.timer();
                 timer1.start();
                 extra.putAll(((DictFiller) it).jsonAnyGetter());
-                StaticLog.info("jsonAnyGetter耗时{}",timer1.intervalPretty());
             }
             node.setExtra(extra);
             return node;
         }).toList();
-        StaticLog.info("构建TreeNode耗时{}",timer.intervalPretty());
         List<Tree<String>> forest = new ArrayList<>();
         for (String rootId : parentIds) {
             forest.addAll(build(treeNodes,rootId));
