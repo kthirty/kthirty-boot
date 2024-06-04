@@ -4,6 +4,7 @@ import com.mybatisflex.annotation.Table;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import top.kthirty.core.db.base.entity.LogicEntity;
+import top.kthirty.core.tool.dict.Dict;
 
 /**
  * 菜单 实体类。
@@ -30,6 +31,7 @@ public class Menu extends LogicEntity {
      * 类型(1菜单,2权限)
      */
     @Schema(description = "类型(0目录,1菜单,2权限)")
+    @Dict(code = "menu_type")
     private String type;
 
     /**
@@ -83,11 +85,13 @@ public class Menu extends LogicEntity {
      * 状态(1启用/0禁用)
      */
     @Schema(description = "状态(1启用/0禁用)")
+    @Dict(code = "enable_status")
     private String status;
     /**
      * 是否显示(1显示/0隐藏)
      */
     @Schema(description = "状态(1显示/0隐藏)")
+    @Dict(code = "show_status")
     private String show;
 
 }

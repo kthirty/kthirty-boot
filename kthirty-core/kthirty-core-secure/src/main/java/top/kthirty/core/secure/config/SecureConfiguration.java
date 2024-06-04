@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -71,12 +72,12 @@ public class SecureConfiguration {
      * 有Redis时
      */
     @Bean
-    @ConditionalOnClass(RedisUtil.class)
-    @ConditionalOnBean({RedisUtil.class})
+    @ConditionalOnClass(RedisTemplate.class)
+    @ConditionalOnBean({RedisTemplate.class})
     @ConditionalOnMissingBean(TokenProvider.class)
     @Order(1)
-    public TokenProvider jwtRedisTokenProvider(RedisUtil redisUtil,KthirtySecureProperties kthirtySecureProperties){
-        return new JwtRedisTokenProvider(redisUtil,kthirtySecureProperties);
+    public TokenProvider jwtRedisTokenProvider(KthirtySecureProperties kthirtySecureProperties){
+        return new JwtRedisTokenProvider(kthirtySecureProperties);
     }
     /**
      * 无Redis时，使用本地缓存

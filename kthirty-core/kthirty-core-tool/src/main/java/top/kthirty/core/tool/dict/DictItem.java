@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -22,7 +24,10 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Accessors(chain = true)
-public class DictItem {
+public class DictItem implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     @Schema(title = "ID")
     private String id;
     @Schema(title = "父ID")

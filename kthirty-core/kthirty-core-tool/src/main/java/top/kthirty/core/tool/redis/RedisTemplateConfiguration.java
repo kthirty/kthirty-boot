@@ -1,6 +1,8 @@
 package top.kthirty.core.tool.redis;
 
 import cn.hutool.extra.spring.SpringUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -17,8 +19,10 @@ import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
+import top.kthirty.core.tool.jackson.JsonUtil;
 import top.kthirty.core.tool.utils.StringPool;
 
 import java.time.Duration;
@@ -47,7 +51,7 @@ public class RedisTemplateConfiguration {
     @Bean
     @ConditionalOnMissingBean(RedisSerializer.class)
     public RedisSerializer<Object> redisSerializer() {
-        return new GenericJackson2JsonRedisSerializer();
+        return new JdkSerializationRedisSerializer();
     }
 
     @Bean(name = "redisTemplate")
@@ -64,6 +68,7 @@ public class RedisTemplateConfiguration {
         redisTemplate.setValueSerializer(redisSerializer);
         redisTemplate.setHashValueSerializer(redisSerializer);
         redisTemplate.setConnectionFactory(redisConnectionFactory);
+        redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
 

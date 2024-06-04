@@ -13,21 +13,19 @@ import top.kthirty.core.tool.redis.RedisUtil;
  * @since 2023/11/27
  */
 public class JwtRedisTokenProvider extends AbstractJwtTokenProvider {
-    private final RedisUtil redisUtil;
 
-    public JwtRedisTokenProvider(RedisUtil redisUtil, KthirtySecureProperties secureProperties) {
+    public JwtRedisTokenProvider(KthirtySecureProperties secureProperties) {
         super(secureProperties);
-        this.redisUtil = redisUtil;
     }
 
 
     @Override
     protected void putCache(String key, SysUser sysUser, long seconds) {
-        redisUtil.set(key,sysUser,seconds);
+        RedisUtil.set(key,sysUser,seconds);
     }
 
     @Override
     protected SysUser getCache(String key) {
-        return redisUtil.get(key);
+        return RedisUtil.get(key);
     }
 }

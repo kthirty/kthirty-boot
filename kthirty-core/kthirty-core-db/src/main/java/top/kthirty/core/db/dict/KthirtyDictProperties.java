@@ -13,15 +13,11 @@ public class KthirtyDictProperties {
     /**
      * 数据字典查询sql
      */
-    private String dictSql = "select id,parent_id,label,value from sys_dict_item where code = ?";
+    private String dictSql = "select id,parent_id,label,value,weight from sys_dict_item where code = ?";
     /**
      * 缓存时间，默认两小时
      */
     private long cacheTime = 2 * 60 * 60;
-    /**
-     * 查库为空缓存时间
-     */
-    private long emptyCache = 5 * 60;
     /**
      * redis Key 前缀
      */

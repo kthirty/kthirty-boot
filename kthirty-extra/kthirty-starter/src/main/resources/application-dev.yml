@@ -7,8 +7,8 @@ spring:
     password: ${KTHIRTY_PASSWORD}
   data:
     redis:
-      host: redis.kthirty.top
-      port: 5008
+      host: mysql.kthirty.top
+      port: 9004
       password: ${KTHIRTY_PASSWORD}
 
   liquibase:

@@ -49,7 +49,7 @@ public class DictItem extends LogicEntity {
      * 排序
      */
     @Schema(description = "排序")
-    private Integer sort;
+    private Integer weight;
 
     /**
      * 父ID

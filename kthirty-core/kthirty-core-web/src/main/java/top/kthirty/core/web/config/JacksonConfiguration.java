@@ -32,8 +32,8 @@ import java.util.TimeZone;
 @AutoConfigureBefore(JacksonAutoConfiguration.class)
 public class JacksonConfiguration {
 
-	@Primary
-	@Bean
+//	@Primary
+//	@Bean
 	public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
 		builder.simpleDateFormat(DateUtil.PATTERN_DATETIME);
 		//创建ObjectMapper

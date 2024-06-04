@@ -2,6 +2,8 @@ package top.kthirty.core.db.dict;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.StrUtil;
@@ -9,7 +11,6 @@ import com.mybatisflex.core.constant.SqlOperator;
 import com.mybatisflex.core.query.QueryColumn;
 import com.mybatisflex.core.query.QueryCondition;
 import com.mybatisflex.core.row.Db;
-import com.mybatisflex.core.row.Row;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import top.kthirty.core.tool.Func;
@@ -17,6 +18,7 @@ import top.kthirty.core.tool.dict.DictItem;
 import top.kthirty.core.tool.dict.DictProvider;
 import top.kthirty.core.tool.redis.RedisUtil;
 import top.kthirty.core.tool.support.Constant;
+import top.kthirty.core.tool.support.RequestVariableHolder;
 import top.kthirty.core.tool.utils.StringPool;
 
 import java.util.ArrayList;
@@ -41,11 +43,20 @@ public class RedisDictProvider implements DictProvider {
 
     @Override
     public List<DictItem> get(String code) {
+        TimeInterval timer = DateUtil.timer();
+        timer.start();
         String finalCode = dictProperties.getCacheKeyPrefix() + code;
         Assert.isTrue(Util.getTableInfo(code) == null, "数据库表不支持查询所有选项");
-        // 存在缓存
+        // 存在本地缓存
+        if (RequestVariableHolder.has(finalCode)) {
+            return RequestVariableHolder.get(finalCode);
+        }
+        // 存在Redis缓存
         if (Boolean.TRUE.equals(RedisUtil.hasKey(finalCode))) {
-            return RedisUtil.get(code);
+            List<DictItem> items = RedisUtil.get(finalCode);
+            RequestVariableHolder.add(finalCode,items);
+            log.info("从Redis中获取缓存{} {}",finalCode,timer.intervalPretty());
+            return items;
         }
         // 近期查询过且为结果为空
         if (Boolean.TRUE.equals(RedisUtil.hasKey("empty:" + finalCode))) {
@@ -77,6 +88,7 @@ public class RedisDictProvider implements DictProvider {
             list = Util.listToTree(list);
         }
         RedisUtil.set(finalCode, list, dictProperties.getCacheTime());
+        RequestVariableHolder.add(finalCode,list);
         return list;
     }
 
@@ -89,10 +101,15 @@ public class RedisDictProvider implements DictProvider {
         // 非数据库表
         if (tableInfo == null) {
             List<DictItem> result = new ArrayList<>();
-            Util.deepGet(get(code), it -> StrUtil.splitTrim(value, separator).contains(it.getValue()), result);
+            List<DictItem> dictItems = get(code);
+            Util.deepGet(dictItems, it -> StrUtil.splitTrim(value, separator).contains(it.getValue()), result);
             return result.stream().map(DictItem::getLabel).collect(Collectors.joining(separator));
         }
-        return Util.queryDb(dictProperties.getCacheKeyPrefix(),dictProperties.getCacheTime(),tableInfo,value,separator,true);
+        // 已配置不查库
+        if(!dictProperties.isAutoDb()){
+            return StringPool.EMPTY;
+        }
+        return Util.queryDb(dictProperties.getCacheKeyPrefix(), dictProperties.getCacheTime(), tableInfo, value, separator, true);
     }
 
     @Override
@@ -104,8 +121,13 @@ public class RedisDictProvider implements DictProvider {
         // 非数据库表
         if (tableInfo == null) {
             List<DictItem> result = new ArrayList<>();
-            Util.deepGet(get(code), it -> StrUtil.splitTrim(label, separator).contains(it.getValue()), result);
+            List<DictItem> dictItems = get(code);
+            Util.deepGet(dictItems, it -> StrUtil.splitTrim(label, separator).contains(it.getValue()), result);
             return result.stream().map(DictItem::getValue).collect(Collectors.joining(separator));
+        }
+        // 已配置不查库
+        if(!dictProperties.isAutoDb()){
+            return StringPool.EMPTY;
         }
         return Util.queryDb(dictProperties.getCacheKeyPrefix(),dictProperties.getCacheTime(),tableInfo,label,separator,false);
     }
@@ -175,6 +197,7 @@ public class RedisDictProvider implements DictProvider {
                     .map(it -> it.getString(valueQueryLabel ? tableInfo.labelFieldName : tableInfo.valueFieldName))
                     .collect(Collectors.joining(separator));
             RedisUtil.set(finalCode, result, cacheTime);
+            log.info("查询数据库 {} {} {} {} {}",tableInfo.tableName,tableInfo.valueFieldName,tableInfo.labelFieldName,text,valueQueryLabel);
             return result;
         }
 

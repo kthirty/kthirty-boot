@@ -3,10 +3,17 @@ package top.kthirty.core.tool.utils;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.lang.tree.Tree;
+import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeNodeConfig;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.log.StaticLog;
 import top.kthirty.core.tool.dict.DictFiller;
 import top.kthirty.core.tool.jackson.JsonUtil;
 
@@ -52,6 +59,8 @@ public class TreeUtil extends cn.hutool.core.lang.tree.TreeUtil {
      * @return 森林树
      */
     public static <T> List<Tree<String>> forest(List<T> list, TreeNodeConfig config) {
+        TimeInterval timer = DateUtil.timer();
+        timer.start();
         if (CollUtil.isEmpty(list)) {
             return null;
         }
@@ -59,25 +68,36 @@ public class TreeUtil extends cn.hutool.core.lang.tree.TreeUtil {
         Set<String> parentIds = list.parallelStream().map(it -> Convert.toStr(ReflectUtil.getFieldValue(it, config.getParentIdKey()))).collect(Collectors.toSet());
         Set<String> ids = list.parallelStream().map(it -> Convert.toStr(ReflectUtil.getFieldValue(it, config.getIdKey()))).collect(Collectors.toSet());
         parentIds.removeAll(ids);
+        StaticLog.info("计算顶级耗时{}",timer.intervalPretty());
         // 构建TreeNode
-        List<Tree<String>> forest = new ArrayList<>();
-        parentIds.forEach(rootId -> {
-            List<Tree<String>> trees = build(list, rootId, config, (object, treeNode) -> {
-                if (treeNode.getWeight() == null) {
-                    treeNode.setWeight(0);
-                }
-                Objects.requireNonNull(JsonUtil.toMap(JsonUtil.toJson(object)))
-                        .forEach((k, v) -> {
-                            if (!treeNode.containsKey(k)) {
-                                treeNode.putExtra(k, v);
-                            }
-                        });
-                if (object instanceof DictFiller) {
-                    ((DictFiller) object).jsonAnyGetter().forEach(treeNode::putExtra);
+        List<TreeNode<String>> treeNodes = list.stream().map(it -> {
+            Map<String, Object> beanMap = BeanUtil.toMap(it);
+            TreeNode<String> node = new TreeNode<>();
+            node.setId(MapUtil.getStr(beanMap, config.getIdKey()));
+            node.setName(MapUtil.getStr(beanMap, config.getNameKey()));
+            node.setParentId(MapUtil.getStr(beanMap, config.getParentIdKey()));
+            node.setWeight(MapUtil.getInt(beanMap, config.getWeightKey(), 0));
+            Map<String, Object> extra = new HashMap<>();
+            beanMap.forEach((key, value) -> {
+                if (!StrUtil.equalsAny(key, config.getIdKey(), config.getParentIdKey(), config.getWeightKey(), config.getNameKey(), "deleted")) {
+                    extra.put(key, value);
                 }
             });
-            forest.addAll(trees);
-        });
+            if (it instanceof DictFiller) {
+                TimeInterval timer1 = DateUtil.timer();
+                timer1.start();
+                extra.putAll(((DictFiller) it).jsonAnyGetter());
+                StaticLog.info("jsonAnyGetter耗时{}",timer1.intervalPretty());
+            }
+            node.setExtra(extra);
+            return node;
+        }).toList();
+        StaticLog.info("构建TreeNode耗时{}",timer.intervalPretty());
+        List<Tree<String>> forest = new ArrayList<>();
+        for (String rootId : parentIds) {
+            forest.addAll(build(treeNodes,rootId));
+        }
+        StaticLog.info("build耗时{}",timer.intervalPretty());
         return forest;
     }
 
