@@ -39,6 +39,7 @@ import java.util.Locale;
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass({RedisAutoConfiguration.class, RedisSerializer.class})
 @AutoConfigureBefore({RedisAutoConfiguration.class})
+@ConditionalOnBean({RedisConnectionFactory.class})
 public class RedisTemplateConfiguration {
 
     /**

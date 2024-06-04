@@ -22,6 +22,7 @@ import top.kthirty.core.secure.exception.NotLoginException;
 import top.kthirty.core.secure.exception.SecureException;
 import top.kthirty.core.secure.interceptor.SecureInterceptor;
 import top.kthirty.core.secure.interceptor.SecureRegistry;
+import top.kthirty.core.secure.token.JwtTokenProvider;
 import top.kthirty.core.secure.token.TokenProvider;
 import top.kthirty.core.tool.api.R;
 import top.kthirty.core.tool.api.SystemResultCode;
@@ -62,6 +63,12 @@ public class SecureConfiguration {
                 }
             }
         };
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(TokenProvider.class)
+    public TokenProvider tokenProvider(KthirtySecureProperties secureProperties) {
+        return new JwtTokenProvider(secureProperties);
     }
 
     /**

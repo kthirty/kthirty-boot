@@ -2,8 +2,6 @@ package top.kthirty.core.db.dict;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.StrUtil;
@@ -53,7 +51,6 @@ public class DefaultDictProvider implements DictProvider {
         if (Boolean.TRUE.equals(Cache.hasKey(finalCode))) {
             List<DictItem> items = Cache.get(finalCode);
             RequestVariableHolder.add(finalCode,items);
-            log.info("从Redis中获取缓存{} {}",finalCode,timer.intervalPretty());
             return items;
         }
         // 近期查询过且为结果为空

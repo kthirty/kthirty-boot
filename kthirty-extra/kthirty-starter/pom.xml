@@ -16,12 +16,6 @@
             <groupId>top.kthirty</groupId>
             <artifactId>kthirty-core-all</artifactId>
             <version>${project.version}</version>
-            <!--<exclusions>
-                <exclusion>
-                    <artifactId>spring-boot-starter-data-redis</artifactId>
-                    <groupId>org.springframework.boot</groupId>
-                </exclusion>
-            </exclusions>-->
         </dependency>
         <dependency>
             <groupId>com.mysql</groupId>
