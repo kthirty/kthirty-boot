@@ -5,12 +5,11 @@ import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
-import top.kthirty.core.tool.redis.RedisUtil;
+import top.kthirty.core.tool.cache.Cache;
 
 /**
  * <p>
  * 编码规则工具
- * <p color="red">强依赖Redis</p>
  * </p>
  *
  * @author KThirty
@@ -43,8 +42,8 @@ public class RuleCodeUtil {
     public String next(String prefix) {
         prefix = StrUtil.blankToDefault(prefix, StringPool.EMPTY);
         String key = StrUtil.join(StringPool.COLON, KEY_PREFIX, category, prefix);
-        String next = handler.next(RedisUtil.get(key));
-        RedisUtil.set(key, next);
+        String next = handler.next(Cache.get(key));
+        Cache.set(key, next);
         return prefix + next;
     }
 

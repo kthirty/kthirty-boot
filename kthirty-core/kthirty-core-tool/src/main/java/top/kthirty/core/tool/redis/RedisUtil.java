@@ -1,8 +1,6 @@
 package top.kthirty.core.tool.redis;
 
 import cn.hutool.core.convert.Convert;
-import lombok.AllArgsConstructor;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

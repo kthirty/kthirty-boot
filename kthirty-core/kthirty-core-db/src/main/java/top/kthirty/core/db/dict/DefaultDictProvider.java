@@ -14,9 +14,9 @@ import com.mybatisflex.core.row.Db;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import top.kthirty.core.tool.Func;
+import top.kthirty.core.tool.cache.Cache;
 import top.kthirty.core.tool.dict.DictItem;
 import top.kthirty.core.tool.dict.DictProvider;
-import top.kthirty.core.tool.redis.RedisUtil;
 import top.kthirty.core.tool.support.Constant;
 import top.kthirty.core.tool.support.RequestVariableHolder;
 import top.kthirty.core.tool.utils.StringPool;
@@ -28,23 +28,21 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
-public class RedisDictProvider implements DictProvider {
+public class DefaultDictProvider implements DictProvider {
     private final KthirtyDictProperties dictProperties;
 
     @Override
     public void removeCache(String code) {
-        RedisUtil.del(dictProperties.getCacheKeyPrefix() + code);
+        Cache.del(dictProperties.getCacheKeyPrefix() + code);
     }
 
     @Override
     public void put(String code, List<DictItem> items, long time) {
-        RedisUtil.set(code, items, time);
+        Cache.add(code, items, time);
     }
 
     @Override
     public List<DictItem> get(String code) {
-        TimeInterval timer = DateUtil.timer();
-        timer.start();
         String finalCode = dictProperties.getCacheKeyPrefix() + code;
         Assert.isTrue(Util.getTableInfo(code) == null, "数据库表不支持查询所有选项");
         // 存在本地缓存
@@ -52,14 +50,14 @@ public class RedisDictProvider implements DictProvider {
             return RequestVariableHolder.get(finalCode);
         }
         // 存在Redis缓存
-        if (Boolean.TRUE.equals(RedisUtil.hasKey(finalCode))) {
-            List<DictItem> items = RedisUtil.get(finalCode);
+        if (Boolean.TRUE.equals(Cache.hasKey(finalCode))) {
+            List<DictItem> items = Cache.get(finalCode);
             RequestVariableHolder.add(finalCode,items);
             log.info("从Redis中获取缓存{} {}",finalCode,timer.intervalPretty());
             return items;
         }
         // 近期查询过且为结果为空
-        if (Boolean.TRUE.equals(RedisUtil.hasKey("empty:" + finalCode))) {
+        if (Boolean.TRUE.equals(Cache.hasKey("empty:" + finalCode))) {
             return ListUtil.empty();
         }
         // 已配置不查询数据库
@@ -79,7 +77,7 @@ public class RedisDictProvider implements DictProvider {
         }
         // 查询结果为空,防止缓存击穿
         if (CollUtil.isEmpty(list)) {
-            RedisUtil.set("empty:" + finalCode, ListUtil.empty(), 5 * 60);
+            Cache.set("empty:" + finalCode, ListUtil.empty(), 5 * 60);
             return ListUtil.empty();
         }
         // 树形数据处理
@@ -87,7 +85,7 @@ public class RedisDictProvider implements DictProvider {
         if (isTree) {
             list = Util.listToTree(list);
         }
-        RedisUtil.set(finalCode, list, dictProperties.getCacheTime());
+        Cache.set(finalCode, list, dictProperties.getCacheTime());
         RequestVariableHolder.add(finalCode,list);
         return list;
     }
@@ -122,7 +120,7 @@ public class RedisDictProvider implements DictProvider {
         if (tableInfo == null) {
             List<DictItem> result = new ArrayList<>();
             List<DictItem> dictItems = get(code);
-            Util.deepGet(dictItems, it -> StrUtil.splitTrim(label, separator).contains(it.getValue()), result);
+            Util.deepGet(dictItems, it -> StrUtil.splitTrim(label, separator).contains(it.getLabel()), result);
             return result.stream().map(DictItem::getValue).collect(Collectors.joining(separator));
         }
         // 已配置不查库
@@ -182,8 +180,8 @@ public class RedisDictProvider implements DictProvider {
          */
         private static String queryDb(String keyPrefix,long cacheTime, TableInfo tableInfo, String text, String separator, boolean valueQueryLabel) {
             String finalCode = keyPrefix + Func.join(":", "table", tableInfo.tableName, tableInfo.valueFieldName, tableInfo.labelFieldName);
-            if (RedisUtil.hasKey(finalCode)) {
-                return RedisUtil.get(finalCode);
+            if (Cache.hasKey(finalCode)) {
+                return Cache.get(finalCode);
             }
             // 开始查数据库
             boolean hasMultiple = StrUtil.splitTrim(text, separator).size() > 1;
@@ -196,8 +194,7 @@ public class RedisDictProvider implements DictProvider {
                     .filter(it ->  Constant.NO.equals(it.getString("deleted",  Constant.NO)))
                     .map(it -> it.getString(valueQueryLabel ? tableInfo.labelFieldName : tableInfo.valueFieldName))
                     .collect(Collectors.joining(separator));
-            RedisUtil.set(finalCode, result, cacheTime);
-            log.info("查询数据库 {} {} {} {} {}",tableInfo.tableName,tableInfo.valueFieldName,tableInfo.labelFieldName,text,valueQueryLabel);
+            Cache.set(finalCode, result, cacheTime);
             return result;
         }
 

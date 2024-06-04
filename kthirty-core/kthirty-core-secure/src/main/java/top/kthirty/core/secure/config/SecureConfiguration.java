@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -23,12 +22,9 @@ import top.kthirty.core.secure.exception.NotLoginException;
 import top.kthirty.core.secure.exception.SecureException;
 import top.kthirty.core.secure.interceptor.SecureInterceptor;
 import top.kthirty.core.secure.interceptor.SecureRegistry;
-import top.kthirty.core.secure.token.JwtCacheTokenProvider;
-import top.kthirty.core.secure.token.JwtRedisTokenProvider;
 import top.kthirty.core.secure.token.TokenProvider;
 import top.kthirty.core.tool.api.R;
 import top.kthirty.core.tool.api.SystemResultCode;
-import top.kthirty.core.tool.redis.RedisUtil;
 import top.kthirty.core.web.error.ErrorHandler;
 import top.kthirty.core.web.utils.WebUtil;
 
@@ -66,27 +62,6 @@ public class SecureConfiguration {
                 }
             }
         };
-    }
-
-    /**
-     * 有Redis时
-     */
-    @Bean
-    @ConditionalOnClass(RedisTemplate.class)
-    @ConditionalOnBean({RedisTemplate.class})
-    @ConditionalOnMissingBean(TokenProvider.class)
-    @Order(1)
-    public TokenProvider jwtRedisTokenProvider(KthirtySecureProperties kthirtySecureProperties){
-        return new JwtRedisTokenProvider(kthirtySecureProperties);
-    }
-    /**
-     * 无Redis时，使用本地缓存
-     */
-    @Bean
-    @ConditionalOnMissingBean(TokenProvider.class)
-    @Order(1)
-    public TokenProvider jwtCacheTokenProvider(KthirtySecureProperties kthirtySecureProperties){
-        return new JwtCacheTokenProvider(kthirtySecureProperties);
     }
 
     /**

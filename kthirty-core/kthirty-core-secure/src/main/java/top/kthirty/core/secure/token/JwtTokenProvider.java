@@ -6,12 +6,13 @@ import org.springframework.util.Assert;
 import top.kthirty.core.boot.secure.SysUser;
 import top.kthirty.core.secure.config.KthirtySecureProperties;
 import top.kthirty.core.secure.exception.NotLoginException;
+import top.kthirty.core.tool.cache.Cache;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @AllArgsConstructor
-public abstract class AbstractJwtTokenProvider implements TokenProvider{
+public class JwtTokenProvider implements TokenProvider{
     private final KthirtySecureProperties secureProperties;
     private static final String USER_PREFIX = "auth:token:";
 
@@ -31,13 +32,13 @@ public abstract class AbstractJwtTokenProvider implements TokenProvider{
         Map<String, Object> claim = new HashMap<>();
         tokenInfo.setUsername(username);
         tokenInfo.setUserId(sysUser.getId());
-        claim.put(JwtCacheTokenProvider.ClaimKey.USERNAME, username);
-        claim.put(JwtCacheTokenProvider.ClaimKey.TOKEN_TYPE, JwtCacheTokenProvider.ClaimKey.ACCESS_TOKEN);
+        claim.put(ClaimKey.USERNAME, username);
+        claim.put(ClaimKey.TOKEN_TYPE, ClaimKey.ACCESS_TOKEN);
         // AccessToken
         String accessToken = JwtUtil.getToken(claim, secureProperties.getAccessTokenValidity());
         tokenInfo.setAccessToken(accessToken);
         // RefreshToken
-        claim.put(JwtCacheTokenProvider.ClaimKey.TOKEN_TYPE,  JwtCacheTokenProvider.ClaimKey.REFRESH_TOKEN);
+        claim.put(ClaimKey.TOKEN_TYPE,  ClaimKey.REFRESH_TOKEN);
         String refreshToken = JwtUtil.getToken(claim, secureProperties.getRefreshTokenValidity());
         tokenInfo.setRefreshToken(refreshToken);
         tokenInfo.setExpiresIn(secureProperties.getAccessTokenValidity());
@@ -55,8 +56,8 @@ public abstract class AbstractJwtTokenProvider implements TokenProvider{
             String username = JwtUtil.getClaims(refreshToken).get("username", String.class);
             TokenInfo tokenInfo = new TokenInfo();
             Map<String, Object> claim = new HashMap<>();
-            claim.put(JwtRedisTokenProvider.ClaimKey.USERNAME, username);
-            claim.put(JwtRedisTokenProvider.ClaimKey.TOKEN_TYPE, JwtRedisTokenProvider.ClaimKey.ACCESS_TOKEN);
+            claim.put(ClaimKey.USERNAME, username);
+            claim.put(ClaimKey.TOKEN_TYPE, ClaimKey.ACCESS_TOKEN);
             String accessToken = JwtUtil.getToken(claim,secureProperties.getAccessTokenValidity());
             tokenInfo.setAccessToken(accessToken);
             tokenInfo.setRefreshToken(refreshToken);
@@ -71,14 +72,18 @@ public abstract class AbstractJwtTokenProvider implements TokenProvider{
     public SysUser getCurrentUser(String accessToken) {
         try{
             Claims claims = JwtUtil.getClaims(accessToken);
-            String username = claims.get(JwtCacheTokenProvider.ClaimKey.USERNAME, String.class);
+            String username = claims.get(ClaimKey.USERNAME, String.class);
             return getCache(USER_PREFIX + username);
         }catch (Exception e){
             return null;
         }
     }
 
-    protected abstract void putCache(String key, SysUser sysUser, long seconds);
-    protected abstract SysUser getCache(String key);
+    private void putCache(String key, SysUser sysUser, long seconds){
+        Cache.add(key,sysUser,seconds);
+    }
+    private SysUser getCache(String key){
+        return Cache.get(key);
+    }
 
 }

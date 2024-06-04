@@ -4,7 +4,7 @@ import cn.hutool.core.thread.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @description 请求阶段ThreadLocal
+ * 请求阶段ThreadLocal
  * 请求结束时自动清空
  * @author KThirty
  * @since 2024/6/4 15:16

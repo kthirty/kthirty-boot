@@ -3,10 +3,8 @@ package top.kthirty.system.util;
 import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
-import top.kthirty.core.tool.redis.RedisUtil;
+import top.kthirty.core.tool.cache.Cache;
 import top.kthirty.core.web.utils.WebUtil;
-
-import java.util.concurrent.TimeUnit;
 
 public class CaptchaHelper {
     private static final String KEY = "auth:captcha:";
@@ -23,7 +21,7 @@ public class CaptchaHelper {
         String clientId = WebUtil.getClientId();
         Assert.notBlank(clientId,"未知客户端");
         LineCaptcha lineCaptcha = new LineCaptcha(100, 40, 4, 50);
-        RedisUtil.set(KEY + clientId,lineCaptcha.getCode(),2, TimeUnit.MINUTES);
+        Cache.set(KEY + clientId,lineCaptcha.getCode(),2);
         return BASE64_PREFIX + lineCaptcha.getImageBase64();
     }
     /**
@@ -37,7 +35,7 @@ public class CaptchaHelper {
     public static boolean validateCode(String code){
         String clientId = WebUtil.getClientId();
         Assert.notBlank(clientId,"未知客户端");
-        String redisCode = RedisUtil.get(KEY + clientId);
+        String redisCode = Cache.get(KEY + clientId);
         return StrUtil.equalsIgnoreCase(redisCode,code);
     }
 }
