@@ -72,6 +72,7 @@ public class RuleCodeUtil {
             return;
         }
         if(!handler.isEffective(code)){
+            log.warn("code 不合法 {} {}",handler.getClass().getName(),code);
             return;
         }
         String prefix = null;
@@ -169,7 +170,7 @@ public class RuleCodeUtil {
         public boolean isEffective(String code) {
             for (String str : StrUtil.split(code, 3)) {
                 // 开头不是A-Z
-                if(!('A' <= str.charAt(0) && str.charAt(0) >= 'Z')){
+                if(!('A' <= str.charAt(0) && str.charAt(0) <= 'Z')){
                     return false;
                 }
                 // 后两位不是数字
