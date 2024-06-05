@@ -1,5 +1,7 @@
 package top.kthirty.core.tool.cache;
 
+import java.util.Set;
+
 /**
  * 缓存处理器
  */
@@ -28,4 +30,6 @@ public interface CacheHandler {
      * 删除所有缓存
      */
     void clear();
+
+    Set<String> keys(String pattern);
 }

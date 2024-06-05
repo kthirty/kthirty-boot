@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.context.annotation.Configuration;
 import top.kthirty.core.db.base.entity.BaseEntity;
 import top.kthirty.core.db.listener.OperatingListener;
+import top.kthirty.core.db.listener.SequenceCodeListener;
 
 @Slf4j
 @Configuration
@@ -29,6 +30,7 @@ public class MyBatisFlexConfiguration implements MyBatisFlexCustomizer {
         // 插入与更新监听
         flexGlobalConfig.registerInsertListener(new OperatingListener(), BaseEntity.class);
         flexGlobalConfig.registerUpdateListener(new OperatingListener(), BaseEntity.class);
+        flexGlobalConfig.registerInsertListener(new SequenceCodeListener(), BaseEntity.class);
         // Sql审计功能
         AuditManager.setAuditEnable(true);
         AuditManager.setMessageCollector(auditMessage -> log.debug("{} ,count {},{}ms", auditMessage.getFullSql(), auditMessage.getQueryCount(), auditMessage.getElapsedTime()));

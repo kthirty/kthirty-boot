@@ -68,6 +68,12 @@ public class RuleCodeUtil {
      * 记录序列号
      */
     public void record(String code){
+        if(StrUtil.isBlank(code)){
+            return;
+        }
+        if(!handler.isEffective(code)){
+            return;
+        }
         String prefix = null;
         // 截取前缀
         if(handler.getClass() == HandlerPool.SINGLE_LETTER.getClass()){
@@ -108,6 +114,8 @@ public class RuleCodeUtil {
          * a < b => -1
          */
         int compare(String a,String b);
+
+        boolean isEffective(String code);
     }
 
     /**
@@ -137,6 +145,15 @@ public class RuleCodeUtil {
 
         @Override
         public int compare(String a, String b) {
+            if(a == null && b == null){
+                return 1;
+            }
+            if(a == null){
+                return -1;
+            }
+            if(b == null){
+                return 1;
+            }
             Assert.isTrue(a.length() == 3);
             Assert.isTrue(b.length() == 3);
             if(a.charAt(0) > b.charAt(0)){
@@ -147,14 +164,34 @@ public class RuleCodeUtil {
                 return -1;
             }
         }
+
+        @Override
+        public boolean isEffective(String code) {
+            for (String str : StrUtil.split(code, 3)) {
+                // 开头不是A-Z
+                if(!('A' <= str.charAt(0) && str.charAt(0) >= 'Z')){
+                    return false;
+                }
+                // 后两位不是数字
+                if(!NumberUtil.isInteger(str.substring(1))){
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 
     /**
      * 数字序列号处理器
      */
-    @AllArgsConstructor
     public static class NumberSeqHandler implements Handler {
-        private int length;
+        public NumberSeqHandler(){
+            this.length = 4;
+        }
+        public NumberSeqHandler(int length){
+            this.length = length;
+        }
+        private final int length;
 
         @Override
         public String next(String currentVal) {
@@ -169,6 +206,11 @@ public class RuleCodeUtil {
         @Override
         public int compare(String a, String b) {
             return NumberUtil.compare(Convert.toInt(a),Convert.toInt(b));
+        }
+
+        @Override
+        public boolean isEffective(String code) {
+            return NumberUtil.isInteger(code);
         }
     }
 

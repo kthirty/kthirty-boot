@@ -49,9 +49,4 @@ public class TreePath {
     public static void setCode(Object obj){
         setCode(obj,"code");
     }
-
-    public static void buildCache(String table,String column){
-        RuleCodeUtil ruleCodeUtil = RuleCodeUtil.getInstance(RuleCodeUtil.HandlerPool.SINGLE_LETTER, Func.join(":", table, column));
-        Db.selectAll(table).forEach(it -> ruleCodeUtil.record(it.getString(column)));
-    }
 }

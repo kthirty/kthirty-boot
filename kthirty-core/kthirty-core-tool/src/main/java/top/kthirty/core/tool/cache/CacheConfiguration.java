@@ -14,6 +14,6 @@ public class CacheConfiguration {
     @Bean(name = "cacheHandler")
     @ConditionalOnMissingBean(CacheHandler.class)
     public CacheHandler cacheHandler() {
-        return new LocalCacheHandler();
+        return new RuntimeCacheHandler();
     }
 }

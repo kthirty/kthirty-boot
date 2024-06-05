@@ -23,7 +23,7 @@ import java.util.List;
 public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements DeptService {
     @Override
     public boolean save(Dept entity) {
-        TreePath.setCode(entity);
+//        TreePath.setCode(entity);
         return super.save(entity);
     }
 

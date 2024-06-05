@@ -2,6 +2,8 @@ package top.kthirty.core.tool.cache;
 
 import top.kthirty.core.tool.redis.RedisUtil;
 
+import java.util.Set;
+
 public class RedisCacheHandler implements CacheHandler {
 
     @Override
@@ -27,5 +29,10 @@ public class RedisCacheHandler implements CacheHandler {
     @Override
     public void clear() {
         RedisUtil.keys("*").forEach(this::del);
+    }
+
+    @Override
+    public Set<String> keys(String pattern) {
+        return RedisUtil.keys(pattern);
     }
 }
