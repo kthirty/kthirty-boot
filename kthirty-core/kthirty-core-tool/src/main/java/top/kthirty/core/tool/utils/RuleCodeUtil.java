@@ -1,10 +1,12 @@
 package top.kthirty.core.tool.utils;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import top.kthirty.core.tool.cache.Cache;
 
 /**
@@ -15,6 +17,7 @@ import top.kthirty.core.tool.cache.Cache;
  * @author KThirty
  * @since 2023/11/29
  */
+@Slf4j
 @AllArgsConstructor
 public class RuleCodeUtil {
     private static final String KEY_PREFIX = "rule:code";
@@ -51,6 +54,36 @@ public class RuleCodeUtil {
         return next(null);
     }
 
+    /**
+     * 比较
+     * a > b => 1
+     * a = b => 0
+     * a < b => -1
+     */
+    public int compare(String a,String b){
+        return handler.compare(a,b);
+    }
+
+    /**
+     * 记录序列号
+     */
+    public void record(String code){
+        String prefix = null;
+        // 截取前缀
+        if(handler.getClass() == HandlerPool.SINGLE_LETTER.getClass()){
+            prefix = StrUtil.sub(code, 0, code.length() - 3);
+        }
+        prefix = StrUtil.blankToDefault(prefix, StringPool.EMPTY);
+        // 获取当前
+        String key = StrUtil.join(StringPool.COLON, KEY_PREFIX, category, prefix);
+        String current = Cache.get(key);
+        String paramSeq = StrUtil.sub(code, code.length()-3, code.length());
+        if(handler.compare(paramSeq,current) == 1){
+            Cache.set(key,paramSeq);
+            log.debug("更新缓存中的RuleCode {}===>{}",key,paramSeq);
+        }
+    }
+
     public interface HandlerPool {
         /**
          * A00-Z99
@@ -67,6 +100,14 @@ public class RuleCodeUtil {
      */
     public interface Handler {
         String next(String currentVal);
+
+        /**
+         * 比较
+         * a > b => 1
+         * a = b => 0
+         * a < b => -1
+         */
+        int compare(String a,String b);
     }
 
     /**
@@ -93,6 +134,19 @@ public class RuleCodeUtil {
                 return letter + StrUtil.fill(StrUtil.toString(nextSeq), '0', 2, true);
             }
         }
+
+        @Override
+        public int compare(String a, String b) {
+            Assert.isTrue(a.length() == 3);
+            Assert.isTrue(b.length() == 3);
+            if(a.charAt(0) > b.charAt(0)){
+                return 1;
+            }else if(a.charAt(0) == a.charAt(0)){
+                return NumberUtil.compare(Convert.toInt(a.substring(1)) , Convert.toInt(b.substring(1)));
+            }else {
+                return -1;
+            }
+        }
     }
 
     /**
@@ -110,6 +164,11 @@ public class RuleCodeUtil {
             Assert.isTrue(NumberUtil.isInteger(currentVal), "当前值不正确，应为数字，实为{}", currentVal);
             String nextVal = StrUtil.toString(NumberUtil.parseInt(currentVal) + 1);
             return StrUtil.fill(nextVal, '0', length, true);
+        }
+
+        @Override
+        public int compare(String a, String b) {
+            return NumberUtil.compare(Convert.toInt(a),Convert.toInt(b));
         }
     }
 

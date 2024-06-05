@@ -3,14 +3,23 @@ package top.kthirty.core.db.support;
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.annotation.Table;
 import com.mybatisflex.core.query.QueryChain;
 import com.mybatisflex.core.query.QueryColumn;
 import com.mybatisflex.core.query.QueryCondition;
+import com.mybatisflex.core.row.Db;
+import org.apache.poi.ss.formula.functions.T;
+import top.kthirty.core.boot.constant.EnvEnum;
+import top.kthirty.core.boot.secure.SysUser;
 import top.kthirty.core.tool.Func;
+import top.kthirty.core.tool.api.R;
 import top.kthirty.core.tool.utils.RuleCodeUtil;
+
+import java.awt.*;
+import java.util.function.Function;
 
 public class TreePath {
     public static void setCode(Object obj,String codeField) {
@@ -39,5 +48,10 @@ public class TreePath {
 
     public static void setCode(Object obj){
         setCode(obj,"code");
+    }
+
+    public static void buildCache(String table,String column){
+        RuleCodeUtil ruleCodeUtil = RuleCodeUtil.getInstance(RuleCodeUtil.HandlerPool.SINGLE_LETTER, Func.join(":", table, column));
+        Db.selectAll(table).forEach(it -> ruleCodeUtil.record(it.getString(column)));
     }
 }
