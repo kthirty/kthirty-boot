@@ -19,7 +19,6 @@ import top.kthirty.core.db.sequence.SequenceCodeListener;
 public class MyBatisFlexConfiguration implements MyBatisFlexCustomizer {
     @Override
     public void customize(FlexGlobalConfig flexGlobalConfig) {
-
         // Id 生成策略
         FlexGlobalConfig.KeyConfig keyConfig = new FlexGlobalConfig.KeyConfig();
         keyConfig.setKeyType(KeyType.Generator);
