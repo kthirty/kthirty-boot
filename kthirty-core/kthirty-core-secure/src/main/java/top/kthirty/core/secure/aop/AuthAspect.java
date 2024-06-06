@@ -23,7 +23,7 @@ import top.kthirty.core.secure.auth.AuthConstant;
 import top.kthirty.core.secure.auth.AuthFun;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.api.SystemResultCode;
-import top.kthirty.core.secure.exception.SecureException;
+import top.kthirty.core.tool.exception.SecureException;
 import top.kthirty.core.tool.utils.StringPool;
 import top.kthirty.core.tool.utils.StringUtil;
 import top.kthirty.core.web.utils.ClassUtil;

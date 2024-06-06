@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import top.kthirty.core.boot.secure.SecureUtil;
 import top.kthirty.core.boot.secure.SysUser;
-import top.kthirty.core.secure.exception.NotLoginException;
+import top.kthirty.core.tool.exception.NotLoginException;
 import top.kthirty.core.secure.token.TokenInfo;
 import top.kthirty.core.secure.token.TokenUtil;
 import top.kthirty.core.secure.util.PasswordUtil;

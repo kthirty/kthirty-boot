@@ -20,7 +20,7 @@ public class CacheTest extends BaseKthirtyTest {
     @Test
     public void test1(){
         Cache.keys("*").forEach(it -> {
-            log.info("{}===>{}",it,Cache.get(it));
+            log.info("before {}===>{}",it,Cache.get(it));
         });
         Dept dept = new Dept();
         dept.setCategory(10);
@@ -31,5 +31,6 @@ public class CacheTest extends BaseKthirtyTest {
         Cache.keys("*").forEach(it -> {
             log.info("{}===>{}",it,Cache.get(it));
         });
+        deptService.removeById(dept.getId());
     }
 }

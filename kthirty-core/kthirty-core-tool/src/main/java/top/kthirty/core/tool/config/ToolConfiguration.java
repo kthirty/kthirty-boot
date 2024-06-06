@@ -4,6 +4,7 @@ package top.kthirty.core.tool.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import top.kthirty.core.tool.utils.SpringUtil;
@@ -15,6 +16,7 @@ import top.kthirty.core.tool.utils.SpringUtil;
  */
 @Configuration(proxyBeanMethods = false)
 @Order(Ordered.HIGHEST_PRECEDENCE)
+@EnableAspectJAutoProxy
 public class ToolConfiguration {
 
 	/**

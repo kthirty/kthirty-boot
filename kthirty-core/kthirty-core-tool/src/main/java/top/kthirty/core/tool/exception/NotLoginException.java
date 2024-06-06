@@ -1,4 +1,4 @@
-package top.kthirty.core.secure.exception;
+package top.kthirty.core.tool.exception;
 
 import lombok.Getter;
 import top.kthirty.core.tool.api.IResultCode;
@@ -7,33 +7,37 @@ import top.kthirty.core.tool.api.SystemResultCode;
 import java.io.Serial;
 
 /**
- * Secure异常
+ * 未登录异常
  *
  * @author Kthirty
  */
 @Getter
-public class SecureException extends RuntimeException {
+public class NotLoginException extends RuntimeException {
 	@Serial
 	private static final long serialVersionUID = 2359767895161832954L;
 
 	private final IResultCode resultCode;
 
-	public SecureException(){
-		this(SystemResultCode.UN_AUTHORIZED);
+	public NotLoginException(){
+		this(SystemResultCode.NOT_LOGIN);
 	}
-	public SecureException(String message) {
+	public NotLoginException(String message) {
 		super(message);
-		this.resultCode = SystemResultCode.UN_AUTHORIZED;
+		this.resultCode = SystemResultCode.NOT_LOGIN;
 	}
 
-	public SecureException(IResultCode resultCode) {
+	public NotLoginException(IResultCode resultCode) {
 		super(resultCode.getMessage());
 		this.resultCode = resultCode;
 	}
 
-	public SecureException(IResultCode resultCode, Throwable cause) {
+	public NotLoginException(IResultCode resultCode, Throwable cause) {
 		super(cause);
 		this.resultCode = resultCode;
+	}
+	public NotLoginException(Throwable cause) {
+		super(cause);
+		this.resultCode = SystemResultCode.NOT_LOGIN;
 	}
 
 	@Override

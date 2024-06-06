@@ -38,11 +38,8 @@ public class TreeSeqHandler implements RuleHandler {
                     .set("column", context.getColumn())
                     .setAll(BeanUtil.toMap(context.getEntity()));
             Row row = Db.selectOneBySql(StrUtil.format(prefixStr, sqlParam));
-            if(row != null){
-                prefixStr = row.getString("prefix");
-            }
+            prefixStr = row != null ? row.getString("prefix") : StringPool.EMPTY;
         }
-        prefixStr = StrUtil.blankToDefault(prefixStr, StringPool.EMPTY);
         this.prefix = prefixStr;
     }
 

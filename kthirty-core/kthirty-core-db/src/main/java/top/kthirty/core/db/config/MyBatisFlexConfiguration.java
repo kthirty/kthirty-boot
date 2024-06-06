@@ -3,6 +3,8 @@ package top.kthirty.core.db.config;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.core.FlexGlobalConfig;
 import com.mybatisflex.core.audit.AuditManager;
+import com.mybatisflex.core.dialect.DbType;
+import com.mybatisflex.core.dialect.DialectFactory;
 import com.mybatisflex.core.keygen.KeyGenerators;
 import com.mybatisflex.spring.boot.MyBatisFlexCustomizer;
 import com.mybatisflex.spring.boot.MybatisFlexAutoConfiguration;
@@ -11,6 +13,7 @@ import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.context.annotation.Configuration;
 import top.kthirty.core.db.base.entity.BaseEntity;
 import top.kthirty.core.db.listener.OperatingListener;
+import top.kthirty.core.db.permission.DataPermissionDialectImpl;
 import top.kthirty.core.db.sequence.SequenceCodeListener;
 
 @Slf4j
@@ -33,5 +36,8 @@ public class MyBatisFlexConfiguration implements MyBatisFlexCustomizer {
         // Sql审计功能
         AuditManager.setAuditEnable(true);
         AuditManager.setMessageCollector(auditMessage -> log.debug("{} ,count {},{}ms", auditMessage.getFullSql(), auditMessage.getQueryCount(), auditMessage.getElapsedTime()));
+
+        // 数据权限
+        DialectFactory.registerDialect(DbType.MYSQL,new DataPermissionDialectImpl());
     }
 }
