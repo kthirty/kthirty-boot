@@ -4,7 +4,6 @@ import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNode;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
-import top.kthirty.core.db.support.TreePath;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.utils.TreeUtil;
 import top.kthirty.system.entity.Dept;
@@ -21,11 +20,6 @@ import java.util.List;
  */
 @Service
 public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements DeptService {
-    @Override
-    public boolean save(Dept entity) {
-//        TreePath.setCode(entity);
-        return super.save(entity);
-    }
 
     @Override
     public List<Tree<String>> tree() {

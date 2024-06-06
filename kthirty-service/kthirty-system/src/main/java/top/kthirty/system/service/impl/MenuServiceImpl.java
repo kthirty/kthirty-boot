@@ -4,7 +4,6 @@ import cn.hutool.core.lang.tree.Tree;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
-import top.kthirty.core.db.support.TreePath;
 import top.kthirty.core.tool.utils.TreeUtil;
 import top.kthirty.system.entity.Menu;
 import top.kthirty.system.mapper.MenuMapper;
@@ -20,11 +19,6 @@ import java.util.List;
  */
 @Service
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
-    @Override
-    public boolean save(Menu entity) {
-        TreePath.setCode(entity,"id");
-        return super.save(entity);
-    }
 
     @Override
     public List<Tree<String>> tree(QueryWrapper wrapper) {

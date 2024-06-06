@@ -1,12 +1,12 @@
 package top.kthirty.system.entity;
 
 import com.mybatisflex.annotation.Table;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import top.kthirty.core.db.base.entity.LogicEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
-import top.kthirty.core.db.listener.SequenceCode;
+import top.kthirty.core.db.sequence.SequenceCode;
+import top.kthirty.core.db.sequence.handler.TreeSeqHandler;
 import top.kthirty.core.tool.dict.Dict;
-import top.kthirty.core.tool.utils.RuleCodeUtil;
 
 /**
  * 部门信息 实体类。
@@ -54,7 +54,7 @@ public class Dept extends LogicEntity {
      * 部门代码
      */
     @Schema(description = "部门代码")
-    @SequenceCode(handler = RuleCodeUtil.SingleLetterSeqHandler.class)
+    @SequenceCode(handler = TreeSeqHandler.class,rebuildCache = true)
     private String code;
 
     /**

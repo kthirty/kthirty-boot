@@ -3,7 +3,6 @@ package top.kthirty.system.service.impl;
 import cn.hutool.core.lang.tree.Tree;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import top.kthirty.core.db.support.TreePath;
 import top.kthirty.core.tool.utils.TreeUtil;
 import top.kthirty.system.mapper.PostMapper;
 import top.kthirty.system.entity.Post;
@@ -28,7 +27,6 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
 
     @Override
     public boolean save(Post entity) {
-        TreePath.setCode(entity);
         return super.save(entity);
     }
 }

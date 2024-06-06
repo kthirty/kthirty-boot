@@ -4,7 +4,6 @@ import cn.hutool.core.util.RandomUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import top.kthirty.core.db.support.TreePath;
 import top.kthirty.core.test.BaseKthirtyTest;
 import top.kthirty.core.test.KthirtyTest;
 import top.kthirty.core.tool.cache.Cache;

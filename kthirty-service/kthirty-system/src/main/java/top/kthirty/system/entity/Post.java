@@ -4,6 +4,9 @@ import com.mybatisflex.annotation.Table;
 import lombok.*;
 import top.kthirty.core.db.base.entity.LogicEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import top.kthirty.core.db.sequence.SequenceCode;
+import top.kthirty.core.db.sequence.handler.TreeSeqHandler;
+import top.kthirty.core.tool.dict.Dict;
 
 /**
  * 岗位信息 实体类。
@@ -24,6 +27,7 @@ public class Post extends LogicEntity {
      * 状态(1/0)
      */
     @Schema(description = "状态(1/0)")
+    @Dict(code = "enable_status")
     private String status;
 
     /**
@@ -42,6 +46,7 @@ public class Post extends LogicEntity {
      * 岗位代码
      */
     @Schema(description = "岗位代码")
+    @SequenceCode(handler = TreeSeqHandler.class,rebuildCache = true)
     private String code;
 
     /**
