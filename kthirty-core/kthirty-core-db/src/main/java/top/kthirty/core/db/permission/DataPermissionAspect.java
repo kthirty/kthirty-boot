@@ -11,22 +11,23 @@ import org.aspectj.lang.annotation.Pointcut;
 @Slf4j
 public class DataPermissionAspect {
     @Pointcut("execution(* *(..)) && within(top.kthirty.core.db.base.mapper.BaseMapper+)")
-    public void baseMapperMethods() {}
+    public void baseMapperMethods() {
+    }
 
     @Before("baseMapperMethods()")
     public void before(JoinPoint joinPoint) {
         String className = joinPoint.getSignature().getDeclaringTypeName();
         String methodName = joinPoint.getSignature().getName();
         Object[] args = joinPoint.getArgs();
-        DataPermissionHolder.set(DataPermissionContext.builder()
+        DataPermissionHolder.setContext(DataPermissionContext.builder()
                 .className(className)
                 .methodName(methodName)
+                .parameters(args)
                 .build());
-        DataPermissionHolder.get().setParameters(args);
     }
 
     @After("baseMapperMethods()")
     public void after(JoinPoint joinPoint) {
-        DataPermissionHolder.clear();
+        DataPermissionHolder.clearContext();
     }
 }

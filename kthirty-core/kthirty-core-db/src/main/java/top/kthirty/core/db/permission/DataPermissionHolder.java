@@ -11,13 +11,18 @@ import cn.hutool.core.thread.ThreadUtil;
  */
 public class DataPermissionHolder {
     private static final ThreadLocal<DataPermissionContext> CONTEXT = ThreadUtil.createThreadLocal(true);
-    public static DataPermissionContext get(){
-        return CONTEXT.get() != null ? CONTEXT.get() : new DataPermissionContext();
+    public static DataPermissionContext getContext(){
+        if(CONTEXT.get() != null){
+            return CONTEXT.get();
+        }
+        DataPermissionContext dataPermissionContext = new DataPermissionContext();
+        setContext(dataPermissionContext);
+        return dataPermissionContext;
     }
-    public static void set(DataPermissionContext context){
+    public static void setContext(DataPermissionContext context){
         CONTEXT.set(context);
     }
-    public static void clear(){
+    public static void clearContext(){
         CONTEXT.remove();
     }
 }

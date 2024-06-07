@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import top.kthirty.core.boot.secure.SysUser;
 
 import java.util.List;
 
@@ -26,4 +27,5 @@ public class DataPermissionContext {
     private Object[] parameters;
     private OperateType operateType;
     private List<QueryTable> tables;
+    private SysUser currentUser;
 }
