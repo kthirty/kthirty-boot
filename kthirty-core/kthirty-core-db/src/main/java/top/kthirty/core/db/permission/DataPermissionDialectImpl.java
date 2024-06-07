@@ -4,6 +4,7 @@ import com.mybatisflex.core.BaseMapper;
 import com.mybatisflex.core.dialect.OperateType;
 import com.mybatisflex.core.dialect.impl.CommonsDialectImpl;
 import com.mybatisflex.core.query.CPI;
+import com.mybatisflex.core.query.QueryTable;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.row.Row;
 import com.mybatisflex.core.row.RowMapper;
@@ -37,8 +38,9 @@ public class DataPermissionDialectImpl extends CommonsDialectImpl {
         DataPermissionHolder.getContext()
                 .setOperateType(operateType)
                 .setTables(CPI.getQueryTables(queryWrapper))
-                .setCurrentUser(SecureUtil.getCurrentUser());
-
+                .setCurrentUser(SecureUtil.getCurrentUser())
+                .setQueryWrapper(queryWrapper);
+        DataPermissionHolder.handle();
         super.prepareAuth(queryWrapper, operateType);
     }
 
@@ -55,6 +57,12 @@ public class DataPermissionDialectImpl extends CommonsDialectImpl {
      */
     @Override
     public void prepareAuth(String schema, String tableName, StringBuilder sql, OperateType operateType) {
+        DataPermissionHolder.getContext()
+                .setOperateType(operateType)
+                .setTables(List.of(new QueryTable(schema,tableName)))
+                .setCurrentUser(SecureUtil.getCurrentUser())
+                .setSql(sql);
+        DataPermissionHolder.handle();
         super.prepareAuth(schema, tableName, sql, operateType);
     }
 
@@ -74,6 +82,11 @@ public class DataPermissionDialectImpl extends CommonsDialectImpl {
      */
     @Override
     public void prepareAuth(TableInfo tableInfo, StringBuilder sql, OperateType operateType) {
+        DataPermissionHolder.getContext()
+                .setOperateType(operateType)
+                .setTables(List.of(new QueryTable(tableInfo.getSchema(),tableInfo.getTableName())))
+                .setSql(sql);
+        DataPermissionHolder.handle();
         super.prepareAuth(tableInfo, sql, operateType);
     }
 }

@@ -1,6 +1,8 @@
 package top.kthirty.core.db.permission;
 
 import cn.hutool.core.thread.ThreadUtil;
+import com.mybatisflex.core.query.QueryWrapper;
+
 /**
  * <p>
  * 当前Mapper上下文
@@ -24,5 +26,9 @@ public class DataPermissionHolder {
     }
     public static void clearContext(){
         CONTEXT.remove();
+    }
+
+    public static void handle() {
+        // TODO 实际逻辑
     }
 }

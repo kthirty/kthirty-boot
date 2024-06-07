@@ -2,12 +2,14 @@ package top.kthirty.core.db.permission;
 
 import com.mybatisflex.core.dialect.OperateType;
 import com.mybatisflex.core.query.QueryTable;
+import com.mybatisflex.core.query.QueryWrapper;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import top.kthirty.core.boot.secure.SysUser;
+import top.kthirty.core.tool.support.Kv;
 
 import java.util.List;
 
@@ -28,4 +30,6 @@ public class DataPermissionContext {
     private OperateType operateType;
     private List<QueryTable> tables;
     private SysUser currentUser;
+    private QueryWrapper queryWrapper;
+    private StringBuilder sql;
 }
