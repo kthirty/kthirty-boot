@@ -1,5 +1,6 @@
 package top.kthirty.core.db.permission;
 
+import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.BaseMapper;
 import com.mybatisflex.core.dialect.OperateType;
 import com.mybatisflex.core.dialect.impl.CommonsDialectImpl;
@@ -35,12 +36,20 @@ public class DataPermissionDialectImpl extends CommonsDialectImpl {
      */
     @Override
     public void prepareAuth(QueryWrapper queryWrapper, OperateType operateType) {
+        DataPermissionContext context = DataPermissionHolder.getContext();
         DataPermissionHolder.getContext()
                 .setOperateType(operateType)
                 .setTables(CPI.getQueryTables(queryWrapper))
                 .setCurrentUser(SecureUtil.getCurrentUser())
+                .setSql(new StringBuilder())
                 .setQueryWrapper(queryWrapper);
         DataPermissionHolder.handle();
+        // 处理的SQL添加到QueryWrapper
+        String sql = StrUtil.trim(context.getSql().toString());
+        if(StrUtil.startWithAnyIgnoreCase(sql, "and")){
+            sql =  StrUtil.removePrefix(sql, "and");
+        }
+        queryWrapper.and(sql);
         super.prepareAuth(queryWrapper, operateType);
     }
 

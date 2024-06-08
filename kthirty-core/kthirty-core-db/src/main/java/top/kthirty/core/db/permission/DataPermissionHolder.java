@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DataPermissionHolder {
     private static final ThreadLocal<DataPermissionContext> CONTEXT = ThreadUtil.createThreadLocal(true);
-    private static final ThreadLocal<Boolean> IS_HANDLE = ThreadUtil.createThreadLocal(true);
     public static DataPermissionContext getContext(){
         if(CONTEXT.get() != null){
             return CONTEXT.get();
@@ -33,7 +32,8 @@ public class DataPermissionHolder {
     public static void handle() {
         // TODO 实际逻辑
         log.info("处理数据权限: {}",getContext());
+        DataPermissionContext context = getContext();
 
-        getContext().setProcessed(true);
+        context.setProcessed(true);
     }
 }
