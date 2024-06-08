@@ -1,7 +1,7 @@
 package top.kthirty.core.db.permission;
 
 import cn.hutool.core.thread.ThreadUtil;
-import com.mybatisflex.core.query.QueryWrapper;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
@@ -11,8 +11,10 @@ import com.mybatisflex.core.query.QueryWrapper;
  * @author KThirty
  * @since 2024/6/6
  */
+@Slf4j
 public class DataPermissionHolder {
     private static final ThreadLocal<DataPermissionContext> CONTEXT = ThreadUtil.createThreadLocal(true);
+    private static final ThreadLocal<Boolean> IS_HANDLE = ThreadUtil.createThreadLocal(true);
     public static DataPermissionContext getContext(){
         if(CONTEXT.get() != null){
             return CONTEXT.get();
@@ -30,5 +32,8 @@ public class DataPermissionHolder {
 
     public static void handle() {
         // TODO 实际逻辑
+        log.info("处理数据权限: {}",getContext());
+
+        getContext().setProcessed(true);
     }
 }

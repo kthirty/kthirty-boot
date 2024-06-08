@@ -9,16 +9,19 @@ import com.mybatisflex.core.keygen.KeyGenerators;
 import com.mybatisflex.spring.boot.MyBatisFlexCustomizer;
 import com.mybatisflex.spring.boot.MybatisFlexAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.apache.ibatis.plugin.Interceptor;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import top.kthirty.core.db.base.entity.BaseEntity;
 import top.kthirty.core.db.listener.OperatingListener;
 import top.kthirty.core.db.permission.DataPermissionDialectImpl;
+import top.kthirty.core.db.permission.DataPermissionInterceptor;
 import top.kthirty.core.db.sequence.SequenceCodeListener;
 
 @Slf4j
 @Configuration
-@AutoConfigureBefore(MybatisFlexAutoConfiguration.class)
+@AutoConfigureAfter(MybatisFlexAutoConfiguration.class)
 public class MyBatisFlexConfiguration implements MyBatisFlexCustomizer {
     @Override
     public void customize(FlexGlobalConfig flexGlobalConfig) {
@@ -39,5 +42,12 @@ public class MyBatisFlexConfiguration implements MyBatisFlexCustomizer {
 
         // 数据权限
         DialectFactory.registerDialect(DbType.MYSQL,new DataPermissionDialectImpl());
+
+    }
+
+
+    @Bean
+    public Interceptor interceptor(){
+        return new DataPermissionInterceptor();
     }
 }

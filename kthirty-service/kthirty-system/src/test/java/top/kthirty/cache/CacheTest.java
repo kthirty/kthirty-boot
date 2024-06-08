@@ -9,6 +9,7 @@ import top.kthirty.core.test.BaseKthirtyTest;
 import top.kthirty.core.test.KthirtyTest;
 import top.kthirty.system.SystemApplication;
 import top.kthirty.system.entity.Dept;
+import top.kthirty.system.mapper.DeptMapper;
 import top.kthirty.system.service.DeptService;
 
 import java.util.List;
@@ -18,14 +19,17 @@ import java.util.List;
 public class CacheTest extends BaseKthirtyTest {
     @Autowired
     private DeptService deptService;
+    @Autowired
+    private DeptMapper deptMapper;
 
     @Test
     public void test1(){
         List<Dept> list = deptService.list(QueryWrapper.create());
-        log.info("list {}", JSONUtil.toJsonPrettyStr(list));
-
         boolean b = deptService.removeById("37160876074000124");
-        System.out.println("b: "+b);
+
+
+        List<Dept> depts = deptMapper.selectDeptByStatus("1");
+        log.info("depts {}", JSONUtil.toJsonPrettyStr(depts));
 
     }
 }

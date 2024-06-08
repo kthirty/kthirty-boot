@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import top.kthirty.core.boot.secure.SysUser;
-import top.kthirty.core.tool.support.Kv;
 
 import java.util.List;
 
@@ -32,4 +31,8 @@ public class DataPermissionContext {
     private SysUser currentUser;
     private QueryWrapper queryWrapper;
     private StringBuilder sql;
+    /**
+     * 本方法是否已处理过
+     */
+    private boolean processed;
 }
