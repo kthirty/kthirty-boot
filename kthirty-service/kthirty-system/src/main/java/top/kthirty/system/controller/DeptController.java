@@ -1,24 +1,17 @@
 package top.kthirty.system.controller;
 
-import cn.hutool.core.lang.tree.Tree;
 import com.mybatisflex.core.paginate.Page;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import lombok.AllArgsConstructor;
-import top.kthirty.core.db.support.Condition;
-import top.kthirty.system.entity.Dept;
-import top.kthirty.system.service.DeptService;
-import org.springframework.web.bind.annotation.RestController;
-import top.kthirty.core.web.base.BaseController;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import top.kthirty.core.db.support.Condition;
+import top.kthirty.core.web.base.BaseController;
+import top.kthirty.system.entity.Dept;
+import top.kthirty.system.service.DeptService;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -55,7 +48,7 @@ public class DeptController extends BaseController {
 
     @GetMapping("tree")
     @Operation(summary = "查询所有部门信息树",description="查询所有部门信息树")
-    public List<Tree<String>> tree() {
+    public List<Dept> tree() {
         return deptService.tree();
     }
 

@@ -1,6 +1,5 @@
 package top.kthirty.system.controller;
 
-import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,13 +11,11 @@ import org.springframework.web.bind.annotation.*;
 import top.kthirty.core.db.support.Condition;
 import top.kthirty.core.db.support.Query;
 import top.kthirty.core.tool.support.Kv;
-import top.kthirty.core.tool.utils.BeanUtil;
 import top.kthirty.core.tool.utils.TreeUtil;
 import top.kthirty.core.web.base.BaseController;
 import top.kthirty.system.entity.Dict;
 import top.kthirty.system.entity.DictItem;
 import top.kthirty.system.entity.table.DictItemTableDef;
-import top.kthirty.system.model.DictItemVO;
 import top.kthirty.system.service.DictItemService;
 import top.kthirty.system.service.DictService;
 
@@ -79,9 +76,9 @@ public class DictController extends BaseController {
 
     @GetMapping("queryItem")
     @Operation(summary = "查询字典选项", description = "查询字典选项")
-    public List<Tree<String>> items(@RequestParam String code) {
+    public List<DictItem> items(@RequestParam String code) {
         List<DictItem> list = dictItemService.queryChain().where(DictItemTableDef.DICT_ITEM.CODE.eq(code)).list();
-        return TreeUtil.forest(list);
+        return TreeUtil.buildBean(list);
     }
 
     @PostMapping("saveItem")
@@ -97,7 +94,6 @@ public class DictController extends BaseController {
         Map<String, List<DictItem>> dictList = dictItemService.list()
                 .stream()
                 .peek(it -> it.setParentId(StrUtil.blankToDefault(it.getParentId(),"0")))
-                .map(it -> BeanUtil.copyProperties(it, DictItemVO.class))
                 .collect(Collectors.groupingBy(DictItem::getCode));
         dictList.forEach((code,list) -> {
             List<DictItem> dictItems = TreeUtil.buildBean(list);

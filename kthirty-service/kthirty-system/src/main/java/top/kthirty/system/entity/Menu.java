@@ -1,10 +1,13 @@
 package top.kthirty.system.entity;
 
+import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Table;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import top.kthirty.core.db.base.entity.LogicEntity;
 import top.kthirty.core.tool.dict.Dict;
+
+import java.util.List;
 
 /**
  * 菜单 实体类。
@@ -93,5 +96,8 @@ public class Menu extends LogicEntity {
     @Schema(description = "状态(1显示/0隐藏)")
     @Dict(code = "show_status")
     private String show;
+
+    @Column(ignore = true)
+    private List<Menu> children;
 
 }

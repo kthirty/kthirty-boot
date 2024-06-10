@@ -1,6 +1,5 @@
 package top.kthirty.system.service;
 
-import cn.hutool.core.lang.tree.Tree;
 import top.kthirty.core.db.base.service.BaseService;
 import top.kthirty.system.entity.Dept;
 
@@ -14,5 +13,5 @@ import java.util.List;
  */
 public interface DeptService extends BaseService<Dept> {
 
-    List<Tree<String>> tree();
+    List<Dept> tree();
 }

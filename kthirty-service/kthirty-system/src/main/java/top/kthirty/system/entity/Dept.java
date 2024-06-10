@@ -1,5 +1,6 @@
 package top.kthirty.system.entity;
 
+import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Table;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -7,6 +8,8 @@ import top.kthirty.core.db.base.entity.LogicEntity;
 import top.kthirty.core.db.sequence.SequenceCode;
 import top.kthirty.core.db.sequence.handler.TreeSeqHandler;
 import top.kthirty.core.tool.dict.Dict;
+
+import java.util.List;
 
 /**
  * 部门信息 实体类。
@@ -68,5 +71,8 @@ public class Dept extends LogicEntity {
      */
     @Schema(description = "描述")
     private String description;
+
+    @Column(ignore = true)
+    private List<Dept> children;
 
 }

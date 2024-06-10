@@ -1,13 +1,12 @@
 package top.kthirty.system.service.impl;
 
-import cn.hutool.core.lang.tree.Tree;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import top.kthirty.core.tool.utils.TreeUtil;
-import top.kthirty.system.mapper.PostMapper;
-import top.kthirty.system.entity.Post;
-import top.kthirty.system.service.PostService;
 import org.springframework.stereotype.Service;
+import top.kthirty.core.tool.utils.TreeUtil;
+import top.kthirty.system.entity.Post;
+import top.kthirty.system.mapper.PostMapper;
+import top.kthirty.system.service.PostService;
 
 import java.util.List;
 
@@ -21,8 +20,8 @@ import java.util.List;
 public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements PostService {
 
     @Override
-    public List<Tree<String>> tree(QueryWrapper wrapper) {
-        return TreeUtil.forest(this.list(wrapper));
+    public List<Post> tree(QueryWrapper wrapper) {
+        return TreeUtil.buildBean(this.list(wrapper));
     }
 
     @Override

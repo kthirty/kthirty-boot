@@ -1,9 +1,10 @@
 package top.kthirty.system.service.impl;
 
-import cn.hutool.core.lang.tree.Tree;
+import cn.hutool.log.StaticLog;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import top.kthirty.core.tool.jackson.JsonUtil;
 import top.kthirty.core.tool.utils.TreeUtil;
 import top.kthirty.system.entity.Menu;
 import top.kthirty.system.mapper.MenuMapper;
@@ -21,7 +22,9 @@ import java.util.List;
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
 
     @Override
-    public List<Tree<String>> tree(QueryWrapper wrapper) {
-        return TreeUtil.forest(list(wrapper));
+    public List<Menu> tree(QueryWrapper wrapper) {
+        List<Menu> menus = TreeUtil.buildBean(list(wrapper));
+        StaticLog.info("menus {}", JsonUtil.toJson(menus));
+        return menus;
     }
 }

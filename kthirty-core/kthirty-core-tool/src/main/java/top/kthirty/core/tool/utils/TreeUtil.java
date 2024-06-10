@@ -9,13 +9,11 @@ import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeNodeConfig;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.StaticLog;
 import top.kthirty.core.tool.dict.DictFiller;
-import top.kthirty.core.tool.jackson.JsonUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -98,27 +96,38 @@ public class TreeUtil extends cn.hutool.core.lang.tree.TreeUtil {
         return forest;
     }
 
-    public static <T> List<T> buildBean(List<T> list) {
+    public static <T> List<T> buildBean(List<T> list){
+        return buildBean(list, TreeNodeConfig.DEFAULT_CONFIG);
+    }
+    public static <T> List<T> buildBean(List<T> list,TreeNodeConfig treeNodeConfig) {
         if (CollUtil.isEmpty(list)) {
             return ListUtil.empty();
         }
-        return getChildren(list, "0");
+        return getChildren(list, "0",treeNodeConfig);
+    }
+    public static <T> List<T> getChildren(List<T> list, String parentId){
+        return getChildren(list, parentId, TreeNodeConfig.DEFAULT_CONFIG);
     }
 
-    public static <T> List<T> getChildren(List<T> list, String parentId) {
+    public static <T> List<T> getChildren(List<T> list, String parentId,TreeNodeConfig treeNodeConfig) {
         if (CollUtil.isEmpty(list)) {
             return null;
         }
-        return list.stream()
+        List<T> childrenList = list.stream()
                 .filter(it -> {
-                    String thisParentId = Convert.toStr(ReflectUtil.getFieldValue(it, "parentId"));
+                    String thisParentId = Convert.toStr(ReflectUtil.getFieldValue(it, treeNodeConfig.getParentIdKey()));
                     return ObjUtil.equals(thisParentId, parentId);
                 })
                 .peek(it -> {
-                    String thisId = Convert.toStr(ReflectUtil.getFieldValue(it, "id"));
-                    List<T> children = getChildren(list, thisId);
-                    ReflectUtil.setFieldValue(it, "children", children);
+                    String thisId = Convert.toStr(ReflectUtil.getFieldValue(it, treeNodeConfig.getIdKey()));
+                    List<T> children = getChildren(list, thisId, treeNodeConfig);
+                    if (CollUtil.isNotEmpty(children)) {
+                        ReflectUtil.setFieldValue(it, treeNodeConfig.getChildrenKey(), children);
+                    } else {
+                        ReflectUtil.setFieldValue(it, treeNodeConfig.getChildrenKey(), null);
+                    }
                 })
                 .toList();
+       return CollUtil.isEmpty(childrenList) ? null : childrenList;
     }
 }

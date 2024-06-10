@@ -2,7 +2,6 @@ package top.kthirty.core.web.jackson;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.BeanDescription;
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -12,10 +11,6 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import top.kthirty.core.tool.utils.StringPool;
 
 import java.io.IOException;
-import java.time.OffsetDateTime;
-import java.time.temporal.TemporalAccessor;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,7 +41,7 @@ public class KthirtyBeanSerializerModifier extends BeanSerializerModifier {
 			if (writer.hasNullSerializer()) {
 				return;
 			}
-            JavaType type = writer.getType();
+            /*JavaType type = writer.getType();
             Class<?> clazz = type.getRawClass();
             if (type.isTypeOrSubTypeOf(Number.class)) {
                 writer.assignNullSerializer(NullJsonSerializers.NUMBER_JSON_SERIALIZER);
@@ -64,7 +59,7 @@ public class KthirtyBeanSerializerModifier extends BeanSerializerModifier {
                 writer.assignNullSerializer(NullJsonSerializers.STRING_JSON_SERIALIZER);
             } else {
                 writer.assignNullSerializer(NullJsonSerializers.OBJECT_JSON_SERIALIZER);
-            }
+            }*/
         });
         return super.changeProperties(config, beanDesc, beanProperties);
     }

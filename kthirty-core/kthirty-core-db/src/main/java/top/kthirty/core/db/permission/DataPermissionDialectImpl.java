@@ -2,6 +2,7 @@ package top.kthirty.core.db.permission;
 
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.BaseMapper;
+import com.mybatisflex.core.constant.SqlConsts;
 import com.mybatisflex.core.dialect.OperateType;
 import com.mybatisflex.core.dialect.impl.CommonsDialectImpl;
 import com.mybatisflex.core.query.CPI;
@@ -44,12 +45,11 @@ public class DataPermissionDialectImpl extends CommonsDialectImpl {
                 .setSql(new StringBuilder())
                 .setQueryWrapper(queryWrapper);
         DataPermissionHolder.handle();
-        // 处理的SQL添加到QueryWrapper
-        String sql = StrUtil.trim(context.getSql().toString());
-        if(StrUtil.startWithAnyIgnoreCase(sql, "and")){
-            sql =  StrUtil.removePrefix(sql, "and");
+        // 实际业务处理支持拼接SQL
+        String sql = StrUtil.removePrefix(context.getSql().toString().trim(), "and");
+        if(StrUtil.isNotBlank(sql)){
+            queryWrapper.and(sql);
         }
-        queryWrapper.and(sql);
         super.prepareAuth(queryWrapper, operateType);
     }
 
@@ -66,12 +66,19 @@ public class DataPermissionDialectImpl extends CommonsDialectImpl {
      */
     @Override
     public void prepareAuth(String schema, String tableName, StringBuilder sql, OperateType operateType) {
-        DataPermissionHolder.getContext()
-                .setOperateType(operateType)
+        StringBuilder stringBuilder = new StringBuilder();
+        DataPermissionContext context = DataPermissionHolder.getContext();
+        context.setOperateType(operateType)
                 .setTables(List.of(new QueryTable(schema,tableName)))
                 .setCurrentUser(SecureUtil.getCurrentUser())
-                .setSql(sql);
+                .setSql(stringBuilder);
         DataPermissionHolder.handle();
+        // 实际业务处理支持拼接SQL
+        String appendSql = StrUtil.removePrefix(context.getSql().toString().trim(), "and");
+        if(StrUtil.isNotBlank(appendSql)){
+            sql.append(SqlConsts.AND).append(appendSql);
+        }
+
         super.prepareAuth(schema, tableName, sql, operateType);
     }
 
@@ -91,11 +98,17 @@ public class DataPermissionDialectImpl extends CommonsDialectImpl {
      */
     @Override
     public void prepareAuth(TableInfo tableInfo, StringBuilder sql, OperateType operateType) {
-        DataPermissionHolder.getContext()
-                .setOperateType(operateType)
+        StringBuilder stringBuilder = new StringBuilder();
+        DataPermissionContext context = DataPermissionHolder.getContext();
+        context.setOperateType(operateType)
                 .setTables(List.of(new QueryTable(tableInfo.getSchema(),tableInfo.getTableName())))
-                .setSql(sql);
+                .setSql(stringBuilder);
         DataPermissionHolder.handle();
+        // 实际业务处理支持拼接SQL
+        String appendSql = StrUtil.removePrefix(context.getSql().toString().trim(), "and");
+        if(StrUtil.isNotBlank(appendSql)){
+            sql.append(SqlConsts.AND).append(appendSql);
+        }
         super.prepareAuth(tableInfo, sql, operateType);
     }
 }

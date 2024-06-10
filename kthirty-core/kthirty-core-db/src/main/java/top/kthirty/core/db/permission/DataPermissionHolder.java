@@ -31,9 +31,8 @@ public class DataPermissionHolder {
 
     public static void handle() {
         // TODO 实际逻辑
-        log.info("处理数据权限: {}",getContext());
+//        log.info("处理数据权限: {}",getContext());
         DataPermissionContext context = getContext();
-
         context.setProcessed(true);
     }
 }

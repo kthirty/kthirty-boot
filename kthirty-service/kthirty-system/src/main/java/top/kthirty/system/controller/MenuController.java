@@ -1,6 +1,5 @@
 package top.kthirty.system.controller;
 
-import cn.hutool.core.lang.tree.Tree;
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,16 +11,11 @@ import org.springframework.web.bind.annotation.*;
 import top.kthirty.core.db.support.Condition;
 import top.kthirty.core.db.support.Query;
 import top.kthirty.core.web.base.BaseController;
-import top.kthirty.system.entity.DataPermission;
 import top.kthirty.system.entity.Menu;
-import top.kthirty.system.entity.table.DataPermissionTableDef;
-import top.kthirty.system.service.DataPermissionService;
 import top.kthirty.system.service.MenuService;
 
 import java.io.Serializable;
 import java.util.List;
-
-import static top.kthirty.system.entity.table.DataPermissionTableDef.DATA_PERMISSION;
 
 /**
  * 菜单 控制层。
@@ -36,7 +30,6 @@ import static top.kthirty.system.entity.table.DataPermissionTableDef.DATA_PERMIS
 @Slf4j
 public class MenuController extends BaseController {
     private final MenuService menuService;
-    private final DataPermissionService dataPermissionService;
 
     @PostMapping("save")
     @Operation(summary = "保存菜单", description = "保存菜单")
@@ -58,7 +51,7 @@ public class MenuController extends BaseController {
 
     @GetMapping("tree")
     @Operation(summary = "查询所有菜单", description = "查询所有菜单")
-    public List<Tree<String>> tree(Menu menu) {
+    public List<Menu> tree(Menu menu) {
         return menuService.tree(Condition.getWrapper(menu));
     }
 
@@ -72,17 +65,5 @@ public class MenuController extends BaseController {
     @Operation(summary = "分页查询菜单", description = "分页查询菜单")
     public Page<Menu> page(Query<Menu> query, Menu menu) {
         return menuService.page(query.getPage(), Condition.getWrapper(menu));
-    }
-
-    @GetMapping("dataPermission/{id}")
-    @Operation(summary = "查询菜单的数据权限列表")
-    public List<DataPermission> queryDataPermission(@PathVariable String id,DataPermission dataPermission) {
-        return dataPermissionService.list(Condition.getWrapper(dataPermission).eq(DATA_PERMISSION.MENU_ID.getAlias(),id));
-    }
-
-    @PutMapping("saveDataPermission")
-    @Operation(summary = "保存菜单的数据权限")
-    public void saveDataPermission(@RequestBody DataPermission dataPermission) {
-        dataPermissionService.saveOrUpdate(dataPermission);
     }
 }

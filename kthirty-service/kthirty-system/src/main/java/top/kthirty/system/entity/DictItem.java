@@ -1,10 +1,13 @@
 package top.kthirty.system.entity;
 
+import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Table;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import top.kthirty.core.db.base.entity.LogicEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
 import top.kthirty.core.tool.dict.Dict;
+
+import java.util.List;
 
 /**
  *  实体类。
@@ -61,5 +64,9 @@ public class DictItem extends LogicEntity {
     @Schema(description = "是否有效")
     @Dict(code = "enable_status")
     private String status;
+
+
+    @Column(ignore = true)
+    private List<DictItem> children;
 
 }

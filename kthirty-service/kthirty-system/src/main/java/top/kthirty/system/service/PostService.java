@@ -1,6 +1,5 @@
 package top.kthirty.system.service;
 
-import cn.hutool.core.lang.tree.Tree;
 import com.mybatisflex.core.query.QueryWrapper;
 import top.kthirty.core.db.base.service.BaseService;
 import top.kthirty.system.entity.Post;
@@ -15,5 +14,5 @@ import java.util.List;
  */
 public interface PostService extends BaseService<Post> {
 
-    List<Tree<String>> tree(QueryWrapper wrapper);
+    List<Post> tree(QueryWrapper wrapper);
 }
