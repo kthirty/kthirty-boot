@@ -1,7 +1,6 @@
 package top.kthirty.core.db.sequence.handler;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.NumberUtil;
@@ -40,7 +39,7 @@ public class NumberSeqHandler implements RuleHandler {
     }
     @Override
     public int compare(String a, String b) {
-        return NumberUtil.compare(Convert.toInt(a),Convert.toInt(b));
+        return NumberUtil.compare(Convert.toInt(a,0),Convert.toInt(b,0));
     }
 
     @Override

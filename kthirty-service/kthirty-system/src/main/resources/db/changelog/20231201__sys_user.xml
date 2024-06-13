@@ -23,6 +23,7 @@
                 <constraints unique="true" uniqueConstraintName="sys_user_username" nullable="false"/>
             </column>
             <column name="real_name" type="varchar(100)" remarks="真实姓名"/>
+            <column name="code" type="varchar(32)" remarks="编码"/>
             <column name="password" type="varchar(100)" remarks="密码"/>
             <column name="email" type="varchar(100)" remarks="邮箱"/>
             <column name="phone" type="varchar(100)" remarks="手机号"/>

@@ -4,6 +4,8 @@ import com.mybatisflex.annotation.Table;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import top.kthirty.core.db.base.entity.LogicEntity;
+import top.kthirty.core.db.sequence.SequenceCode;
+import top.kthirty.core.db.sequence.handler.NumberSeqHandler;
 import top.kthirty.core.tool.dict.Dict;
 
 import java.sql.Timestamp;
@@ -34,6 +36,14 @@ public class User extends LogicEntity {
      */
     @Schema(description = "真实姓名")
     private String realName;
+
+    /**
+     * 编码
+     */
+    @Schema(description = "编码")
+    @SequenceCode(handler = NumberSeqHandler.class,handlerParams = "6",rebuildCache = true)
+    private String code;
+
     /**
      * 密码
      */
