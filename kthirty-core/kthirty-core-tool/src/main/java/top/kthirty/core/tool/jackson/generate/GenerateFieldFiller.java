@@ -28,11 +28,13 @@ public interface GenerateFieldFiller extends JsonFiller {
                 GenerateField generateField = AnnotationUtil.getAnnotation(field, GenerateField.class);
                 Object fieldValue = ReflectUtil.getFieldValue(this, field);
                 if(fieldValue == null){
+                    result.put(generateField.genField(),"");
                     continue;
                 }
                 if(Collection.class.isAssignableFrom(field.getType())){
                     Collection<?> valueColl = ((Collection<?>)fieldValue);
                     if(CollUtil.isEmpty(valueColl)){
+                        result.put(generateField.genField(),"");
                         continue;
                     }
                     String value = valueColl.stream().map(it -> StrUtil.toString(ReflectUtil.getFieldValue(it,generateField.objField()))).collect(Collectors.joining(","));

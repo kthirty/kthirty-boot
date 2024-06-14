@@ -3,7 +3,7 @@ package top.kthirty.core.tool.jackson.filler;
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.util.ReflectUtil;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonGetter;
+
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ public interface JsonFiller {
     @JsonAnyGetter
     default Map<String, Object> __JsonFiller() {
         Map<String,Object> res = new HashMap<>();
-        Arrays.stream(ReflectUtil.getMethods(this.getClass(),it -> AnnotationUtil.hasAnnotation(it, JsonGetter.class)
+        Arrays.stream(ReflectUtil.getMethods(this.getClass(),it -> AnnotationUtil.hasAnnotation(it, JsonFillGetter.class)
                 && it.getParameterCount() == 0
                 && it.getReturnType() == Map.class))
                 .forEach(it -> res.putAll(ReflectUtil.invoke(this,it)));
