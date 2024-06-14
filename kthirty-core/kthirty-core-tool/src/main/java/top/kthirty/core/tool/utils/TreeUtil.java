@@ -40,7 +40,7 @@ public class TreeUtil extends cn.hutool.core.lang.tree.TreeUtil {
             });
             // dict
             if (entity instanceof DictFiller) {
-                map.putAll(((DictFiller) entity).jsonAnyGetter());
+                map.putAll(((DictFiller) entity).__dictJsonFiller());
             }
         }
         return map;
@@ -83,7 +83,7 @@ public class TreeUtil extends cn.hutool.core.lang.tree.TreeUtil {
             if (it instanceof DictFiller) {
                 TimeInterval timer1 = DateUtil.timer();
                 timer1.start();
-                extra.putAll(((DictFiller) it).jsonAnyGetter());
+                extra.putAll(((DictFiller) it).__dictJsonFiller());
             }
             node.setExtra(extra);
             return node;

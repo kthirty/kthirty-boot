@@ -1,13 +1,13 @@
 package top.kthirty.core.tool.dict;
 
 import cn.hutool.core.annotation.AnnotationUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import top.kthirty.core.tool.Func;
-import top.kthirty.core.tool.utils.StringPool;
+import top.kthirty.core.tool.jackson.filler.JsonFillGetter;
+import top.kthirty.core.tool.jackson.filler.JsonFiller;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,10 +20,10 @@ import java.util.Map;
  * @author KThirty
  * @since 2023/11/22
  */
-public interface DictFiller {
+public interface DictFiller extends JsonFiller {
 
-    @JsonAnyGetter
-    default Map<String, String> jsonAnyGetter() {
+    @JsonFillGetter
+    default Map<String, String> __dictJsonFiller() {
         Map<String, String> map = new HashMap<>();
         try{
             // 字段上的注解
@@ -32,7 +32,7 @@ public interface DictFiller {
                     .forEach(field -> {
                         Dict dict = AnnotationUtil.getAnnotation(field, Dict.class);
                         String code = StrUtil.blankToDefault(dict.code(), field.getName());
-                        String value = Func.toStr(ReflectUtil.getFieldValue(this, field));
+                        String value = Convert.toStr(ReflectUtil.getFieldValue(this, field));
                         Assert.notBlank(dict.fieldName(),"字段名不可为空");
                         String fieldName = StrUtil.format(dict.fieldName(), field.getName());
                         map.put(fieldName, DictUtil.getLabel(code, value,dict.splitBy()));
@@ -48,7 +48,7 @@ public interface DictFiller {
                         String name = StrUtil.startWith(method.getName(),"get") ? StrUtil.lowerFirst(StrUtil.removePrefix(method.getName(),"get")) : method.getName();
                         Dict dict = AnnotationUtil.getAnnotation(method, Dict.class);
                         String code =StrUtil.blankToDefault(dict.code(), method.getName());
-                        String value = Func.toStr(ReflectUtil.invoke(this,method));
+                        String value = Convert.toStr(ReflectUtil.invoke(this,method));
                         Assert.notBlank(dict.fieldName(),"字段名不可为空");
                         String fieldName = StrUtil.format(dict.fieldName(), name);
                         map.put(fieldName, DictUtil.getLabel(code, value,dict.splitBy()));

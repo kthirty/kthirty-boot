@@ -35,7 +35,7 @@ public class DataPermissionInterceptor implements Interceptor {
             StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
             BoundSql boundSql = statementHandler.getBoundSql();
             StringBuilder sql = new StringBuilder();
-            OperateType operateType = OperateType.valueOf(StrUtil.subBefore(sql, StringPool.SPACE, false).toUpperCase());
+            OperateType operateType = OperateType.valueOf(StrUtil.subBefore(boundSql.getSql(), StringPool.SPACE, false).toUpperCase());
             DataPermissionHolder.getContext()
                     .setOperateType(operateType)
                     .setTables(null)

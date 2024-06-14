@@ -1,5 +1,7 @@
 package top.kthirty.system.entity;
 
+import com.mybatisflex.annotation.Column;
+import com.mybatisflex.annotation.RelationManyToMany;
 import com.mybatisflex.annotation.Table;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -7,8 +9,10 @@ import top.kthirty.core.db.base.entity.LogicEntity;
 import top.kthirty.core.db.sequence.SequenceCode;
 import top.kthirty.core.db.sequence.handler.NumberSeqHandler;
 import top.kthirty.core.tool.dict.Dict;
+import top.kthirty.core.tool.jackson.generate.GenerateField;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * 用户信息 实体类。
@@ -41,7 +45,7 @@ public class User extends LogicEntity {
      * 编码
      */
     @Schema(description = "编码")
-    @SequenceCode(handler = NumberSeqHandler.class,handlerParams = "6",rebuildCache = true)
+    @SequenceCode(handler = NumberSeqHandler.class, handlerParams = "6", rebuildCache = true)
     private String code;
 
     /**
@@ -86,5 +90,32 @@ public class User extends LogicEntity {
     @Schema(description = "状态")
     @Dict(code = "enable_status")
     private String status;
+
+    @Column(ignore = true)
+    @RelationManyToMany(
+            joinTable = "sys_user_post_rl",
+            joinSelfColumn = "user_id",
+            targetField = "code",
+            joinTargetColumn = "post_code"
+    )
+    private List<Post> postList;
+
+    @Column(ignore = true)
+    @RelationManyToMany(
+            joinTable = "sys_user_dept_rl",
+            joinSelfColumn = "user_id",
+            targetField = "code",
+            joinTargetColumn = "dept_code"
+    )
+    private List<Dept> deptList;
+
+    @Column(ignore = true)
+    @RelationManyToMany(
+            joinTable = "sys_user_role_rl",
+            joinSelfColumn = "user_id",
+            joinTargetColumn = "role_id"
+    )
+    @GenerateField(genField = "roleName",objField = "name")
+    private List<Role> roleList;
 
 }

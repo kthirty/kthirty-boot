@@ -1,6 +1,7 @@
 package top.kthirty.core.db.permission;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.query.QueryTable;
@@ -32,6 +33,7 @@ public class DataPermissionHolder {
         }
         DataPermissionContext dataPermissionContext = new DataPermissionContext();
         dataPermissionContext.setSql(new StringBuilder());
+        dataPermissionContext.setTables(ListUtil.list(true));
         dataPermissionContext.setCurrentUser(new SysUser());
         setContext(dataPermissionContext);
         return dataPermissionContext;
