@@ -3,6 +3,7 @@ package top.kthirty.core.db.permission;
 
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.mybatisflex.core.constant.SqlConsts;
 import com.mybatisflex.core.dialect.OperateType;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -33,7 +34,7 @@ public class DataPermissionInterceptor implements Interceptor {
         if(!DataPermissionHolder.getContext().isProcessed()) {
             StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
             BoundSql boundSql = statementHandler.getBoundSql();
-            StringBuilder sql = new StringBuilder(boundSql.getSql());
+            StringBuilder sql = new StringBuilder();
             OperateType operateType = OperateType.valueOf(StrUtil.subBefore(sql, StringPool.SPACE, false).toUpperCase());
             DataPermissionHolder.getContext()
                     .setOperateType(operateType)
@@ -41,7 +42,13 @@ public class DataPermissionInterceptor implements Interceptor {
                     .setCurrentUser(SecureUtil.getCurrentUser())
                     .setSql(sql);
             DataPermissionHolder.handle();
-            ReflectUtil.setFieldValue(boundSql, "sql", sql.toString());
+            // 实际业务处理支持拼接SQL
+            StringBuilder finalSql = new StringBuilder(boundSql.getSql());
+            String appendSql = StrUtil.removePrefix(sql.toString().trim(), "and");
+            if(StrUtil.isNotBlank(appendSql)){
+                finalSql.append(SqlConsts.AND).append(appendSql);
+            }
+            ReflectUtil.setFieldValue(boundSql, "sql", finalSql.toString());
         }
         return invocation.proceed();
     }
