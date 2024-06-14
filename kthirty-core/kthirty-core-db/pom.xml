@@ -74,6 +74,12 @@
             <artifactId>spring-web</artifactId>
             <scope>provided</scope>
         </dependency>
+        <!--用于数据权限脚本-->
+        <dependency>
+            <groupId>com.jfinal</groupId>
+            <artifactId>enjoy</artifactId>
+            <version>5.1.2</version>
+        </dependency>
     </dependencies>
 
 </project>

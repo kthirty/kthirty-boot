@@ -5,6 +5,10 @@ import lombok.Data;
 @Data
 public class DataPermission {
     /**
+     * 规则编码
+     */
+    private String code;
+    /**
      * 限制范围类型
      */
     private ScopeType scopeType;
@@ -17,6 +21,16 @@ public class DataPermission {
      * 操作类型 （SELECT/UPDATE/DELETE/INSERT）
      */
     private String operateType;
-
-    private String script;
+    /**
+     * 处理类型
+     */
+    private HandleType handleType;
+    /**
+     * 处理内容/预设规则名称
+     */
+    private String handleContent;
+    /**
+     * 脚本参数
+     */
+    private String handleParam;
 }
