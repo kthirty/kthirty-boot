@@ -30,6 +30,7 @@ public interface DictFiller extends JsonFiller {
             Arrays.stream(ReflectUtil.getFields(getClass()))
                     .filter(field -> AnnotationUtil.hasAnnotation(field, Dict.class))
                     .forEach(field -> {
+                        Assert.isTrue(field.getType() == String.class,"数据字典只能用在String类型的属性上");
                         Dict dict = AnnotationUtil.getAnnotation(field, Dict.class);
                         String code = StrUtil.blankToDefault(dict.code(), field.getName());
                         String value = Convert.toStr(ReflectUtil.getFieldValue(this, field));
@@ -46,6 +47,8 @@ public interface DictFiller extends JsonFiller {
                     ))
                     .forEach(method -> {
                         String name = StrUtil.startWith(method.getName(),"get") ? StrUtil.lowerFirst(StrUtil.removePrefix(method.getName(),"get")) : method.getName();
+
+                        Assert.isTrue(method.getReturnType() == String.class,"数据字典只能用在返回值为String的方法上");
                         Dict dict = AnnotationUtil.getAnnotation(method, Dict.class);
                         String code =StrUtil.blankToDefault(dict.code(), method.getName());
                         String value = Convert.toStr(ReflectUtil.invoke(this,method));

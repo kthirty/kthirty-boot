@@ -38,7 +38,7 @@ public class Dept extends LogicEntity {
      */
     @Schema(description = "机构类型10公司，20组织机构，30岗位")
     @Dict(code = "dept_category")
-    private Integer category;
+    private String category;
 
     /**
      * 上级部门ID
