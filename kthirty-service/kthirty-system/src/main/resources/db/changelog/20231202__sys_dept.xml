@@ -26,6 +26,7 @@
             <column name="code" type="varchar(32)" remarks="部门代码"/>
             <column name="sort" type="int(2)" remarks="排序"/>
             <column name="description" type="varchar(255)" remarks="描述"/>
+            <column name="level" type="int" remarks="岗位层级"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>
