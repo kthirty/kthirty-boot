@@ -14,6 +14,7 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.StaticLog;
 import top.kthirty.core.tool.dict.DictFiller;
+import top.kthirty.core.tool.support.Constant;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -103,7 +104,7 @@ public class TreeUtil extends cn.hutool.core.lang.tree.TreeUtil {
         if (CollUtil.isEmpty(list)) {
             return ListUtil.empty();
         }
-        return getChildren(list, "0",treeNodeConfig);
+        return getChildren(list,  Constant.ROOT_ID,treeNodeConfig);
     }
     public static <T> List<T> getChildren(List<T> list, String parentId){
         return getChildren(list, parentId, TreeNodeConfig.DEFAULT_CONFIG);
@@ -115,7 +116,7 @@ public class TreeUtil extends cn.hutool.core.lang.tree.TreeUtil {
         }
         List<T> childrenList = list.stream()
                 .filter(it -> {
-                    String thisParentId = Convert.toStr(ReflectUtil.getFieldValue(it, treeNodeConfig.getParentIdKey()));
+                    String thisParentId = StrUtil.blankToDefault(Convert.toStr(ReflectUtil.getFieldValue(it, treeNodeConfig.getParentIdKey())), Constant.ROOT_ID);
                     return ObjUtil.equals(thisParentId, parentId);
                 })
                 .peek(it -> {
