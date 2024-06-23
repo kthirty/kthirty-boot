@@ -11,7 +11,6 @@ import com.zaxxer.hikari.HikariDataSource;
 import top.kthirty.core.db.base.entity.LogicEntity;
 import top.kthirty.core.db.base.mapper.BaseMapper;
 import top.kthirty.core.db.base.service.BaseService;
-import top.kthirty.core.web.base.BaseController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +24,7 @@ public class CodeGen {
         String basePackage = "top.kthirty.system";
 
         Map<String,String> moduleTable = new HashMap<>();
-        moduleTable.put("","sys_data_permission,sys_user_data_permission");
+        moduleTable.put("","sys_user_position");
 
         moduleTable.forEach((model,tables) -> gen(basePath,basePackage,tablePrefix,tables.split(",")));
     }
@@ -41,7 +40,8 @@ public class CodeGen {
         // 创建配置内容
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.setSourceDir(basePath+"/src/main/java/");
-        globalConfig.setMapperXmlPath(basePath+"/src/main/java/"+basePackage.replace(".","/")+"/mapper");
+//        globalConfig.setMapperXmlPath(basePath+"/src/main/java/"+basePackage.replace(".","/")+"/mapper");
+        globalConfig.setMapperXmlGenerateEnable(false);
         globalConfig.setBasePackage(basePackage);
 
         //设置表前缀和只生成哪些表

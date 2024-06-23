@@ -24,29 +24,40 @@ public interface GenerateFieldFiller extends JsonFiller {
         Map<String,Object> result = new HashMap<>();
         Field[] fields = ReflectUtil.getFields(this.getClass(), it -> AnnotationUtil.hasAnnotation(it, GenerateField.class));
         for (Field field : fields) {
-            try{
-                GenerateField generateField = AnnotationUtil.getAnnotation(field, GenerateField.class);
-                Object fieldValue = ReflectUtil.getFieldValue(this, field);
-                if(fieldValue == null){
-                    result.put(generateField.genField(),"");
-                    continue;
-                }
-                if(Collection.class.isAssignableFrom(field.getType())){
-                    Collection<?> valueColl = ((Collection<?>)fieldValue);
-                    if(CollUtil.isEmpty(valueColl)){
-                        result.put(generateField.genField(),"");
-                        continue;
-                    }
-                    String value = valueColl.stream().map(it -> StrUtil.toString(ReflectUtil.getFieldValue(it,generateField.objField()))).collect(Collectors.joining(","));
-                    result.put(generateField.genField(),value);
-                }else{
-                    String value = StrUtil.toString(ReflectUtil.getFieldValue(fieldValue, generateField.objField()));
-                    result.put(generateField.genField(),value);
-                }
-            }catch (Throwable e){
-                StaticLog.warn("GenerateFieldFiller 处理失败",e);
+            GenerateField generateField = AnnotationUtil.getAnnotation(field, GenerateField.class);
+            __handleField(field, result,generateField);
+        }
+        Field[] multiFields = ReflectUtil.getFields(this.getClass(), it -> AnnotationUtil.hasAnnotation(it, GenerateFields.class));
+        for (Field field : multiFields) {
+            GenerateFields generateFields = AnnotationUtil.getAnnotation(field, GenerateFields.class);
+            for (GenerateField generateField : generateFields.value()) {
+                __handleField(field, result,generateField);
             }
         }
         return result;
+    }
+
+    private void __handleField(Field field, Map<String, Object> result,GenerateField generateField) {
+        try{
+            Object fieldValue = ReflectUtil.getFieldValue(this, field);
+            if(fieldValue == null){
+                result.put(generateField.genField(),"");
+                return;
+            }
+            if(Collection.class.isAssignableFrom(field.getType())){
+                Collection<?> valueColl = ((Collection<?>)fieldValue);
+                if(CollUtil.isEmpty(valueColl)){
+                    result.put(generateField.genField(),"");
+                    return;
+                }
+                String value = valueColl.stream().map(it -> StrUtil.toString(ReflectUtil.getFieldValue(it,generateField.objField()))).collect(Collectors.joining(","));
+                result.put(generateField.genField(),value);
+            }else{
+                String value = StrUtil.toString(ReflectUtil.getFieldValue(fieldValue, generateField.objField()));
+                result.put(generateField.genField(),value);
+            }
+        }catch (Throwable e){
+            StaticLog.warn("GenerateFieldFiller 处理失败",e);
+        }
     }
 }

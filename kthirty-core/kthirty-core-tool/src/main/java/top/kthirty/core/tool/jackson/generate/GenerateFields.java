@@ -11,15 +11,6 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Documented
 @Inherited
-@Repeatable(GenerateFields.class)
-public @interface GenerateField {
-    /**
-     * 生成的新字段名
-     */
-    String genField();
-
-    /**
-     * 对象中的字段名
-     */
-    String objField();
+public @interface GenerateFields {
+    GenerateField[] value() default {};
 }

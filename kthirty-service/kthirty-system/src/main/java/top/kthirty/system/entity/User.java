@@ -1,7 +1,9 @@
 package top.kthirty.system.entity;
 
+import cn.hutool.core.convert.Convert;
 import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.RelationManyToMany;
+import com.mybatisflex.annotation.RelationOneToMany;
 import com.mybatisflex.annotation.Table;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -10,9 +12,11 @@ import top.kthirty.core.db.sequence.SequenceCode;
 import top.kthirty.core.db.sequence.handler.NumberSeqHandler;
 import top.kthirty.core.tool.dict.Dict;
 import top.kthirty.core.tool.jackson.generate.GenerateField;
+import top.kthirty.core.tool.utils.StringPool;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户信息 实体类。
@@ -93,24 +97,6 @@ public class User extends LogicEntity {
 
     @Column(ignore = true)
     @RelationManyToMany(
-            joinTable = "sys_user_post_rl",
-            joinSelfColumn = "user_id",
-            targetField = "code",
-            joinTargetColumn = "post_code"
-    )
-    private List<Post> postList;
-
-    @Column(ignore = true)
-    @RelationManyToMany(
-            joinTable = "sys_user_dept_rl",
-            joinSelfColumn = "user_id",
-            targetField = "code",
-            joinTargetColumn = "dept_code"
-    )
-    private List<Dept> deptList;
-
-    @Column(ignore = true)
-    @RelationManyToMany(
             joinTable = "sys_user_role_rl",
             joinSelfColumn = "user_id",
             joinTargetColumn = "role_id"
@@ -118,4 +104,18 @@ public class User extends LogicEntity {
     @GenerateField(genField = "roleName",objField = "name")
     private List<Role> roleList;
 
+    @Column(ignore = true)
+    @RelationOneToMany(targetField = "userId")
+    private List<UserPosition> userPositions;
+
+
+    public String getPositionName(){
+        if(userPositions == null){
+            return null;
+        }
+        return userPositions.stream().map(it ->
+                Convert.toStr(it.__getJsonField("deptIdLabel"))
+                + Convert.toStr(it.__getJsonField("postIdLabel")))
+                .collect(Collectors.joining(StringPool.COMMA));
+    }
 }

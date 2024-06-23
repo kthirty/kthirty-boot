@@ -29,4 +29,8 @@ public interface JsonFiller {
                 .forEach(it -> res.putAll(ReflectUtil.invoke(this,it)));
         return res;
     }
+
+    default Object __getJsonField(String fieldName) {
+        return __JsonFiller().get(fieldName);
+    }
 }

@@ -49,7 +49,7 @@ public class DataPermissionHolder {
 
     public static void handle() {
         DataPermissionContext context = getContext();
-        List<String> tableNames = CollUtil.isEmpty(context.getTables()) ? ListUtil.empty() : context.getTables().stream().map(QueryTable::getName).toList();
+        List<String> tableNames = CollUtil.isNotEmpty(context.getTables()) ? context.getTables().stream().map(QueryTable::getName).toList() : ListUtil.empty();
         List<DataPermission> list = DataPermissionHelper.getAll()
                 .stream()
                 .filter(it -> {

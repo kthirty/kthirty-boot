@@ -34,6 +34,21 @@
             <column name="user_id" type="varchar(32)" remarks="用户ID"/>
         </createTable>
     </changeSet>
+    <!--用户岗位关联表-->
+    <changeSet id="sys_user_post_rl" author="KTHIRTY">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="sys_user_post_rl"/>
+            </not>
+        </preConditions>
+        <createTable tableName="sys_user_post_rl" remarks="用户岗位关联表">
+            <column name="id" type="varchar(32)" remarks="主键">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="post_code" type="varchar(32)" remarks="岗位代码"/>
+            <column name="user_id" type="varchar(32)" remarks="用户ID"/>
+        </createTable>
+    </changeSet>
     <!--用户部门关联表-->
     <changeSet id="sys_user_dept_rl" author="KTHIRTY">
         <preConditions onFail="MARK_RAN">
