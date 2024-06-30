@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="dev_form" author="admin">
+        <preConditions>
+            <not>
+                <tableExists tableName="dev_form"/>
+            </not>
+        </preConditions>
+        <createTable tableName="dev_form" remarks="form开发">
+            <column name="id" type="varchar(32)" remarks="主键">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="create_by" remarks="创建人" type="varchar(32)"/>
+            <column name="update_by" remarks="更新人" type="varchar(32)"/>
+            <column name="create_date" remarks="创建时间" type="timestamp" defaultValueDate="current_timestamp"/>
+            <column name="update_date" remarks="更新时间" type="timestamp" defaultValueDate="current_timestamp"/>
+            <column name="deleted" remarks="删除标记" type="tinyint" defaultValueBoolean="false"/>
+            <column name="table_name" type="varchar(32)" remarks="表名">
+                <constraints nullable="false"/>
+            </column>
+            <column name="remarks" remarks="备注" type="varchar(255)"/>
+            <column name="table_type"  type="varchar(2)" remarks="表类型 1单表2主表3附表" defaultValue="1"/>
+            <column name="list_type" type="varchar(2)" remarks="列表类型 1分页列表 2不分页列表 3树形列表" defaultValue="1"/>
+            <column name="is_db_sync" type="tinyint" remarks="是否已同步到数据库" defaultValueBoolean="false"/>
+        </createTable>
+        <createTable tableName="dev_form_item">
+            <column name="id" type="varchar(32)" remarks="主键">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="form_id" type="varchar(32)" remarks="dev_form表ID"/>
+
+            <column name="column_name" remarks="表字段名" type="varchar(32)"/>
+            <column name="column_type" remarks="表字段类型" type="varchar(32)"/>
+            <column name="column_length" remarks="表字段长度" type="int"/>
+            <column name="column_point_length" remarks="小数点长度" type="int"/>
+            <column name="column_default_val" type="varchar(32)" remarks="默认值"/>
+            <column name="column_nullable" type="tinyint" defaultValueBoolean="false" remarks="是否允许为空"/>
+            <column name="column_remarks" type="255" remarks="字段备注"/>
+
+            <column name="field_type" remarks="Java字段类型" type="varchar(20)"/>
+            <column name="field_attribute" remarks="字段属性[1普通字段2主键3删除标记4非数据库字段]" type="varchar(2)"/>
+            <column name="dict_code" remarks="字典Code" type="varchar(32)"/>
+
+            <column name="form_component" type="varchar(20)" remarks="表字段显示组件"/>
+            <column name="form_required" type="tinyint" remarks="是否必填" defaultValueBoolean="false"/>
+            <column name="form_regexp" type="varchar(32)" remarks="正则验证"/>
+            <column name="weight" type="int" remarks="排序权重" defaultValueNumeric="0"/>
+            <column name="is_show_query" type="tinyint" defaultValueBoolean="true" remarks="是否查询"/>
+            <column name="query_component" type="varchar(20)" remarks="查询模式"/>
+            <column name="is_show_form" type="tinyint" defaultValueBoolean="true" remarks="是否Form中显示"/>
+            <column name="is_show_list" type="tinyint" defaultValueBoolean="true" remarks="是否List中显示"/>
+            <column name="is_allow_sort" type="tinyint" defaultValueBoolean="true" remarks="是否允许排序"/>
+            <column name="is_readonly" type="tinyint" defaultValueBoolean="false" remarks="是否只读"/>
+            <column name="foreign_key_main_table" type="varchar(32)" remarks="外键主表名"/>
+            <column name="foreign_key_main_column" type="varchar(32)" remarks="外键主表字段"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

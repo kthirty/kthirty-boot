@@ -1,0 +1,9 @@
+server:
+  port: 9002
+  servlet:
+    context-path: /act
+spring:
+  datasource:
+    url: jdbc:mysql://mysql.kthirty.top:7091/test2024
+    username: test2024
+    password: ${KTHIRTY_PASSWORD}

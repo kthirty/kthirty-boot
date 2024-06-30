@@ -69,6 +69,7 @@
         <knife4j.version>4.5.0</knife4j.version>
         <redission.version>3.16.5</redission.version>
         <jjwt.version>0.12.3</jjwt.version>
+        <flowable.version>7.0.1</flowable.version>
         <!--DB-->
         <mybatis-flex.version>1.8.9</mybatis-flex.version>
         <mybatis-spring.version>3.0.3</mybatis-spring.version>
@@ -153,6 +154,12 @@
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
                 <version>${jjwt.version}</version>
+            </dependency>
+            <!--Flowable -->
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-spring-boot-starter-process</artifactId>
+                <version>${flowable.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

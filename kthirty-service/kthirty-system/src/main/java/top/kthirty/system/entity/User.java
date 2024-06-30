@@ -1,9 +1,7 @@
 package top.kthirty.system.entity;
 
-import cn.hutool.core.convert.Convert;
 import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.RelationManyToMany;
-import com.mybatisflex.annotation.RelationOneToMany;
 import com.mybatisflex.annotation.Table;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -12,11 +10,9 @@ import top.kthirty.core.db.sequence.SequenceCode;
 import top.kthirty.core.db.sequence.handler.NumberSeqHandler;
 import top.kthirty.core.tool.dict.Dict;
 import top.kthirty.core.tool.jackson.generate.GenerateField;
-import top.kthirty.core.tool.utils.StringPool;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 用户信息 实体类。
@@ -104,18 +100,4 @@ public class User extends LogicEntity {
     @GenerateField(genField = "roleName",objField = "name")
     private List<Role> roleList;
 
-    @Column(ignore = true)
-    @RelationOneToMany(targetField = "userId")
-    private List<UserPosition> userPositions;
-
-
-    public String getPositionName(){
-        if(userPositions == null){
-            return null;
-        }
-        return userPositions.stream().map(it ->
-                Convert.toStr(it.__getJsonField("deptIdLabel"))
-                + Convert.toStr(it.__getJsonField("postIdLabel")))
-                .collect(Collectors.joining(StringPool.COMMA));
-    }
 }
