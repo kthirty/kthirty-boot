@@ -5,7 +5,7 @@
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <changeSet id="dev_form" author="admin">
-        <preConditions>
+        <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="dev_form"/>
             </not>
@@ -39,7 +39,7 @@
             <column name="column_point_length" remarks="小数点长度" type="int"/>
             <column name="column_default_val" type="varchar(32)" remarks="默认值"/>
             <column name="column_nullable" type="tinyint" defaultValueBoolean="false" remarks="是否允许为空"/>
-            <column name="column_remarks" type="255" remarks="字段备注"/>
+            <column name="column_remarks" type="varchar(255)" remarks="字段备注"/>
 
             <column name="field_type" remarks="Java字段类型" type="varchar(20)"/>
             <column name="field_attribute" remarks="字段属性[1普通字段2主键3删除标记4非数据库字段]" type="varchar(2)"/>

@@ -11,6 +11,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import top.kthirty.core.db.base.entity.LogicEntity;
 import top.kthirty.core.db.base.mapper.BaseMapper;
 import top.kthirty.core.db.base.service.BaseService;
+import top.kthirty.core.web.base.BaseController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,13 +19,13 @@ import java.util.Map;
 public class CodeGen {
     public static void main(String[] args) {
 
-        String basePath = FileUtil.getParent(ResourceUtil.getResource("").getFile(),4) + "/kthirty-service/kthirty-system";
+        String basePath = FileUtil.getParent(ResourceUtil.getResource("").getFile(),4) + "/kthirty-extra/kthirty-develop";
 
-        String tablePrefix = "sys_";
-        String basePackage = "top.kthirty.system";
+        String tablePrefix = "";
+        String basePackage = "top.kthirty.develop";
 
         Map<String,String> moduleTable = new HashMap<>();
-        moduleTable.put("","sys_user_position");
+        moduleTable.put("","dev_form,dev_form_item");
 
         moduleTable.forEach((model,tables) -> gen(basePath,basePackage,tablePrefix,tables.split(",")));
     }
@@ -62,7 +63,7 @@ public class CodeGen {
 
         //设置生成 mapper
         globalConfig.enableMapper().setSuperClass(BaseMapper.class);
-        globalConfig.enableMapperXml().setOverwriteEnable(true).setFileSuffix("Mapper");
+//        globalConfig.enableMapperXml().setOverwriteEnable(true).setFileSuffix("Mapper");
 //
 
         // service
@@ -70,7 +71,7 @@ public class CodeGen {
         globalConfig.enableServiceImpl();
         globalConfig.getServiceConfig().setSuperClass(BaseService.class);
         // controller
-//        globalConfig.enableController().setSuperClass(BaseController.class).setOverwriteEnable(true);
+        globalConfig.enableController().setSuperClass(BaseController.class).setOverwriteEnable(true);
 
         Generator generator = new Generator(dataSource, globalConfig);
         generator.generate();
