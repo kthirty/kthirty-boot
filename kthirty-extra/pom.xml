@@ -12,8 +12,7 @@
     <artifactId>kthirty-extra</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>kthirty-develop</module>
-        <module>kthirty-starter</module>
+
     </modules>
     <dependencies>
 

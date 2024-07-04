@@ -16,7 +16,6 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -65,7 +64,7 @@ public class SwaggerAutoConfiguration {
                 registry.addInterceptor(new HandlerInterceptor() {
                     @Override
                     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
-                        if (HttpMethod.GET.matches(request.getMethod()) && request.getRequestURI().equals("/favicon.ico")) {
+                        if (HttpMethod.GET.matches(request.getMethod()) && "/favicon.ico".equals(request.getRequestURI())) {
                             response.setStatus(HttpStatus.NO_CONTENT.value()); // 设置状态码为204 No Content
                             return false;
                         }

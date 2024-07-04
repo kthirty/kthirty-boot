@@ -40,10 +40,11 @@
 
 
     <modules>
-        <module>kthirty-boot-examples</module>
+        <module>kthirty-examples</module>
         <module>kthirty-core</module>
         <module>kthirty-extra</module>
         <module>kthirty-service</module>
+        <module>kthirty-starter</module>
     </modules>
 
     <properties>

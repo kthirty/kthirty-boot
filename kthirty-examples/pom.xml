@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>kthirty-boot-examples</artifactId>
+    <artifactId>kthirty-examples</artifactId>
     <packaging>pom</packaging>
     <modules>
         <module>boot-examples</module>
