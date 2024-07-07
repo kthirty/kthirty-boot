@@ -60,7 +60,7 @@
             <column name="id" type="varchar(32)" remarks="主键">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="dept_code" type="varchar(32)" remarks="部门代码"/>
+            <column name="dept_id" type="varchar(32)" remarks="部门ID"/>
             <column name="user_id" type="varchar(32)" remarks="用户ID"/>
         </createTable>
     </changeSet>

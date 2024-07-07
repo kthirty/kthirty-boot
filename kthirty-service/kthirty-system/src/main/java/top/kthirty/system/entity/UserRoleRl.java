@@ -3,6 +3,7 @@ package top.kthirty.system.entity;
 import com.mybatisflex.annotation.Table;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import lombok.experimental.Accessors;
 import top.kthirty.core.db.base.entity.IdEntity;
 
 /**
@@ -14,6 +15,7 @@ import top.kthirty.core.db.base.entity.IdEntity;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
+@Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "用户角色关联表")
