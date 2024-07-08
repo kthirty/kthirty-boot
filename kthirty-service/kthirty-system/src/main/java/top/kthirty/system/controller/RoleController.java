@@ -1,27 +1,26 @@
 package top.kthirty.system.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import lombok.AllArgsConstructor;
-import top.kthirty.core.db.support.Condition;
-import top.kthirty.system.entity.Role;
-import top.kthirty.system.service.RoleService;
-import org.springframework.web.bind.annotation.RestController;
-import top.kthirty.core.web.base.BaseController;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.mybatisflex.core.query.QueryWrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import top.kthirty.core.db.support.Condition;
+import top.kthirty.core.web.base.BaseController;
+import top.kthirty.system.entity.Role;
+import top.kthirty.system.entity.User;
+import top.kthirty.system.entity.UserRoleRl;
 import top.kthirty.system.model.RoleConfigMenuVO;
+import top.kthirty.system.service.RoleService;
+import top.kthirty.system.service.UserRoleRlService;
 
 import java.io.Serializable;
 import java.util.List;
+
+import static top.kthirty.system.entity.table.UserRoleRlTableDef.USER_ROLE_RL;
 
 /**
  * 角色 控制层。
@@ -35,6 +34,7 @@ import java.util.List;
 @RequestMapping("/sys/role")
 public class RoleController extends BaseController {
     private final RoleService roleService;
+    private final UserRoleRlService userRoleRlService;
 
     @PostMapping("save")
     @Operation(summary = "保存角色",description="保存角色")
@@ -75,6 +75,25 @@ public class RoleController extends BaseController {
     @Operation(summary = "保存角色拥有的菜单",description="保存角色拥有的菜单")
     public void saveMenus(@RequestBody @Valid RoleConfigMenuVO req){
         roleService.saveMenus(req);
+    }
+
+    @GetMapping("users/{id}")
+    @Operation(summary = "根据主键获取此角色的用户",description="根据主键获取此角色的用户")
+    public List<User> queryUsers(@PathVariable String id){
+        return roleService.queryUsers(id);
+    }
+    @DeleteMapping("removeLink")
+    @Operation(summary = "根据主键获取此角色的用户",description="根据主键获取此角色的用户")
+    public void removeLink(@RequestBody @Valid UserRoleRl req) {
+        userRoleRlService.remove(USER_ROLE_RL.USER_ID.eq(req.getUserId()).and(USER_ROLE_RL.ROLE_ID.eq(req.getRoleId())));
+    }
+    @PostMapping("addLink")
+    @Operation(summary = "根据主键获取此角色的用户",description="根据主键获取此角色的用户")
+    public void addLink(@RequestBody @Valid UserRoleRl req){
+        boolean exists = userRoleRlService.exists(QueryWrapper.create(req));
+        if(!exists){
+            userRoleRlService.save(req);
+        }
     }
 
     @GetMapping("page")
