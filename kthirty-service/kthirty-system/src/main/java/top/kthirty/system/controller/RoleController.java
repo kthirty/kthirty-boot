@@ -1,7 +1,6 @@
 package top.kthirty.system.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.core.query.QueryWrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,6 +12,7 @@ import top.kthirty.core.web.base.BaseController;
 import top.kthirty.system.entity.Role;
 import top.kthirty.system.entity.User;
 import top.kthirty.system.entity.UserRoleRl;
+import top.kthirty.system.model.AddUserRoleLinkReq;
 import top.kthirty.system.model.RoleConfigMenuVO;
 import top.kthirty.system.service.RoleService;
 import top.kthirty.system.service.UserRoleRlService;
@@ -89,11 +89,8 @@ public class RoleController extends BaseController {
     }
     @PostMapping("addLink")
     @Operation(summary = "根据主键获取此角色的用户",description="根据主键获取此角色的用户")
-    public void addLink(@RequestBody @Valid UserRoleRl req){
-        boolean exists = userRoleRlService.exists(QueryWrapper.create(req));
-        if(!exists){
-            userRoleRlService.save(req);
-        }
+    public void addLink(@RequestBody @Valid AddUserRoleLinkReq req){
+        userRoleRlService.batchAdd(req.getRoleId(),req.getUserIds());
     }
 
     @GetMapping("page")
