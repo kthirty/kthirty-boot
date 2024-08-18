@@ -25,7 +25,7 @@ import java.util.List;
 @RestController
 @Tag(name = "form开发接口")
 @AllArgsConstructor
-@RequestMapping("/devForm")
+@RequestMapping("/dev/form")
 public class DevFormController extends BaseController {
     private final DevFormService devFormService;
 

@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
+import top.kthirty.core.tool.dict.Dict;
 
 import java.io.Serial;
 
@@ -46,6 +47,7 @@ public class DevForm extends LogicEntity {
      * @see top.kthirty.develop.enums.TableType
      */
     @Schema(description = "表类型 1单表2主表3附表")
+    @Dict(code = "dev_table_type")
     private String tableType;
 
     /**
@@ -53,12 +55,14 @@ public class DevForm extends LogicEntity {
      * @see top.kthirty.develop.enums.ListType
      */
     @Schema(description = "列表类型")
+    @Dict(code = "dev_list_type")
     private String listType;
 
     /**
      * 是否已同步到数据库
      */
     @Schema(description = "是否已同步到数据库")
-    private Integer isDbSync;
+    @Dict(code = "whether")
+    private String isDbSync;
 
 }

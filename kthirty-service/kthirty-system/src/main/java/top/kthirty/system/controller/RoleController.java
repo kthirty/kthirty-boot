@@ -91,7 +91,7 @@ public class RoleController extends BaseController {
     @Operation(summary = "根据主键获取此角色的用户",description="根据主键获取此角色的用户")
     public void addLink(@RequestBody @Valid AddUserRoleLinkReq req){
         userRoleRlService.batchAdd(req.getRoleId(),req.getUserIds());
-    }
+    } 
 
     @GetMapping("page")
     @Operation(summary = "分页查询角色",description="分页查询角色")
