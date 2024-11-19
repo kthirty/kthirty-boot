@@ -5,6 +5,7 @@ import com.mybatisflex.annotation.RelationManyToMany;
 import com.mybatisflex.annotation.Table;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import top.kthirty.core.db.base.entity.IdEntity;
 import top.kthirty.core.db.base.entity.LogicEntity;
 import top.kthirty.core.db.sequence.SequenceCode;
 import top.kthirty.core.db.sequence.handler.NumberSeqHandler;
@@ -91,7 +92,6 @@ public class User extends LogicEntity {
     @Dict(code = "enable_status")
     private String status;
 
-    @Column(ignore = true)
     @RelationManyToMany(
             joinTable = "sys_user_role_rl",
             joinSelfColumn = "user_id",
@@ -99,5 +99,34 @@ public class User extends LogicEntity {
     )
     @GenerateField(genField = "roleName",objField = "name")
     private List<Role> roleList;
+
+    @RelationManyToMany(
+            joinTable = "sys_user_dept_rl",
+            joinSelfColumn = "user_id",
+            joinTargetColumn = "dept_id"
+    )
+    @GenerateField(genField = "deptName",objField = "name")
+    private List<Dept> deptList;
+
+    @Column(ignore = true)
+    private List<String> roleIds;
+    @Column(ignore = true)
+    private List<String> deptIds;
+
+    public void setRoleList(List<Role> list){
+        if(list == null){
+            return;
+        }
+        this.roleList = list;
+        this.roleIds = list.stream().map(IdEntity::getId).toList();
+    }
+
+    public void setDeptList(List<Dept> list){
+        if(list == null){
+            return;
+        }
+        this.deptList = list;
+        this.deptIds = list.stream().map(IdEntity::getId).toList();
+    }
 
 }

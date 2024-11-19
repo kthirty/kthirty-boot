@@ -14,9 +14,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum TableType {
-    PAGE("1","单表"),
-    LIST("2","主表"),
-    TREE("3","附表");
+    SINGLE_TABLE("1","单表"),
+    MAIN_TABLE("2","主表"),
+    SUB_TABLE("3","附表");
 
     private final String value;
     private final String description;

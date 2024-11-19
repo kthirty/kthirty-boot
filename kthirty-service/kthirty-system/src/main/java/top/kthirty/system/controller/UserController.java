@@ -1,7 +1,6 @@
 package top.kthirty.system.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.core.query.QueryColumn;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import top.kthirty.core.db.support.Condition;
 import top.kthirty.core.web.base.BaseController;
 import top.kthirty.system.entity.User;
-import top.kthirty.system.entity.table.UserTableDef;
 import top.kthirty.system.service.UserService;
 
 import java.io.Serializable;

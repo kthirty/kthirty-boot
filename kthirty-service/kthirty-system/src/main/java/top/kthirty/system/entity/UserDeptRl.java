@@ -1,10 +1,10 @@
 package top.kthirty.system.entity;
 
 import com.mybatisflex.annotation.Table;
-import lombok.*;
-import top.kthirty.core.db.base.entity.IdEntity;
-import top.kthirty.core.db.base.entity.LogicEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.*;
+import lombok.experimental.Accessors;
+import top.kthirty.core.db.base.entity.IdEntity;
 
 /**
  * 用户部门关联表 实体类。
@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
+@Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "用户部门关联表")
@@ -22,10 +23,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class UserDeptRl extends IdEntity {
 
     /**
-     * 部门代码
+     * 部门ID
      */
-    @Schema(description = "部门代码")
-    private String deptCode;
+    @Schema(description = "部门ID")
+    private String deptId;
 
     /**
      * 用户ID
