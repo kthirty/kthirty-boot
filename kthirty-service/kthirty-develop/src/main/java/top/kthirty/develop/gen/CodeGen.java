@@ -9,7 +9,7 @@ import com.mybatisflex.codegen.constant.GenTypeConst;
 import com.mybatisflex.codegen.generator.GeneratorFactory;
 import com.zaxxer.hikari.HikariDataSource;
 import top.kthirty.core.db.base.entity.LogicEntity;
-import top.kthirty.core.db.base.mapper.BaseMapper;
+import top.kthirty.core.db.base.mp.BaseMapper;
 import top.kthirty.core.db.base.service.BaseService;
 import top.kthirty.core.web.base.BaseController;
 

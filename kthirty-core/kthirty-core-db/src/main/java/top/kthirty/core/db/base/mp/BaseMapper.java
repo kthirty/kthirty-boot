@@ -1,4 +1,4 @@
-package top.kthirty.core.db.base.mapper;
+package top.kthirty.core.db.base.mp;
 
 
 /**

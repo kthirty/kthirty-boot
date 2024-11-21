@@ -1,7 +1,7 @@
 package top.kthirty.core.db.base.service;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import top.kthirty.core.db.base.mapper.BaseMapper;
+import top.kthirty.core.db.base.mp.BaseMapper;
 
 /**
  * <p>

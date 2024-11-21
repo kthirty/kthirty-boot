@@ -2,7 +2,7 @@ package top.kthirty.system.mapper;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import top.kthirty.core.db.base.mapper.BaseMapper;
+import top.kthirty.core.db.base.mp.BaseMapper;
 import top.kthirty.system.entity.Dept;
 
 import java.util.List;

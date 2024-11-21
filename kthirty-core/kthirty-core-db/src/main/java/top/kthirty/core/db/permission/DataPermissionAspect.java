@@ -10,7 +10,7 @@ import org.aspectj.lang.annotation.Pointcut;
 @Aspect
 @Slf4j
 public class DataPermissionAspect {
-    @Pointcut("execution(* *(..)) && within(top.kthirty.core.db.base.mapper.BaseMapper+)")
+    @Pointcut("execution(* *(..)) && within(top.kthirty.core.db.base.mp.BaseMapper+)")
     public void baseMapperMethods() {
     }
 

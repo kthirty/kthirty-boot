@@ -1,6 +1,6 @@
 package top.kthirty.develop.mapper;
 
-import top.kthirty.core.db.base.mapper.BaseMapper;
+import top.kthirty.core.db.base.mp.BaseMapper;
 import top.kthirty.develop.entity.DevForm;
 
 /**

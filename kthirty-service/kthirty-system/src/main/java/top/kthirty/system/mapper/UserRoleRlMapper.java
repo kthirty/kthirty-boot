@@ -1,6 +1,6 @@
 package top.kthirty.system.mapper;
 
-import top.kthirty.core.db.base.mapper.BaseMapper;
+import top.kthirty.core.db.base.mp.BaseMapper;
 import top.kthirty.system.entity.UserRoleRl;
 
 /**
