@@ -4,15 +4,14 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.*;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.bpmn.converter.BpmnXMLConverter;
 import org.flowable.bpmn.model.BpmnModel;
-import org.flowable.common.engine.api.io.InputStreamProvider;
-import org.flowable.common.engine.impl.util.io.StringStreamSource;
 import org.flowable.engine.ManagementService;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.jackson.JsonUtil;
-import top.kthirty.core.tool.utils.Base64Util;
 import top.kthirty.core.tool.utils.BeanUtil;
 import top.kthirty.core.tool.utils.Charsets;
 import top.kthirty.core.web.base.BaseController;
@@ -37,8 +35,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
@@ -52,6 +48,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("model")
 @RequiredArgsConstructor
+@Tag(name = "流程模型")
 public class ModelController extends BaseController {
     private final RepositoryService repositoryService;
     private final ManagementService managementService;
@@ -60,16 +57,15 @@ public class ModelController extends BaseController {
 
     @GetMapping("page")
     @Operation(summary = "分页查询流程模型")
-    public List<Model> page(FlowModelQuery req){
+    public Page<Model> page(FlowModelQuery req){
         ModelQuery query = repositoryService.createModelQuery();
         query.latestVersion();
         Func.doIf(StrUtil.isNotBlank(req.getKey()),() -> query.modelKey(req.getKey()));
         Func.doIf(StrUtil.isNotBlank(req.getCategory()),() -> query.modelCategory(req.getCategory()));
         Func.doIf(StrUtil.isNotBlank(req.getName()),() -> query.modelNameLike(req.getName()));
-        Func.doIf(StrUtil.isNotBlank(req.getTenantId()), () -> query.modelTenantId(req.getTenantId()));
         Func.doIf(ObjUtil.isNotNull(req.getDeployed()) && req.getDeployed(), query::deployed);
         Func.doIf(ObjUtil.isNotNull(req.getDeployed()) && !req.getDeployed(), query::notDeployed);
-        return query.listPage(req.getPageNumber() - 1, req.getPageSize());
+        return req.getPage(query.count(),query.listPage(req.getPageNumber() - 1, req.getPageSize()));
     }
 
     @PostMapping("save")

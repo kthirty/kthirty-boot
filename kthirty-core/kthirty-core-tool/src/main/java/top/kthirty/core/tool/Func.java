@@ -1462,6 +1462,11 @@ public class Func {
         }
     }
 
+    public static void doNotBlank(String str, VoidFunc0 func) {
+        doIf(isNotBlank(str),func);
+    }
+
+
 
     public static String blankToDefault(String str, String defaultVal) {
         return StrUtil.blankToDefault(str,defaultVal);

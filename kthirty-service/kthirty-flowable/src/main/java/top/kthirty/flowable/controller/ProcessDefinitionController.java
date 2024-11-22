@@ -3,17 +3,17 @@ package top.kthirty.flowable.controller;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
+import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.bpmn.converter.BpmnXMLConverter;
 import org.flowable.bpmn.model.BpmnModel;
-import org.flowable.engine.ManagementService;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
-import org.flowable.engine.RuntimeService;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.repository.ProcessDefinitionQuery;
 import org.springframework.web.bind.annotation.*;
@@ -36,31 +36,31 @@ import java.util.List;
  * @since 2024/11/22 15:30
  */
 @RestController
-@RequestMapping("process")
+@RequestMapping("process/definition")
 @RequiredArgsConstructor
-public class ProcessController extends BaseController {
+@Tag(name = "流程定义")
+public class ProcessDefinitionController extends BaseController {
     private final RepositoryService repositoryService;
     private final ProcessEngine processEngine;
 
-    @GetMapping("def/page")
+    @GetMapping("page")
     @Operation(summary = "获取流程定义分页")
-    public List<ProcessDefinition> defPage(FlowProcessDefQuery req){
+    public Page<ProcessDefinition> defPage(FlowProcessDefQuery req){
         ProcessDefinitionQuery query = repositoryService.createProcessDefinitionQuery();
         Func.doIf(StrUtil.isNotBlank(req.getCategory()), () -> query.processDefinitionKeyLike(req.getCategory()));
         Func.doIf(StrUtil.isNotBlank(req.getKey()), () -> query.processDefinitionKeyLike(req.getKey()));
         Func.doIf(StrUtil.isNotBlank(req.getName()), () -> query.processDefinitionNameLike(req.getName()));
-        Func.doIf(StrUtil.isNotBlank(req.getTenantId()), () -> query.processDefinitionTenantId(req.getTenantId()));
         Func.doIf(req.getActive() != null && req.getActive() , query::active);
         Func.doIf(req.getActive() != null && !req.getActive() , query::suspended);
-        return query.latestVersion()
-                .listPage(req.getPageNumber() - 1,req.getPageSize());
+        query.latestVersion();
+        return req.getPage(query.count(),query.listPage(req.getPageNumber() - 1,req.getPageSize()));
     }
-    @PutMapping("def/active")
+    @PutMapping("active")
     @Operation(summary = "流程激活")
     public void devActive(String processDefId){
         repositoryService.activateProcessDefinitionById(processDefId);
     }
-    @PutMapping("def/suspended")
+    @PutMapping("suspended")
     @Operation(summary = "流程激活")
     public void devSuspended(String processDefId){
         repositoryService.suspendProcessDefinitionById(processDefId);

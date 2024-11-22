@@ -21,6 +21,4 @@ public class FlowModelQuery extends Query<Model> {
     private String category;
     @Schema(description = "是否已部署")
     private Boolean deployed;
-    @Schema(description = "租户ID")
-    private String tenantId;
 }

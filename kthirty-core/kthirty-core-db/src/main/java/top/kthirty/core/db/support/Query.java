@@ -4,6 +4,8 @@ import com.mybatisflex.core.paginate.Page;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 /**
  * 分页工具
  *
@@ -26,4 +28,12 @@ public class Query<T> {
     public Page<T> getPage() {
         return Condition.getPage(this);
     }
+
+    public Page<T> getPage(long totalRows, List<T> records) {
+        Page<T> page = getPage();
+        page.setTotalRow(totalRows);
+        page.setRecords(records);
+        return page;
+    }
+
 }
