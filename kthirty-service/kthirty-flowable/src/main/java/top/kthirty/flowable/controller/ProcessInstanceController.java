@@ -2,18 +2,17 @@ package top.kthirty.flowable.controller;
 
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.history.HistoricProcessInstanceQuery;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.kthirty.core.tool.Func;
 import top.kthirty.flowable.model.FlowProcessInstQuery;
+import top.kthirty.flowable.util.FlowableHelper;
 
 /**
  * @description 流程实例控制器
@@ -21,12 +20,13 @@ import top.kthirty.flowable.model.FlowProcessInstQuery;
  * @since 2024/11/22 16:39
  */
 @RestController
-@RequestMapping("process/instance")
+@RequestMapping("pi")
 @RequiredArgsConstructor
 @Tag(name = "流程实例")
-public class ProcessInstController {
+public class ProcessInstanceController {
     private final RuntimeService runtimeService;
     private final HistoryService historyService;
+    private final FlowableHelper flowableHelper;
 
     @GetMapping("page")
     @Operation(summary = "分页查询流程实例")
@@ -48,6 +48,27 @@ public class ProcessInstController {
     @Operation(summary = "删除流程实例")
     public void delete(String procInstId,String deleteReason){
         runtimeService.deleteProcessInstance(procInstId,deleteReason);
-
     }
+
+    @PutMapping("suspend")
+    @Operation(summary = "挂起流程实例")
+    public void suspend(String procInstId){
+        runtimeService.suspendProcessInstanceById(procInstId);
+    }
+
+    @PutMapping("activate")
+    @Operation(summary = "激活流程实例")
+    public void activate(String procInstId){
+        runtimeService.activateProcessInstanceById(procInstId);
+    }
+
+    @PostMapping("start")
+    @Operation(summary = "启动流程实例")
+    public void start(@Parameter(description = "流程定义KEY") String processDefinitionKey
+            , @Parameter(description = "业务表ID") String businessKey){
+        flowableHelper.start(processDefinitionKey,businessKey);
+    }
+
+
+
 }

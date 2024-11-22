@@ -28,7 +28,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.util.List;
 
 /**
  * @description 流程相关接口
@@ -36,7 +35,7 @@ import java.util.List;
  * @since 2024/11/22 15:30
  */
 @RestController
-@RequestMapping("process/definition")
+@RequestMapping("pd")
 @RequiredArgsConstructor
 @Tag(name = "流程定义")
 public class ProcessDefinitionController extends BaseController {
