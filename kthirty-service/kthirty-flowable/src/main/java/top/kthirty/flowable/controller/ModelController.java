@@ -1,12 +1,20 @@
 package top.kthirty.flowable.controller;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.*;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.flowable.bpmn.converter.BpmnXMLConverter;
+import org.flowable.bpmn.model.BpmnModel;
+import org.flowable.common.engine.api.io.InputStreamProvider;
+import org.flowable.common.engine.impl.util.io.StringStreamSource;
 import org.flowable.engine.ManagementService;
+import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.impl.persistence.entity.ModelEntityImpl;
 import org.flowable.engine.repository.Deployment;
@@ -17,13 +25,20 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.jackson.JsonUtil;
+import top.kthirty.core.tool.utils.Base64Util;
 import top.kthirty.core.tool.utils.BeanUtil;
+import top.kthirty.core.tool.utils.Charsets;
 import top.kthirty.core.web.base.BaseController;
 import top.kthirty.core.web.utils.WebUtil;
 import top.kthirty.flowable.model.FlowModel;
 import top.kthirty.flowable.model.FlowModelQuery;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
@@ -40,6 +55,7 @@ import java.util.stream.Collectors;
 public class ModelController extends BaseController {
     private final RepositoryService repositoryService;
     private final ManagementService managementService;
+    private final ProcessEngine processEngine;
     public static final String MODEL_JSON_FILE_NAME = "models.json";
 
     @GetMapping("page")
@@ -48,7 +64,9 @@ public class ModelController extends BaseController {
         ModelQuery query = repositoryService.createModelQuery();
         query.latestVersion();
         Func.doIf(StrUtil.isNotBlank(req.getKey()),() -> query.modelKey(req.getKey()));
+        Func.doIf(StrUtil.isNotBlank(req.getCategory()),() -> query.modelCategory(req.getCategory()));
         Func.doIf(StrUtil.isNotBlank(req.getName()),() -> query.modelNameLike(req.getName()));
+        Func.doIf(StrUtil.isNotBlank(req.getTenantId()), () -> query.modelTenantId(req.getTenantId()));
         Func.doIf(ObjUtil.isNotNull(req.getDeployed()) && req.getDeployed(), query::deployed);
         Func.doIf(ObjUtil.isNotNull(req.getDeployed()) && !req.getDeployed(), query::notDeployed);
         return query.listPage(req.getPageNumber() - 1, req.getPageSize());
@@ -56,7 +74,7 @@ public class ModelController extends BaseController {
 
     @PostMapping("save")
     @Operation(summary = "保存流程模型")
-    public void save(@Parameter(description = "模型信息") FlowModel model){
+    public void save(@RequestBody @Parameter(description = "模型信息") FlowModel model){
         repositoryService.saveModel(model);
         if(StrUtil.isNotBlank(model.getXml())){
             repositoryService.addModelEditorSource(model.getId(),model.getXml().getBytes(StandardCharsets.UTF_8));
@@ -65,12 +83,29 @@ public class ModelController extends BaseController {
 
     @GetMapping("get")
     @Operation(summary = "获取单个模型详情")
-    public FlowModel get(@Parameter(description = "模型ID") String modelId){
+    @SneakyThrows
+    public FlowModel get(@Parameter(description = "模型ID") String modelId
+            , @Parameter(description = "是否查询xml") @RequestParam(required = false, defaultValue = "true") boolean queryXml
+            , @Parameter(description = "是否查询缩略图") @RequestParam(required = false) boolean queryThumbnail){
         Model model = repositoryService.getModel(modelId);
-        byte[] modelEditorSource = repositoryService.getModelEditorSource(modelId);
         FlowModel flowModel = BeanUtil.copy(model, FlowModel.class);
-        if(ObjUtil.isNotEmpty(modelEditorSource)){
-            flowModel.setXml(new String(modelEditorSource));
+        if(queryXml || queryThumbnail){
+            byte[] modelEditorSource = repositoryService.getModelEditorSource(modelId);
+            if(ObjUtil.isNotEmpty(modelEditorSource)){
+                flowModel.setXml(new String(modelEditorSource));
+                // 查询缩略图
+                if(queryThumbnail){
+                    BpmnModel bpmnModel = new BpmnXMLConverter()
+                            .convertToBpmnModel(() -> IoUtil.toStream(modelEditorSource), true, true, Charsets.UTF_8_NAME);
+                    BufferedImage bufferedImage = processEngine.getProcessEngineConfiguration()
+                            .getProcessDiagramGenerator()
+                            .generatePngImage(bpmnModel, 1.0D);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    ImageIO.write(bufferedImage, "png", stream);
+                    String imageBase64 = Base64.encode(stream.toByteArray());
+                    flowModel.setThumbnail(imageBase64);
+                }
+            }
         }
         return flowModel;
     }
@@ -149,7 +184,6 @@ public class ModelController extends BaseController {
                 repositoryService.saveModel(model);
                 repositoryService.addModelEditorSource(model.getId(),xmlStr.getBytes(StandardCharsets.UTF_8));
             });
-
         }
     }
 }

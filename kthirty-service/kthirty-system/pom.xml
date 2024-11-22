@@ -19,7 +19,6 @@
             <groupId>top.kthirty</groupId>
             <artifactId>kthirty-core-all</artifactId>
             <version>${project.version}</version>
-            <type>pom</type>
         </dependency>
         <dependency>
             <groupId>com.mysql</groupId>
