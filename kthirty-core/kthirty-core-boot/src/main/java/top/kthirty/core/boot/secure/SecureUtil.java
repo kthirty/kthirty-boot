@@ -17,6 +17,7 @@ import java.util.List;
  * @since 2023/11/27
  */
 public class SecureUtil implements ApplicationContextAware {
+    public static final String SUPER_ADMIN_CODE = "super_admin";
     public static String getUserId(){
         SysUser currentUser = getCurrentUser();
         return currentUser != null ? currentUser.getId() : null;
@@ -33,17 +34,28 @@ public class SecureUtil implements ApplicationContextAware {
         SysUser currentUser = getCurrentUser();
         return currentUser != null ? currentUser.getOrgCode() : null;
     }
+    public static List<String> getDeptCodes(){
+        SysUser currentUser = getCurrentUser();
+        return currentUser != null ? currentUser.getDeptCodes() : List.of();
+    }
     public static String getTenantId(){
         SysUser currentUser = getCurrentUser();
         return currentUser != null && CollUtil.isNotEmpty(currentUser.getTenantIds()) ? currentUser.getTenantIds().get(0) : null;
     }
     public static List<String> getPermissions(){
         SysUser currentUser = getCurrentUser();
-        return currentUser != null ? currentUser.getPermissions() : null;
+        return currentUser != null ? currentUser.getPermissions() : List.of();
     }
     public static List<String> getRoles(){
         SysUser currentUser = getCurrentUser();
-        return currentUser != null ? currentUser.getRoles() : null;
+        return currentUser != null ? currentUser.getRoles() : List.of();
+    }
+    public static List<String> getIdentityCodes(){
+        SysUser currentUser = getCurrentUser();
+        return currentUser != null ? currentUser.getIdentityCodes() : List.of();
+    }
+    public static boolean isSuperAdmin(){
+        return getRoles().contains(SUPER_ADMIN_CODE);
     }
     public static SysUser getCurrentUser(){
         SysUserProvider provider = getProvider();

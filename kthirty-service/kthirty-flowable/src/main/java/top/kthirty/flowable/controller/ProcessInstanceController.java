@@ -2,7 +2,6 @@ package top.kthirty.flowable.controller;
 
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.HistoryService;
@@ -12,7 +11,6 @@ import org.flowable.engine.history.HistoricProcessInstanceQuery;
 import org.springframework.web.bind.annotation.*;
 import top.kthirty.core.tool.Func;
 import top.kthirty.flowable.model.FlowProcessInstQuery;
-import top.kthirty.flowable.util.FlowableHelper;
 
 /**
  * @description 流程实例控制器
@@ -26,7 +24,6 @@ import top.kthirty.flowable.util.FlowableHelper;
 public class ProcessInstanceController {
     private final RuntimeService runtimeService;
     private final HistoryService historyService;
-    private final FlowableHelper flowableHelper;
 
     @GetMapping("page")
     @Operation(summary = "分页查询流程实例")
@@ -62,12 +59,7 @@ public class ProcessInstanceController {
         runtimeService.activateProcessInstanceById(procInstId);
     }
 
-    @PostMapping("start")
-    @Operation(summary = "启动流程实例")
-    public void start(@Parameter(description = "流程定义KEY") String processDefinitionKey
-            , @Parameter(description = "业务表ID") String businessKey){
-        flowableHelper.start(processDefinitionKey,businessKey);
-    }
+
 
 
 

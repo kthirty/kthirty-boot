@@ -7,4 +7,8 @@ public interface Constant {
      * 树形结构根节点
      */
     String ROOT_ID = "0";
+    /**
+     * 未找到
+     */
+    String NOT_FOUND = "-1";
 }

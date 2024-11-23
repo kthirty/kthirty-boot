@@ -37,6 +37,15 @@ public class SysUser implements Serializable {
      */
     private String orgCode;
     /**
+     * 身份代码
+     * [部门CODE:部门职位]
+     */
+    private List<String> identityCodes;
+    /**
+     * 拥有的所有部门代码
+     */
+    private List<String> deptCodes;
+    /**
      * 角色
      */
     private List<String> roles;

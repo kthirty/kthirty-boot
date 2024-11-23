@@ -36,4 +36,8 @@ public class Query<T> {
         return page;
     }
 
+    public int getFirstResult(){
+        return (pageNumber - 1) * pageSize;
+    }
+
 }

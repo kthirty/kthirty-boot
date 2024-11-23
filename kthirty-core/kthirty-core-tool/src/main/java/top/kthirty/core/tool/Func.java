@@ -1465,6 +1465,9 @@ public class Func {
     public static void doNotBlank(String str, VoidFunc0 func) {
         doIf(isNotBlank(str),func);
     }
+    public static void doNotNull(Object obj, VoidFunc0 func) {
+        doIf(notNull(obj),func);
+    }
 
 
 
