@@ -2,17 +2,23 @@ package top.kthirty.flowable.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
+import lombok.Cleanup;
+import org.flowable.bpmn.converter.BpmnXMLConverter;
 import org.flowable.bpmn.model.*;
 import org.flowable.common.engine.impl.el.VariableContainerWrapper;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.impl.util.CommandContextUtil;
+import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.task.api.Task;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.support.Kv;
+import top.kthirty.core.tool.utils.Charsets;
 import top.kthirty.core.tool.utils.SpringUtil;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -97,5 +103,25 @@ public class FlowableUtil {
         BpmnModel bpmnModel = processEngine.getRepositoryService().getBpmnModel(task.getProcessDefinitionId());
         FlowNode currentNode = (FlowNode) bpmnModel.getFlowElement(task.getTaskDefinitionKey());
         return getNextNode(bpmnModel, currentNode, procInstVars);
+    }
+
+    /**
+     * 获取BpmnModel
+     * @param processDefinitionId 流程定义ID
+     * @return BpmnModel
+     */
+    public static BpmnModel getBpmnModel(String processDefinitionId) {
+        ProcessEngine processEngine = SpringUtil.getBean(ProcessEngine.class);
+        ProcessDefinition processDefinition = processEngine.getRepositoryService()
+                .createProcessDefinitionQuery()
+                .processDefinitionId(processDefinitionId)
+                .singleResult();
+        // 获取XML
+        @Cleanup
+        InputStream xmlStream = processEngine
+                .getRepositoryService()
+                .getResourceAsStream(processDefinition.getDeploymentId(),"process.bpmn");
+        String xml = StrUtil.str(IoUtil.readBytes(xmlStream,false), Charsets.UTF_8);
+        return new BpmnXMLConverter().convertToBpmnModel(() -> xmlStream, true, true, Charsets.UTF_8_NAME);
     }
 }

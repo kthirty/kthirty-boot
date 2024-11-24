@@ -49,7 +49,7 @@ public class FlowableGlobalListenerConfig implements ApplicationListener<Context
                 FlowableEngineEventType eventType = FlowableEngineEventType.valueOf(event.getType().name());
                 // 执行钩子函数
                 FlowableHooks.getHooks(FlowableHooks.NativeEventHook.class, processDefinition.getKey())
-                        .forEach(hook -> hook.handle(eventType, flowableEngineEvent));
+                        .forEach(hook -> hook.onNativeEvent(eventType, flowableEngineEvent));
             }
             @Override
             public boolean isFailOnException() {return true;}

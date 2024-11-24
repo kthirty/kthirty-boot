@@ -2,6 +2,7 @@ package top.kthirty.flowable.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
@@ -74,7 +75,11 @@ public class RuntimeController {
             // 1. 所有拥有的角色 2. 拥有的部门:职位 3. 拥有的部门:角色
             List<String> groupCodes = CollUtil.unionAll(CollUtil.toList(Constant.NOT_FOUND),SecureUtil.getRoles(), SecureUtil.getIdentityCodes());
             SecureUtil.getDeptCodes().forEach(deptCode -> SecureUtil.getRoles().forEach(roleCode -> groupCodes.add(StrUtil.join(StringPool.COLON, deptCode, roleCode))));
-            taskQuery.taskCandidateOrAssigned(SecureUtil.getUsername()).or().taskCandidateGroupIn(groupCodes);
+            taskQuery.taskCandidateOrAssigned(SecureUtil.getUsername())
+                    .or()
+                    .taskCandidateGroupIn(groupCodes);
+            // 签收 : 未签收或者本人签收的任务
+            taskQuery.taskUnassigned().or().taskClaimedBy(SecureUtil.getUsername());
         }
         // 排序
         taskQuery.orderByTaskCreateTime().desc();
@@ -97,6 +102,21 @@ public class RuntimeController {
     public void complete(@RequestBody @Valid @Parameter(description = "办理信息") TaskCompleteReq req) {
         flowableHelper.complete(req);
     }
+    @PutMapping("claim")
+    @Operation(summary = "任务签收")
+    public void claim(@Parameter(description = "任务ID") String taskId) {
+        taskService.claim(taskId, SecureUtil.getUsername());
+    }
+    @PutMapping("unclaim")
+    @Operation(summary = "任务退签收")
+    public void unclaim(@Parameter(description = "任务ID") String taskId) {
+        if(!SecureUtil.isSuperAdmin()){
+            Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+            Assert.isTrue(task.getClaimedBy().equals(SecureUtil.getUsername()), "只能退签收本人签收的任务");
+        }
+        taskService.unclaim(taskId);
+    }
+
     @PutMapping("activate")
     @Operation(summary = "任务激活")
     public void complete(@Parameter(description = "任务ID") String taskId) {

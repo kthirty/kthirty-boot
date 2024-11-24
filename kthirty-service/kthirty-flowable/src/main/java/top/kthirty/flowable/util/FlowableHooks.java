@@ -22,9 +22,9 @@ import static cn.hutool.core.util.ClassUtil.getClassName;
 @Slf4j
 public class FlowableHooks {
     public interface BaseHook{ List<String> listenProcessDefinitionKey();}
-    public interface ProcessStartBeforeHook extends BaseHook { Map<String, Object> handle(String processDefinitionKey, String businessKey);}
-    public interface ProcessInstanceNameGenerator extends BaseHook {String generate(String processDefinitionKey, String businessKey);}
-    public interface ProcessStartAfterHook extends BaseHook { void handle(String processDefinitionKey, String businessKey, ProcessInstance processInstance);}
+    public interface ProcessStartBeforeHook extends BaseHook { Map<String, Object> onProcessStartBefore(String processDefinitionKey, String businessKey);}
+    public interface ProcessInstanceNameGenerator extends BaseHook {String generateProcessInstanceName(String processDefinitionKey, String businessKey);}
+    public interface ProcessStartAfterHook extends BaseHook { void onProcessStartAfter(String processDefinitionKey, String businessKey, ProcessInstance processInstance);}
     public interface TaskCompleteBeforeHook extends BaseHook {
         /**
          * @param processInstance 流程实例
@@ -32,7 +32,7 @@ public class FlowableHooks {
          * @param req 办理请求信息
          * @return 流程变量（作为变量存入流程）
          */
-        Map<String, Object> handle(ProcessInstance processInstance, Task task, TaskCompleteReq req);
+        Map<String, Object> onTaskCompleteBefore(ProcessInstance processInstance, Task task, TaskCompleteReq req);
     }
 
     /**
@@ -45,28 +45,28 @@ public class FlowableHooks {
          * @param req 办理请求信息
          * @return 流程变量（作为变量存入流程）
          */
-        Map<String, Object> handle(ProcessInstance processInstance, Task task, TaskCompleteReq req,Map<String,Object> variables);
+        Map<String, Object> onTaskCompleteAfter(ProcessInstance processInstance, Task task, TaskCompleteReq req,Map<String,Object> variables);
     }
 
     /**
      * 任务创建前
      */
     public interface TaskCreateBeforeHook extends BaseHook {
-        void handle(ProcessInstance processInstance, FlowElement flowElement, Map<String,Object> variables);
+        void onTaskCreateBefore(ProcessInstance processInstance, FlowElement flowElement, Map<String,Object> variables);
     }
 
     /**
      * 流程结束前置，在最后一个节点处理完成之前运行
      */
     public interface ProcessCompleteBeforeHook extends BaseHook {
-        void handle(ProcessInstance processInstance);
+        void onProcessCompleteBefore(ProcessInstance processInstance);
     }
 
     /**
      * flowable 引擎原生监听器
      */
     public interface NativeEventHook extends BaseHook {
-        void handle(FlowableEngineEventType eventType, FlowableEngineEvent flowableEngineEvent);
+        void onNativeEvent(FlowableEngineEventType eventType, FlowableEngineEvent flowableEngineEvent);
     }
 
     /**

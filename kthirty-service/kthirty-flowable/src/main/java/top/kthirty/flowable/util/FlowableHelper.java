@@ -44,15 +44,15 @@ public class FlowableHelper {
         Kv variables = Kv.init();
         // 执行前置钩子
         FlowableHooks.getHooks(FlowableHooks.ProcessStartBeforeHook.class, processDefinitionKey)
-                .forEach(hook -> variables.putAll(ObjUtil.defaultIfNull(hook.handle(processDefinitionKey, businessKey), Map.of())));
+                .forEach(hook -> variables.putAll(ObjUtil.defaultIfNull(hook.onProcessStartBefore(processDefinitionKey, businessKey), Map.of())));
         // 启动流程
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, businessKey, variables);
         // 执行流程实例名称钩子
         FlowableHooks.getHooks(FlowableHooks.ProcessInstanceNameGenerator.class, processDefinitionKey)
-                .forEach(it -> runtimeService.setProcessInstanceName(processInstance.getProcessInstanceId(), it.generate(processDefinitionKey, businessKey)));
+                .forEach(it -> runtimeService.setProcessInstanceName(processInstance.getProcessInstanceId(), it.generateProcessInstanceName(processDefinitionKey, businessKey)));
         // 执行后置钩子
         FlowableHooks.getHooks(FlowableHooks.ProcessStartAfterHook.class, processDefinitionKey)
-                .forEach(it -> it.handle(processDefinitionKey, businessKey, processInstance));
+                .forEach(it -> it.onProcessStartAfter(processDefinitionKey, businessKey, processInstance));
     }
     /**
      * 任务办理
@@ -63,20 +63,25 @@ public class FlowableHelper {
     public void complete(TaskCompleteReq req) {
         Task task = taskService.createTaskQuery().taskId(req.getTaskId()).singleResult();
         Assert.notNull(task, "任务不存在");
+        Assert.isFalse(task.isSuspended(),"任务已挂起，无法办理");
+        // 验证任务是否已签收
+        if(!SecureUtil.isSuperAdmin() && StrUtil.isNotBlank(task.getClaimedBy())){
+            Assert.isTrue(task.getClaimedBy().equals(SecureUtil.getUsername()), "任务已被他人领取，无法办理");
+        }
         ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
         Assert.notNull(processInstance, "流程实例不存在");
         Kv variables = Kv.init().set(FlowConstants.TASK_COMPLETE_VAR_NAME, req.getResult());
         // 执行前置钩子
         FlowableHooks.getHooks(FlowableHooks.TaskCompleteBeforeHook.class, processInstance.getProcessDefinitionKey())
-                .forEach(hook -> variables.putAll(ObjUtil.defaultIfNull(hook.handle(processInstance, task, req), Map.of())));
+                .forEach(hook -> variables.putAll(ObjUtil.defaultIfNull(hook.onTaskCompleteBefore(processInstance, task, req), Map.of())));
         // 执行下一个节点的创建前钩子
         FlowElement nextNode = FlowableUtil.getNextNode(task.getId(), variables);
         Assert.notNull(nextNode, "流程异常，下一个节点为空");
         FlowableHooks.getHooks(FlowableHooks.TaskCreateBeforeHook.class, processInstance.getProcessDefinitionKey())
-                .forEach(hook -> hook.handle(processInstance, nextNode, variables));
+                .forEach(hook -> hook.onTaskCreateBefore(processInstance, nextNode, variables));
         // 流程完成前钩子
         Func.doIf(nextNode instanceof EndEvent, () -> FlowableHooks.getHooks(FlowableHooks.ProcessCompleteBeforeHook.class,processInstance.getProcessDefinitionKey())
-                .forEach(hook -> hook.handle(processInstance)));
+                .forEach(hook -> hook.onProcessCompleteBefore(processInstance)));
         // 任务处理
         taskService.complete(req.getTaskId(), SecureUtil.getUsername(), variables);
         if(StrUtil.isNotBlank(req.getComment())){
@@ -84,7 +89,7 @@ public class FlowableHelper {
         }
         // 执行后置钩子
         FlowableHooks.getHooks(FlowableHooks.TaskCompleteAfterHook.class, processInstance.getProcessDefinitionKey())
-                .forEach(hook -> variables.putAll(ObjUtil.defaultIfNull(hook.handle(processInstance, task, req, variables), Map.of())));
+                .forEach(hook -> variables.putAll(ObjUtil.defaultIfNull(hook.onTaskCompleteAfter(processInstance, task, req, variables), Map.of())));
     }
 
 
