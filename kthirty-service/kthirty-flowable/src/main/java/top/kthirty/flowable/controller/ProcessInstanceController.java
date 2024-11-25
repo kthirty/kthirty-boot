@@ -5,7 +5,6 @@ import cn.hutool.core.lang.Assert;
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -76,7 +75,6 @@ public class ProcessInstanceController {
         runtimeService.activateProcessInstanceById(procInstId);
     }
 
-
     @GetMapping("hisTask")
     @Operation(summary = "查询流程实例历史任务")
     public List<HistoricTaskInstance> hisTask(String procInstId){
@@ -88,7 +86,7 @@ public class ProcessInstanceController {
     @GetMapping("hisDiagram")
     @Operation(summary = "查询流程实例历史流程图")
     @SneakyThrows
-    public String hisDiagram(HttpServletResponse response, String procInstId)  {
+    public String hisDiagram(String procInstId)  {
         HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery().processInstanceId(procInstId).singleResult();
         Assert.notNull(historicProcessInstance,"流程实例不存在");
         // 获取流程定义

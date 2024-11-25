@@ -4,12 +4,15 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
+import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.bpmn.model.EndEvent;
 import org.flowable.bpmn.model.FlowElement;
+import org.flowable.common.engine.impl.el.VariableContainerWrapper;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
+import org.flowable.engine.impl.util.CommandContextUtil;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import org.springframework.stereotype.Component;
@@ -47,6 +50,19 @@ public class FlowableHelper {
                 .forEach(hook -> variables.putAll(ObjUtil.defaultIfNull(hook.onProcessStartBefore(processDefinitionKey, businessKey), Map.of())));
         // 启动流程
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, businessKey, variables);
+        variables.put("pi",processInstance);
+        // 判断是否存在流程实例名称表达式
+        BpmnModel bpmnModel = FlowableUtil.getBpmnModel(processInstance.getProcessDefinitionId());
+        String processNameExp = FlowableUtil.getProcessNameExp(bpmnModel.getMainProcess());
+        if(StrUtil.isNotBlank(processNameExp)){
+            String procInstName = StrUtil.toString(CommandContextUtil.getProcessEngineConfiguration()
+                    .getExpressionManager()
+                    .createExpression(processNameExp)
+                    .getValue(new VariableContainerWrapper(variables)));
+            if(StrUtil.isNotBlank(procInstName)){
+                runtimeService.setProcessInstanceName(processInstance.getProcessInstanceId(), procInstName);
+            }
+        }
         // 执行流程实例名称钩子
         FlowableHooks.getHooks(FlowableHooks.ProcessInstanceNameGenerator.class, processDefinitionKey)
                 .forEach(it -> runtimeService.setProcessInstanceName(processInstance.getProcessInstanceId(), it.generateProcessInstanceName(processDefinitionKey, businessKey)));

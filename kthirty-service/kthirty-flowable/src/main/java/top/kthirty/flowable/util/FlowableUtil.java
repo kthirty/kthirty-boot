@@ -1,19 +1,13 @@
 package top.kthirty.flowable.util;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
-import cn.hutool.log.StaticLog;
-import lombok.Cleanup;
 import lombok.SneakyThrows;
 import org.flowable.bpmn.converter.BpmnXMLConverter;
+import org.flowable.bpmn.model.Process;
 import org.flowable.bpmn.model.*;
 import org.flowable.common.engine.impl.el.VariableContainerWrapper;
 import org.flowable.engine.ProcessEngine;
@@ -22,14 +16,11 @@ import org.flowable.engine.impl.util.CommandContextUtil;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.task.api.Task;
 import top.kthirty.core.tool.Func;
-import top.kthirty.core.tool.jackson.JsonUtil;
 import top.kthirty.core.tool.support.Kv;
 import top.kthirty.core.tool.utils.Charsets;
 import top.kthirty.core.tool.utils.SpringUtil;
 import top.kthirty.flowable.model.FlowButton;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -140,7 +131,7 @@ public class FlowableUtil {
                 .singleResult();
         return new BpmnXMLConverter()
                 .convertToBpmnModel(() -> repositoryService.getResourceAsStream(
-                        processDefinition.getDeploymentId(), "process.bpmn")
+                                processDefinition.getDeploymentId(), "process.bpmn")
                         , true
                         , true
                         , Charsets.UTF_8_NAME);
@@ -152,8 +143,25 @@ public class FlowableUtil {
                 .stream()
                 .map(it -> {
                     Kv attr = Kv.init();
-                    it.getAttributes().forEach((key,values) -> values.forEach(val -> attr.set(val.getName(),val.getValue())));
+                    it.getAttributes().forEach((key, values) -> values.forEach(val -> attr.set(val.getName(), val.getValue())));
                     return attr.toBean(FlowButton.class);
                 }).collect(Collectors.toList());
+    }
+
+    public static String getProcessNameExp(Process process) {
+        return process.getExtensionElements()
+                .get("processNameExp")
+                .stream().map(ExtensionElement::getElementText)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public static void main(String[] args) {
+        BpmnModel bpmnModel = new BpmnXMLConverter().convertToBpmnModel(() ->
+                FileUtil.getInputStream(FileUtil.file("D:\\System\\Download\\diagram.bpmn")
+                ), true, true, Charsets.UTF_8_NAME);
+        Activity flowElement = (Activity) bpmnModel.getFlowElement("task1");
+        getHandleButtons(flowElement).forEach(System.out::println);
+        String processNameExp = getProcessNameExp(bpmnModel.getMainProcess());
     }
 }
