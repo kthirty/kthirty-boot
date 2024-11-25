@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.flowable.bpmn.model.*;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
 import org.flowable.engine.runtime.Execution;
@@ -22,10 +23,12 @@ import top.kthirty.core.boot.secure.SecureUtil;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.support.Constant;
 import top.kthirty.core.tool.utils.StringPool;
+import top.kthirty.flowable.model.FlowButton;
 import top.kthirty.flowable.model.FlowTask;
 import top.kthirty.flowable.model.FlowTodoQuery;
 import top.kthirty.flowable.model.TaskCompleteReq;
 import top.kthirty.flowable.util.FlowableHelper;
+import top.kthirty.flowable.util.FlowableUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -102,6 +105,16 @@ public class RuntimeController {
     public void complete(@RequestBody @Valid @Parameter(description = "办理信息") TaskCompleteReq req) {
         flowableHelper.complete(req);
     }
+    @GetMapping("handleButtons")
+    @Operation(summary = "查询处理按钮")
+    public List<FlowButton> handleButtons(String taskId){
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        Assert.notNull(task,"任务不存在");
+        BpmnModel bpmnModel = FlowableUtil.getBpmnModel(task.getProcessDefinitionId());
+        Activity flowElement = (Activity) bpmnModel.getFlowElement(task.getTaskDefinitionId());
+        return FlowableUtil.getHandleButtons(flowElement);
+    }
+
     @PutMapping("claim")
     @Operation(summary = "任务签收")
     public void claim(@Parameter(description = "任务ID") String taskId) {

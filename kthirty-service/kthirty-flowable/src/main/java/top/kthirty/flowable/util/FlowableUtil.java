@@ -1,39 +1,58 @@
 package top.kthirty.flowable.util;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
+import cn.hutool.log.StaticLog;
 import lombok.Cleanup;
+import lombok.SneakyThrows;
 import org.flowable.bpmn.converter.BpmnXMLConverter;
 import org.flowable.bpmn.model.*;
 import org.flowable.common.engine.impl.el.VariableContainerWrapper;
 import org.flowable.engine.ProcessEngine;
+import org.flowable.engine.RepositoryService;
 import org.flowable.engine.impl.util.CommandContextUtil;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.task.api.Task;
 import top.kthirty.core.tool.Func;
+import top.kthirty.core.tool.jackson.JsonUtil;
 import top.kthirty.core.tool.support.Kv;
 import top.kthirty.core.tool.utils.Charsets;
 import top.kthirty.core.tool.utils.SpringUtil;
+import top.kthirty.flowable.model.FlowButton;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+/**
+ * @author KThirty
+ * @description
+ * @since 2024/11/25 11:02
+ */
 public class FlowableUtil {
     /**
      * 获取下一个节点（并行网关情况下返回第一个）
-     * @param bpmnModel 流程定义
+     *
+     * @param bpmnModel   流程定义
      * @param currentNode 当前节点
-     * @param variables 流程变量
+     * @param variables   流程变量
      * @return FlowElement 节点定义
      */
     public static FlowElement getNextNode(BpmnModel bpmnModel, FlowNode currentNode, Map<String, Object> variables) {
         List<FlowElement> nextNodes = getNextNodes(bpmnModel, currentNode, variables);
         return CollUtil.isEmpty(nextNodes) ? null : nextNodes.get(0);
     }
+
     /**
      * 获取下一个节点
      *
@@ -57,7 +76,7 @@ public class FlowableUtil {
                                     .getValue(new VariableContainerWrapper(variables)), false))
                     .map(SequenceFlow::getTargetFlowElement)
                     .toList();
-        }else{
+        } else {
             // 只会产生单一节点
             FlowElement flowElement = currentNode.getOutgoingFlows()
                     .stream()
@@ -107,21 +126,34 @@ public class FlowableUtil {
 
     /**
      * 获取BpmnModel
+     *
      * @param processDefinitionId 流程定义ID
      * @return BpmnModel
      */
+    @SneakyThrows
     public static BpmnModel getBpmnModel(String processDefinitionId) {
         ProcessEngine processEngine = SpringUtil.getBean(ProcessEngine.class);
-        ProcessDefinition processDefinition = processEngine.getRepositoryService()
+        RepositoryService repositoryService = processEngine.getRepositoryService();
+        ProcessDefinition processDefinition = repositoryService
                 .createProcessDefinitionQuery()
                 .processDefinitionId(processDefinitionId)
                 .singleResult();
-        // 获取XML
-        @Cleanup
-        InputStream xmlStream = processEngine
-                .getRepositoryService()
-                .getResourceAsStream(processDefinition.getDeploymentId(),"process.bpmn");
-        String xml = StrUtil.str(IoUtil.readBytes(xmlStream,false), Charsets.UTF_8);
-        return new BpmnXMLConverter().convertToBpmnModel(() -> xmlStream, true, true, Charsets.UTF_8_NAME);
+        return new BpmnXMLConverter()
+                .convertToBpmnModel(() -> repositoryService.getResourceAsStream(
+                        processDefinition.getDeploymentId(), "process.bpmn")
+                        , true
+                        , true
+                        , Charsets.UTF_8_NAME);
+    }
+
+    public static List<FlowButton> getHandleButtons(Activity activity) {
+        return activity.getExtensionElements()
+                .get("handleButton")
+                .stream()
+                .map(it -> {
+                    Kv attr = Kv.init();
+                    it.getAttributes().forEach((key,values) -> values.forEach(val -> attr.set(val.getName(),val.getValue())));
+                    return attr.toBean(FlowButton.class);
+                }).collect(Collectors.toList());
     }
 }

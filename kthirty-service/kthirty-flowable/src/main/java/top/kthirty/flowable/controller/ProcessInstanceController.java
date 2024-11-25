@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.ProcessEngine;
@@ -86,6 +87,7 @@ public class ProcessInstanceController {
     }
     @GetMapping("hisDiagram")
     @Operation(summary = "查询流程实例历史流程图")
+    @SneakyThrows
     public String hisDiagram(HttpServletResponse response, String procInstId)  {
         HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery().processInstanceId(procInstId).singleResult();
         Assert.notNull(historicProcessInstance,"流程实例不存在");

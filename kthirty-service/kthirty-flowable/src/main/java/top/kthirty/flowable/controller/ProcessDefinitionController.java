@@ -26,6 +26,7 @@ import top.kthirty.flowable.model.FlowProcessDefQuery;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
@@ -76,9 +77,11 @@ public class ProcessDefinitionController extends BaseController {
         if(queryXml || queryThumbnail){
             @Cleanup
             InputStream xmlStream = repositoryService.getResourceAsStream(processDefinition.getDeploymentId(),"process.bpmn");
-            flowProcessDefModel.setXml(StrUtil.str(IoUtil.readBytes(xmlStream,false), Charsets.UTF_8));
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            IoUtil.copy(xmlStream,baos);
+            flowProcessDefModel.setXml(StrUtil.str(baos.toByteArray(), Charsets.UTF_8));
             if(queryThumbnail){
-                BpmnModel bpmnModel = new BpmnXMLConverter().convertToBpmnModel(() -> xmlStream, true, true, Charsets.UTF_8_NAME);
+                BpmnModel bpmnModel = new BpmnXMLConverter().convertToBpmnModel(() -> new ByteArrayInputStream(baos.toByteArray()), true, true, Charsets.UTF_8_NAME);
                 BufferedImage bufferedImage = processEngine.getProcessEngineConfiguration()
                         .getProcessDiagramGenerator()
                         .generatePngImage(bpmnModel, 1.0D);

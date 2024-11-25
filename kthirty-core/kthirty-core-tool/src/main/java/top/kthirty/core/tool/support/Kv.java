@@ -1,5 +1,6 @@
 package top.kthirty.core.tool.support;
 
+import cn.hutool.core.bean.copier.CopyOptions;
 import org.springframework.lang.NonNull;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 import top.kthirty.core.tool.Func;
@@ -222,7 +223,13 @@ public class Kv extends LinkedCaseInsensitiveMap<Object> {
 	 * @return bean instance
 	 */
 	public <T> T toBean(Class<T> type){
-		return BeanUtil.toBean(this,type);
+		T bean = BeanUtil.newInstance(type);
+		cn.hutool.core.bean.BeanUtil.copyProperties(this,bean, CopyOptions.create()
+				.ignoreCase()
+				.ignoreNullValue()
+				.ignoreError()
+		);
+		return bean;
 	}
 
 }
