@@ -8,6 +8,7 @@ import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.kthirty.core.db.base.service.BaseServiceImpl;
 import top.kthirty.system.entity.User;
 import top.kthirty.system.entity.UserDeptRl;
@@ -29,6 +30,7 @@ import java.util.List;
  */
 @Service
 @AllArgsConstructor
+@Transactional
 public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implements UserService {
     private final UserRoleRlService userRoleRlService;
     private final UserDeptRlService userDeptRlService;
@@ -80,5 +82,11 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         Assert.isTrue(updateUser, "update user error");
         this.saveUserRl(entity, true);
         return true;
+    }
+
+    @Override
+    public void testTran(User user) {
+        save(user);
+        throw new RuntimeException("1");
     }
 }

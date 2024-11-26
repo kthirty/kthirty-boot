@@ -1,6 +1,7 @@
 package top.kthirty.flowable.util;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,13 @@ import top.kthirty.flowable.model.TaskCompleteReq;
 
 import java.util.Map;
 
+/**
+ * @author KThirty
+ * @description 流程相关工具
+ * @since 2024/11/26 9:10
+ */
 @Component
-@Transactional(rollbackFor = Exception.class)
+@Transactional
 @RequiredArgsConstructor
 public class FlowableHelper {
     private final RuntimeService runtimeService;
@@ -33,14 +39,21 @@ public class FlowableHelper {
     private final RepositoryService repositoryService;
     private final ProcessEngine processEngine;
 
+    public void testTran(){
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("test", IdUtil.fastSimpleUUID());
+        System.out.println("流程实例id"+processInstance.getProcessInstanceId());
+        throw new RuntimeException("测试出错");
+    }
+
     /**
      * 流程启动
+     *
+     * @param processDefinitionKey 流程定义KEY
+     * @param businessKey          业务流程KEY
      * @author Kthirty
      * @since 2024/11/23
-     * @param processDefinitionKey 流程定义KEY
-     * @param businessKey 业务流程KEY
      */
-    public void start(String processDefinitionKey, String businessKey) {
+    public ProcessInstance start(String processDefinitionKey, String businessKey) {
         Assert.notBlank(processDefinitionKey, "流程定义KEY不可为空");
         Assert.notBlank(businessKey, "业务流程KEY不可为空");
         Assert.isTrue(runtimeService.createProcessInstanceQuery().processInstanceBusinessKey(businessKey).count() == 0, "当前业务流程KEY已存在正在运行的流程，无法重复发起");
@@ -50,38 +63,47 @@ public class FlowableHelper {
                 .forEach(hook -> variables.putAll(ObjUtil.defaultIfNull(hook.onProcessStartBefore(processDefinitionKey, businessKey), Map.of())));
         // 启动流程
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, businessKey, variables);
-        variables.put("pi",processInstance);
+        variables.put("pi", processInstance);
         // 判断是否存在流程实例名称表达式
         BpmnModel bpmnModel = FlowableUtil.getBpmnModel(processInstance.getProcessDefinitionId());
         String processNameExp = FlowableUtil.getProcessNameExp(bpmnModel.getMainProcess());
-        if(StrUtil.isNotBlank(processNameExp)){
+        if (StrUtil.isNotBlank(processNameExp)) {
             String procInstName = StrUtil.toString(CommandContextUtil.getProcessEngineConfiguration()
                     .getExpressionManager()
                     .createExpression(processNameExp)
                     .getValue(new VariableContainerWrapper(variables)));
-            if(StrUtil.isNotBlank(procInstName)){
+            if (StrUtil.isNotBlank(procInstName)) {
                 runtimeService.setProcessInstanceName(processInstance.getProcessInstanceId(), procInstName);
             }
         }
         // 执行流程实例名称钩子
         FlowableHooks.getHooks(FlowableHooks.ProcessInstanceNameGenerator.class, processDefinitionKey)
-                .forEach(it -> runtimeService.setProcessInstanceName(processInstance.getProcessInstanceId(), it.generateProcessInstanceName(processDefinitionKey, businessKey)));
+                .forEach(it -> {
+                    String processInstanceName = it.generateProcessInstanceName(processDefinitionKey, businessKey);
+                    if (StrUtil.isNotBlank(processInstanceName)) {
+                        runtimeService.setProcessInstanceName(processInstance.getProcessInstanceId(), processInstanceName);
+                    }
+
+                });
         // 执行后置钩子
         FlowableHooks.getHooks(FlowableHooks.ProcessStartAfterHook.class, processDefinitionKey)
                 .forEach(it -> it.onProcessStartAfter(processDefinitionKey, businessKey, processInstance));
+        return processInstance;
     }
+
     /**
      * 任务办理
+     *
+     * @param req 办理参数
      * @author Kthirty
      * @since 2024/11/23
-     * @param req 办理参数
      */
     public void complete(TaskCompleteReq req) {
         Task task = taskService.createTaskQuery().taskId(req.getTaskId()).singleResult();
         Assert.notNull(task, "任务不存在");
-        Assert.isFalse(task.isSuspended(),"任务已挂起，无法办理");
+        Assert.isFalse(task.isSuspended(), "任务已挂起，无法办理");
         // 验证任务是否已签收
-        if(!SecureUtil.isSuperAdmin() && StrUtil.isNotBlank(task.getClaimedBy())){
+        if (!SecureUtil.isSuperAdmin() && StrUtil.isNotBlank(task.getClaimedBy())) {
             Assert.isTrue(task.getClaimedBy().equals(SecureUtil.getUsername()), "任务已被他人领取，无法办理");
         }
         ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
@@ -96,16 +118,16 @@ public class FlowableHelper {
         FlowableHooks.getHooks(FlowableHooks.TaskCreateBeforeHook.class, processInstance.getProcessDefinitionKey())
                 .forEach(hook -> hook.onTaskCreateBefore(processInstance, nextNode, variables));
         // 流程完成前钩子
-        Func.doIf(nextNode instanceof EndEvent, () -> FlowableHooks.getHooks(FlowableHooks.ProcessCompleteBeforeHook.class,processInstance.getProcessDefinitionKey())
+        Func.doIf(nextNode instanceof EndEvent, () -> FlowableHooks.getHooks(FlowableHooks.ProcessCompleteBeforeHook.class, processInstance.getProcessDefinitionKey())
                 .forEach(hook -> hook.onProcessCompleteBefore(processInstance)));
         // 任务处理
         taskService.complete(req.getTaskId(), SecureUtil.getUsername(), variables);
-        if(StrUtil.isNotBlank(req.getComment())){
+        if (StrUtil.isNotBlank(req.getComment())) {
             taskService.addComment(req.getTaskId(), processInstance.getProcessInstanceId(), req.getComment());
         }
         // 执行后置钩子
         FlowableHooks.getHooks(FlowableHooks.TaskCompleteAfterHook.class, processInstance.getProcessDefinitionKey())
-                .forEach(hook -> variables.putAll(ObjUtil.defaultIfNull(hook.onTaskCompleteAfter(processInstance, task, req, variables), Map.of())));
+                .forEach(hook -> hook.onTaskCompleteAfter(processInstance, task, req, variables));
     }
 
 

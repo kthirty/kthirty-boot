@@ -8,6 +8,11 @@ import java.lang.annotation.*;
  * Test工具
  * @author Kthirty
  * @date Created in 2020/9/3 15:46
+ *
+ * <pre class="code">
+ * @KthirtyTest(appName = "system", classes = SystemApplication.class)
+ * public class CacheTest extends BaseKthirtyTest {}
+ * </pre>
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

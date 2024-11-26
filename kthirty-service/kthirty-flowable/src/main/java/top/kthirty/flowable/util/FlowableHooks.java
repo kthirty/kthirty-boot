@@ -18,7 +18,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static cn.hutool.core.util.ClassUtil.getClassName;
-
+/**
+ * @description 流程钩子处理
+ * @author KThirty
+ * @since 2024/11/26 9:09
+ */
 @Slf4j
 public class FlowableHooks {
     public interface BaseHook{ List<String> listenProcessDefinitionKey();}
@@ -45,7 +49,7 @@ public class FlowableHooks {
          * @param req 办理请求信息
          * @return 流程变量（作为变量存入流程）
          */
-        Map<String, Object> onTaskCompleteAfter(ProcessInstance processInstance, Task task, TaskCompleteReq req,Map<String,Object> variables);
+        void onTaskCompleteAfter(ProcessInstance processInstance, Task task, TaskCompleteReq req,Map<String,Object> variables);
     }
 
     /**
@@ -68,6 +72,21 @@ public class FlowableHooks {
     public interface NativeEventHook extends BaseHook {
         void onNativeEvent(FlowableEngineEventType eventType, FlowableEngineEvent flowableEngineEvent);
     }
+
+    /**
+     * 流程删除前
+     */
+    public interface ProcessDeleteBeforeHook extends BaseHook{
+        void onProcessDeleteBefore(ProcessInstance processInstance);
+    }
+
+    /**
+     * 流程删除前后
+     */
+    public interface ProcessDeleteAfterHook extends BaseHook{
+        void onProcessDeleteAfter(ProcessInstance processInstance);
+    }
+
 
     /**
      * 获取所有钩子

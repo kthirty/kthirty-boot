@@ -112,4 +112,6 @@
     <Logger name="top.kthirty" level="DEBUG" />
     <Logger name="com.zaxxer.hikari" level="WARN" />
 
+    <logger name="org.springframework.transaction" level="DEBUG"/>
+
 </configuration>

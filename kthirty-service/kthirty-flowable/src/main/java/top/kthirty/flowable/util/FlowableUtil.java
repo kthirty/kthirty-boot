@@ -137,6 +137,11 @@ public class FlowableUtil {
                         , Charsets.UTF_8_NAME);
     }
 
+    /**
+     * 获取节点的处理按钮
+     * @param activity UserTask 节点
+     * @return 处理按钮
+     */
     public static List<FlowButton> getHandleButtons(Activity activity) {
         return activity.getExtensionElements()
                 .get("handleButton")
@@ -148,12 +153,21 @@ public class FlowableUtil {
                 }).collect(Collectors.toList());
     }
 
+    /**
+     * 获取流程实例名称表达式
+     * @param process 主流程
+     * @return 流程实例名称表达式
+     */
     public static String getProcessNameExp(Process process) {
-        return process.getExtensionElements()
-                .get("processNameExp")
-                .stream().map(ExtensionElement::getElementText)
-                .findFirst()
-                .orElse(null);
+        List<ExtensionElement> processNameExpList = process.getExtensionElements().get("processNameExp");
+        if(CollUtil.isEmpty(processNameExpList)){
+            return null;
+        }
+        ExtensionElement extensionElement = processNameExpList.get(0);
+        if(StrUtil.isNotBlank(extensionElement.getElementText())){
+            return null;
+        }
+        return extensionElement.getElementText();
     }
 
     public static void main(String[] args) {

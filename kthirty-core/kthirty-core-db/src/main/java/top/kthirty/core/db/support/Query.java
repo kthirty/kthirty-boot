@@ -1,5 +1,6 @@
 package top.kthirty.core.db.support;
 
+import cn.hutool.core.util.ObjUtil;
 import com.mybatisflex.core.paginate.Page;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -35,8 +36,13 @@ public class Query<T> {
         page.setRecords(records);
         return page;
     }
+    public void defaultPage(){
+        this.pageNumber = ObjUtil.defaultIfNull(this.getPageNumber(), Condition.DEFAULT_CURRENT);
+        this.pageSize = ObjUtil.defaultIfNull(this.getPageSize(), Condition.DEFAULT_SIZE);
+    }
 
     public int getFirstResult(){
+        defaultPage();
         return (pageNumber - 1) * pageSize;
     }
 

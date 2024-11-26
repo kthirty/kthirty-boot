@@ -18,6 +18,7 @@ import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import org.flowable.task.api.TaskInfo;
 import org.flowable.task.api.TaskQuery;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import top.kthirty.core.boot.secure.SecureUtil;
 import top.kthirty.core.tool.Func;
@@ -34,11 +35,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+/**
+ * @description 运行时相关接口
+ * @author KThirty
+ * @since 2024/11/26 15:44
+ */
 @RestController
 @RequestMapping("ru")
 @RequiredArgsConstructor
 @Tag(name = "运行时相关接口")
+@Transactional
 public class RuntimeController {
     private final FlowableHelper flowableHelper;
     private final TaskService taskService;
@@ -46,8 +52,13 @@ public class RuntimeController {
 
     @PostMapping("start")
     @Operation(summary = "启动流程实例")
-    public void start(@Parameter(description = "流程定义KEY") String processDefinitionKey, @Parameter(description = "业务表ID") String businessKey) {
-        flowableHelper.start(processDefinitionKey, businessKey);
+    public ProcessInstance start(@Parameter(description = "流程定义KEY") String processDefinitionKey, @Parameter(description = "业务表ID") String businessKey) {
+        return flowableHelper.start(processDefinitionKey, businessKey);
+    }
+    @PostMapping("testTran")
+    @Operation(summary = "testTran")
+    public void testTran() {
+         flowableHelper.testTran();
     }
 
     @GetMapping("todo")

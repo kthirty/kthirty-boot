@@ -110,4 +110,7 @@
     <!-- 业务日志 -->
     <Logger name="top.kthirty" level="DEBUG" />
 
+
+    <logger name="org.springframework.transaction" level="DEBUG"/>
+
 </configuration>

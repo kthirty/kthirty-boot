@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  xmlns:flowable="http://flowable.org/bpmn" id="Definitions_Process_1732597895847"
+                  targetNamespace="http://bpmn.io/schema/bpmn">
+    <bpmn:process id="test" name="测试流程" isExecutable="true" flowable:versionTag="">
+        <bpmn:extensionElements>
+            <flowable:processNameExp></flowable:processNameExp>
+        </bpmn:extensionElements>
+        <bpmn:startEvent id="start" name="开始">
+            <bpmn:outgoing>Flow_1vbj2st</bpmn:outgoing>
+        </bpmn:startEvent>
+        <bpmn:sequenceFlow id="Flow_1vbj2st" sourceRef="start" targetRef="task1"/>
+        <bpmn:userTask id="task1" name="任务1" flowable:assignee="admin">
+            <bpmn:incoming>Flow_1vbj2st</bpmn:incoming>
+            <bpmn:outgoing>Flow_055pmgw</bpmn:outgoing>
+        </bpmn:userTask>
+        <bpmn:endEvent id="end" name="结束">
+            <bpmn:incoming>Flow_055pmgw</bpmn:incoming>
+        </bpmn:endEvent>
+        <bpmn:sequenceFlow id="Flow_055pmgw" sourceRef="task1" targetRef="end"/>
+    </bpmn:process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="test">
+            <bpmndi:BPMNShape id="Event_0g67lld_di" bpmnElement="start">
+                <dc:Bounds x="232" y="242" width="36" height="36"/>
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="239" y="285" width="22" height="14"/>
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Activity_0cyj7qe_di" bpmnElement="task1">
+                <dc:Bounds x="320" y="220" width="100" height="80"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Event_0h3stl0_di" bpmnElement="end">
+                <dc:Bounds x="472" y="242" width="36" height="36"/>
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="479" y="285" width="22" height="14"/>
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="Flow_1vbj2st_di" bpmnElement="Flow_1vbj2st">
+                <di:waypoint x="268" y="260"/>
+                <di:waypoint x="320" y="260"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_055pmgw_di" bpmnElement="Flow_055pmgw">
+                <di:waypoint x="420" y="260"/>
+                <di:waypoint x="472" y="260"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</bpmn:definitions>

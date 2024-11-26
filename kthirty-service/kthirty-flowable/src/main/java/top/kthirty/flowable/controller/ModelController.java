@@ -65,16 +65,20 @@ public class ModelController extends BaseController {
         Func.doIf(StrUtil.isNotBlank(req.getName()),() -> query.modelNameLike(req.getName()));
         Func.doIf(ObjUtil.isNotNull(req.getDeployed()) && req.getDeployed(), query::deployed);
         Func.doIf(ObjUtil.isNotNull(req.getDeployed()) && !req.getDeployed(), query::notDeployed);
-        return req.getPage(query.count(),query.listPage(req.getPageNumber() - 1, req.getPageSize()));
+        return req.getPage(query.count(),query.listPage(req.getFirstResult(), req.getPageSize()));
     }
 
     @PostMapping("save")
     @Operation(summary = "保存流程模型")
-    public void save(@RequestBody @Parameter(description = "模型信息") FlowModel model){
-        repositoryService.saveModel(model);
-        if(StrUtil.isNotBlank(model.getXml())){
-            repositoryService.addModelEditorSource(model.getId(),model.getXml().getBytes(StandardCharsets.UTF_8));
+    public FlowModel save(@RequestBody @Parameter(description = "模型信息") FlowModel flowModel){
+        String xml = flowModel.getXml();
+        Model modelEntity = flowModel.getModel();
+        repositoryService.saveModel(modelEntity);
+        if(StrUtil.isNotBlank(xml)){
+            repositoryService.addModelEditorSource(modelEntity.getId(),xml.getBytes(StandardCharsets.UTF_8));
         }
+        flowModel.setByModel(modelEntity);
+        return flowModel;
     }
 
     @GetMapping("get")

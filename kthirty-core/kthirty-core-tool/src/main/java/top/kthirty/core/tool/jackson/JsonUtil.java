@@ -1,6 +1,8 @@
 
 package top.kthirty.core.tool.jackson;
 
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.json.JsonReadFeature;
@@ -54,6 +56,9 @@ public class JsonUtil {
 		} catch (JsonProcessingException e) {
 			throw Exceptions.unchecked(e);
 		}
+	}
+	public static String toJsonPrettyStr(Object object){
+		return JSONUtil.toJsonPrettyStr(object);
 	}
 
 	/**

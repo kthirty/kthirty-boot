@@ -15,11 +15,14 @@ import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.history.HistoricProcessInstanceQuery;
+import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.history.HistoricTaskInstance;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import top.kthirty.core.tool.Func;
 import top.kthirty.flowable.model.FlowProcessInstQuery;
 import top.kthirty.flowable.util.FlowableHelper;
+import top.kthirty.flowable.util.FlowableHooks;
 import top.kthirty.flowable.util.FlowableUtil;
 
 import java.io.InputStream;
@@ -34,6 +37,7 @@ import java.util.List;
 @RequestMapping("pi")
 @RequiredArgsConstructor
 @Tag(name = "流程实例")
+@Transactional(rollbackFor = Exception.class)
 public class ProcessInstanceController {
     private final RuntimeService runtimeService;
     private final HistoryService historyService;
@@ -59,8 +63,15 @@ public class ProcessInstanceController {
 
     @DeleteMapping("delete")
     @Operation(summary = "删除流程实例")
+    @Transactional
     public void delete(String procInstId,String deleteReason){
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(procInstId).singleResult();
+        Assert.notNull(processInstance,"流程实例不存在");
+        FlowableHooks.getHooks(FlowableHooks.ProcessDeleteBeforeHook.class,processInstance.getProcessDefinitionKey())
+                        .forEach(hook -> hook.onProcessDeleteBefore(processInstance));
         runtimeService.deleteProcessInstance(procInstId,deleteReason);
+        FlowableHooks.getHooks(FlowableHooks.ProcessDeleteAfterHook.class,processInstance.getProcessDefinitionKey())
+                .forEach(hook -> hook.onProcessDeleteAfter(processInstance));
     }
 
     @PutMapping("suspend")
