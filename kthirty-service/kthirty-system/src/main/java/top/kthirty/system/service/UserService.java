@@ -11,5 +11,4 @@ import top.kthirty.system.entity.User;
  */
 public interface UserService extends BaseService<User> {
 
-    void testTran(User user);
 }

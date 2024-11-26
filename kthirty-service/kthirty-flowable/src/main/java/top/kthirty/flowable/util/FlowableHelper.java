@@ -1,10 +1,10 @@
 package top.kthirty.flowable.util;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.bpmn.model.EndEvent;
 import org.flowable.bpmn.model.FlowElement;
@@ -31,19 +31,14 @@ import java.util.Map;
  * @since 2024/11/26 9:10
  */
 @Component
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @RequiredArgsConstructor
+@Slf4j
 public class FlowableHelper {
     private final RuntimeService runtimeService;
     private final TaskService taskService;
     private final RepositoryService repositoryService;
     private final ProcessEngine processEngine;
-
-    public void testTran(){
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("test", IdUtil.fastSimpleUUID());
-        System.out.println("流程实例id"+processInstance.getProcessInstanceId());
-        throw new RuntimeException("测试出错");
-    }
 
     /**
      * 流程启动
@@ -88,6 +83,7 @@ public class FlowableHelper {
         // 执行后置钩子
         FlowableHooks.getHooks(FlowableHooks.ProcessStartAfterHook.class, processDefinitionKey)
                 .forEach(it -> it.onProcessStartAfter(processDefinitionKey, businessKey, processInstance));
+        log.info("流程启动成功，流程定义KEY：{}，业务流程KEY：{}，流程实例ID：{}", processDefinitionKey, businessKey, processInstance.getProcessInstanceId());
         return processInstance;
     }
 

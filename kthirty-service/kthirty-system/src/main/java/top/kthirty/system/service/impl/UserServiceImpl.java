@@ -84,9 +84,4 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         return true;
     }
 
-    @Override
-    public void testTran(User user) {
-        save(user);
-        throw new RuntimeException("1");
-    }
 }

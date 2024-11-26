@@ -95,13 +95,6 @@ public class TestExcel extends BaseKthirtyTest {
     }
 
 
-    @Test
-    public void testTran(){
-        User user = new User();
-        user.setUsername("4");
-        userService.testTran(user);
-    }
-
     private List<TestUser> getUser(int i) {
         List<TestUser> list = new ArrayList<>();
         for (int i1 = 0; i1 < i; i1++) {

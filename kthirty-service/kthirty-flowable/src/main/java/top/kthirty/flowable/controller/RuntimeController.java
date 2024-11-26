@@ -3,7 +3,6 @@ package top.kthirty.flowable.controller;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,7 +10,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.flowable.bpmn.model.*;
+import org.flowable.bpmn.model.Activity;
+import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
 import org.flowable.engine.runtime.Execution;
@@ -53,15 +53,8 @@ public class RuntimeController {
 
     @PostMapping("start")
     @Operation(summary = "启动流程实例")
-    public ProcessInstance start(@Parameter(description = "流程定义KEY") String processDefinitionKey, @Parameter(description = "业务表ID") String businessKey) {
-        return flowableHelper.start(processDefinitionKey, businessKey);
-    }
-    @PostMapping("testTran")
-    @Operation(summary = "testTran")
-    public void testTran() {
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("test", IdUtil.fastSimpleUUID());
-        System.out.println("流程实例id"+processInstance.getProcessInstanceId());
-        throw new RuntimeException("测试出错");
+    public void start(@Parameter(description = "流程定义KEY") String processDefinitionKey, @Parameter(description = "业务表ID") String businessKey) {
+        flowableHelper.start(processDefinitionKey, businessKey);
     }
 
     @GetMapping("todo")

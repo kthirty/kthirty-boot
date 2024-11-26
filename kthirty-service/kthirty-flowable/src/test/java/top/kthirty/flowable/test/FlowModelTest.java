@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.ManagementService;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
-import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.repository.Model;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +41,7 @@ public class FlowModelTest extends BaseKthirtyTest {
 
     @Test
     public void testDeploy(){
-        Deployment deploy = modelController.deploy("1861304527878299648");
-        log.info(JsonUtil.toJsonPrettyStr(deploy));
+        modelController.deploy("1861304527878299648");
     }
 
     @Test

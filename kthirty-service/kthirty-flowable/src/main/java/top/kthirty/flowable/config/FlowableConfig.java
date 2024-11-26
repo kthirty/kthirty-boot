@@ -1,12 +1,14 @@
 package top.kthirty.flowable.config;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.flowable.spring.SpringProcessEngineConfiguration;
-import org.springframework.context.ApplicationListener;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.transaction.PlatformTransactionManager;
+
+import java.util.List;
 
 
 /**
@@ -18,15 +20,24 @@ import org.springframework.transaction.PlatformTransactionManager;
  * @since 2024/11/23
  */
 @Configuration
-@RequiredArgsConstructor
-public class FlowableConfig implements ApplicationListener<ContextRefreshedEvent> {
-    private final SpringProcessEngineConfiguration processEngineConfiguration;
-    private final PlatformTransactionManager transactionManager;
+@AutoConfigureOrder(-1)
+public class FlowableConfig  {
 
-    @Override
-    public void onApplicationEvent(@NonNull ContextRefreshedEvent event) {
-        processEngineConfiguration.setTransactionManager(transactionManager);
+    @Bean
+    @ConditionalOnMissingBean
+    public SpringProcessEngineConfiguration springProcessEngineConfiguration(
+            SqlSessionFactory sqlSessionFactory,
+            PlatformTransactionManager annotationDrivenTransactionManager) {
+        SpringProcessEngineConfiguration processEngineConfiguration = new SpringProcessEngineConfiguration();
+        // 设置数据源
+        processEngineConfiguration.setDataSource(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource());
+        // 设置事务管理器
+        processEngineConfiguration.setTransactionManager(annotationDrivenTransactionManager);
+        // 配置自定义 ID 生成器
         processEngineConfiguration.setIdGenerator(new FlowableIdGenerator());
-        processEngineConfiguration.getEventDispatcher().addEventListener(new FlowableGlobalListener());
+        // 添加全局事件监听器
+        processEngineConfiguration.setEventListeners(List.of(new FlowableGlobalListener()));
+
+        return processEngineConfiguration;
     }
 }
