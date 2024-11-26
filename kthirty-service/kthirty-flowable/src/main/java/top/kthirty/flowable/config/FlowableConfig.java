@@ -6,6 +6,7 @@ import org.flowable.spring.SpringProcessEngineConfiguration;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.transaction.PlatformTransactionManager;
 
 
 /**
@@ -20,10 +21,12 @@ import org.springframework.context.event.ContextRefreshedEvent;
 @RequiredArgsConstructor
 public class FlowableConfig implements ApplicationListener<ContextRefreshedEvent> {
     private final SpringProcessEngineConfiguration processEngineConfiguration;
+    private final PlatformTransactionManager transactionManager;
 
     @Override
     public void onApplicationEvent(@NonNull ContextRefreshedEvent event) {
-        processEngineConfiguration.setIdGenerator(new FlowableIdGenerator())
-                .getEventDispatcher().addEventListener(new FlowableGlobalListener());
+        processEngineConfiguration.setTransactionManager(transactionManager);
+        processEngineConfiguration.setIdGenerator(new FlowableIdGenerator());
+        processEngineConfiguration.getEventDispatcher().addEventListener(new FlowableGlobalListener());
     }
 }

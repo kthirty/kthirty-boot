@@ -3,6 +3,7 @@ package top.kthirty.flowable.controller;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
@@ -58,7 +59,9 @@ public class RuntimeController {
     @PostMapping("testTran")
     @Operation(summary = "testTran")
     public void testTran() {
-         flowableHelper.testTran();
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("test", IdUtil.fastSimpleUUID());
+        System.out.println("流程实例id"+processInstance.getProcessInstanceId());
+        throw new RuntimeException("测试出错");
     }
 
     @GetMapping("todo")

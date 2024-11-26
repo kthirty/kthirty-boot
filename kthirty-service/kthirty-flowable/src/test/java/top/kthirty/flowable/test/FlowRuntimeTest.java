@@ -20,7 +20,7 @@ public class FlowRuntimeTest extends BaseKthirtyTest {
     private ProcessInstanceController processInstanceController;
 
     @Test
-    private void testTran(){
+    public void testTran(){
         runtimeController.testTran();
     }
     @Test
