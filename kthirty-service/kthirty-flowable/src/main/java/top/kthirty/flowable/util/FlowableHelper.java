@@ -122,11 +122,12 @@ public class FlowableHelper {
         // 流程完成前钩子
         Func.doIf(nextNode instanceof EndEvent, () -> FlowableHooks.getHooks(FlowableHooks.ProcessCompleteBeforeHook.class, processInstance.getProcessDefinitionKey())
                 .forEach(hook -> hook.onProcessCompleteBefore(processInstance)));
-        // 任务处理
-        taskService.complete(req.getTaskId(), SecureUtil.getUsername(), variables);
+        // 添加批注
         if (StrUtil.isNotBlank(req.getComment())) {
             taskService.addComment(req.getTaskId(), processInstance.getProcessInstanceId(), req.getComment());
         }
+        // 任务处理
+        taskService.complete(req.getTaskId(), SecureUtil.getUsername(), variables);
         // 执行后置钩子
         FlowableHooks.getHooks(FlowableHooks.TaskCompleteAfterHook.class, processInstance.getProcessDefinitionKey())
                 .forEach(hook -> hook.onTaskCompleteAfter(processInstance, task, req, variables));

@@ -13,7 +13,7 @@
             <bpmn:outgoing>Flow_1vbj2st</bpmn:outgoing>
         </bpmn:startEvent>
         <bpmn:sequenceFlow id="Flow_1vbj2st" sourceRef="start" targetRef="task1"/>
-        <bpmn:userTask id="task1" name="任务1" flowable:assignee="admin">
+        <bpmn:userTask id="task1" name="任务1" flowable:assignee="admin" flowable:formKey="/sys/test/act.vue">
             <bpmn:extensionElements>
                 <flowable:handleButton code="PASS" name="通过" description="通过审批" resultCode="PASS"/>
                 <flowable:handleButton code="REJECT" name="驳回" description="驳回" resultCode="REJECT"/>

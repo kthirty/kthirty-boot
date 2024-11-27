@@ -3,6 +3,7 @@ package top.kthirty.flowable.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.util.Map;
 /**
@@ -14,6 +15,7 @@ import java.util.Map;
  * @since 2024/11/23
  */
 @Data
+@Accessors(chain = true)
 public class TaskCompleteReq {
     @Schema(description = "任务ID")
     @NotBlank(message = "任务ID不能为空")

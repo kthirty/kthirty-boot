@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.flowable.bpmn.model.Activity;
 import org.flowable.bpmn.model.BpmnModel;
+import org.flowable.bpmn.model.UserTask;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
 import org.flowable.engine.runtime.Execution;
@@ -25,10 +26,7 @@ import top.kthirty.core.boot.secure.SecureUtil;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.support.Constant;
 import top.kthirty.core.tool.utils.StringPool;
-import top.kthirty.flowable.model.FlowButton;
-import top.kthirty.flowable.model.FlowTask;
-import top.kthirty.flowable.model.FlowTodoQuery;
-import top.kthirty.flowable.model.TaskCompleteReq;
+import top.kthirty.flowable.model.*;
 import top.kthirty.flowable.util.FlowableHelper;
 import top.kthirty.flowable.util.FlowableUtil;
 
@@ -111,15 +109,19 @@ public class RuntimeController {
     public void complete(@RequestBody @Valid @Parameter(description = "办理信息") TaskCompleteReq req) {
         flowableHelper.complete(req);
     }
-    @GetMapping("handleButtons")
-    @Operation(summary = "查询处理按钮")
-    public List<FlowButton> handleButtons(String taskId){
+    @GetMapping("completePre")
+    @Operation(summary = "任务办理前置信息")
+    public FlowCompletePre completePre(String taskId){
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
         Assert.notNull(task,"任务不存在");
         BpmnModel bpmnModel = FlowableUtil.getBpmnModel(task.getProcessDefinitionId());
-        Activity flowElement = (Activity) bpmnModel.getFlowElement(task.getTaskDefinitionKey());
-        return FlowableUtil.getHandleButtons(flowElement);
+        UserTask flowElement = (UserTask) bpmnModel.getFlowElement(task.getTaskDefinitionKey());
+        return FlowCompletePre.builder()
+                .formKey(FlowableUtil.getFormKey(flowElement))
+                .handleButtons(FlowableUtil.getHandleButtons(flowElement))
+                .build();
     }
+
 
     @PutMapping("claim")
     @Operation(summary = "任务签收")

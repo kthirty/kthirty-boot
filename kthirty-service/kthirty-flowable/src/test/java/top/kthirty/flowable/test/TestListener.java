@@ -73,12 +73,15 @@ public class TestListener implements FlowableHooks.NativeEventHook
 
     @Override
     public void onTaskCreateBefore(ProcessInstance processInstance, FlowElement flowElement, Map<String, Object> variables) {
-        log.info("监听到 onTaskCreateBefore processInstance{} flowElement{} variables{}",JSONUtil.toJsonStr(processInstance),JSONUtil.toJsonStr(flowElement),JSONUtil.toJsonStr(variables));
+        log.info("监听到 onTaskCreateBefore processInstance{} flowElement{} variables{}"
+                ,processInstance.getProcessInstanceId()
+                , flowElement.getId() + flowElement.getName()
+                ,JSONUtil.toJsonStr(variables));
     }
 
     @Override
     public void onProcessCompleteBefore(ProcessInstance processInstance) {
-        log.info("监听到 onProcessCompleteBefore processInstance {}",JSONUtil.toJsonStr(processInstance));
+        log.info("监听到 onProcessCompleteBefore processInstance {}",processInstance.getProcessInstanceId());
     }
 
     @Override

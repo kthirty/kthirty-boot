@@ -3,6 +3,7 @@ package top.kthirty.flowable.test;
 import com.mybatisflex.core.paginate.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.RuntimeService;
+import org.flowable.engine.impl.runtime.ProcessInstanceBuilderImpl;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,7 @@ import top.kthirty.core.test.KthirtyTest;
 import top.kthirty.flowable.FlowableApplication;
 import top.kthirty.flowable.controller.ProcessInstanceController;
 import top.kthirty.flowable.controller.RuntimeController;
-import top.kthirty.flowable.model.FlowButton;
-import top.kthirty.flowable.model.FlowTask;
-import top.kthirty.flowable.model.FlowTodoQuery;
+import top.kthirty.flowable.model.*;
 
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class FlowRuntimeTest extends BaseKthirtyTest {
 
     @Test
     public void testDeleteProcess(){
-        processInstanceController.delete("1861636743879684096","测试");
+        processInstanceController.delete("1861712757876056064","测试");
     }
     @Test
     public void testTodo(){
@@ -48,7 +47,12 @@ public class FlowRuntimeTest extends BaseKthirtyTest {
 
     @Test
     public void testButtons(){
-        List<FlowButton> flowButtons = runtimeController.handleButtons("1861636743921627136");
-        System.out.println(flowButtons);
+        FlowCompletePre flowCompletePre = runtimeController.completePre("1861722571393970176");
+        System.out.println(flowCompletePre);
+    }
+
+    @Test
+    public void testComplete(){
+        runtimeController.complete(new TaskCompleteReq().setTaskId("1861722571393970176").setResult("PASS").setComment("测试"));
     }
 }

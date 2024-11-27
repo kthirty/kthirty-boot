@@ -153,6 +153,9 @@ public class FlowableUtil {
                     return attr.toBean(FlowButton.class);
                 }).collect(Collectors.toList());
     }
+    public static String getFormKey(Activity activity){
+        return (activity instanceof UserTask userTask) ? userTask.getFormKey() : null;
+    }
 
     /**
      * 获取流程实例名称表达式
