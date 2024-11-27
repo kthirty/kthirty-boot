@@ -17,6 +17,7 @@ import java.util.List;
  * @since 2023/11/27
  */
 public class SecureUtil implements ApplicationContextAware {
+    private static SysUserProvider sysUserProvider;
     public static final String SUPER_ADMIN_CODE = "super_admin";
     public static String getUserId(){
         SysUser currentUser = getCurrentUser();
@@ -65,13 +66,20 @@ public class SecureUtil implements ApplicationContextAware {
         return null;
     }
     public static SysUserProvider getProvider(){
+        if(sysUserProvider != null){
+            return sysUserProvider;
+        }
         if(context == null){
             return null;
         }
         try{
-            return context.getBean(SysUserProvider.class);
+            sysUserProvider = context.getBean(SysUserProvider.class);
+            return sysUserProvider;
         }catch (Throwable ignore){}
         return null;
+    }
+    public static void setSysUserProvider(SysUserProvider sysUserProvider){
+        SecureUtil.sysUserProvider = sysUserProvider;
     }
 
     @Override

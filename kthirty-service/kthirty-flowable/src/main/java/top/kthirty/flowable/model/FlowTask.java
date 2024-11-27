@@ -1,13 +1,17 @@
 package top.kthirty.flowable.model;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import org.flowable.task.service.impl.persistence.entity.TaskEntityImpl;
 import top.kthirty.core.tool.Func;
+import top.kthirty.flowable.util.FlowConstants;
 
 /**
  * <p>
@@ -19,12 +23,14 @@ import top.kthirty.core.tool.Func;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@ToString(callSuper = true)
 @Accessors(chain = true)
 @NoArgsConstructor
 public class FlowTask extends TaskEntityImpl {
     private String processInstanceName;
     public FlowTask(Task task, ProcessInstance processInstance){
-        Func.copy(task,this);
+        super();
+        BeanUtil.copyProperties(task,this, FlowConstants.COPY_OPTIONS);
         this.processInstanceName = processInstance.getName();
     }
 

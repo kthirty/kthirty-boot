@@ -1,14 +1,19 @@
 package top.kthirty.flowable.test;
 
+import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.bpmn.model.FlowElement;
 import org.flowable.common.engine.api.delegate.event.FlowableEngineEvent;
 import org.flowable.common.engine.api.delegate.event.FlowableEngineEventType;
+import org.flowable.engine.RepositoryService;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import top.kthirty.core.tool.support.Kv;
+import top.kthirty.core.tool.utils.SpringUtil;
 import top.kthirty.flowable.model.TaskCompleteReq;
 import top.kthirty.flowable.util.FlowableHooks;
 
@@ -18,6 +23,7 @@ import java.util.Map;
 @Component
 @Slf4j
 @Transactional(rollbackFor = Exception.class)
+@RequiredArgsConstructor
 public class TestListener implements FlowableHooks.NativeEventHook
         , FlowableHooks.ProcessCompleteBeforeHook
         , FlowableHooks.ProcessStartAfterHook
@@ -28,8 +34,8 @@ public class TestListener implements FlowableHooks.NativeEventHook
         , FlowableHooks.TaskCreateBeforeHook
     , FlowableHooks.ProcessDeleteAfterHook
     , FlowableHooks.ProcessDeleteBeforeHook
-
 {
+    private final RepositoryService repositoryService;
     @Override
     public List<String> listenProcessDefinitionKey() {
         return List.of("test");
@@ -42,14 +48,15 @@ public class TestListener implements FlowableHooks.NativeEventHook
     }
 
     @Override
-    public String generateProcessInstanceName(String processDefinitionKey, String businessKey) {
+    public String generateProcessInstanceName(ProcessInstance processInstance,String processDefinitionKey, String businessKey) {
         log.info("监听到 generateProcessInstanceName {} {}",processDefinitionKey,businessKey);
-        return null;
+        String name = repositoryService.createProcessDefinitionQuery().processDefinitionId(processInstance.getProcessDefinitionId()).singleResult().getName();
+        return name + ":" + businessKey;
     }
 
     @Override
     public void onProcessStartAfter(String processDefinitionKey, String businessKey, ProcessInstance processInstance) {
-        log.info("监听到 onProcessStartAfter {} {} {}",processDefinitionKey,businessKey, JSONUtil.toJsonStr(processInstance));
+        log.info("监听到 onProcessStartAfter {} {} {}",processDefinitionKey,businessKey, processInstance.getProcessInstanceId());
     }
 
     @Override
@@ -76,7 +83,7 @@ public class TestListener implements FlowableHooks.NativeEventHook
 
     @Override
     public void onNativeEvent(FlowableEngineEventType eventType, FlowableEngineEvent flowableEngineEvent) {
-        log.info("监听到 onProcessCompleteBefore eventType {} flowableEngineEvent{}",eventType,flowableEngineEvent.getClass().getName());
+        log.info("监听到 onNativeEvent eventType {} flowableEngineEvent{}",eventType,flowableEngineEvent.getClass().getName());
     }
 
     @Override

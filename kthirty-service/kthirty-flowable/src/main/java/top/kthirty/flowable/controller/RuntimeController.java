@@ -85,11 +85,10 @@ public class RuntimeController {
             // 1. 所有拥有的角色 2. 拥有的部门:职位 3. 拥有的部门:角色
             List<String> groupCodes = CollUtil.unionAll(CollUtil.toList(Constant.NOT_FOUND),SecureUtil.getRoles(), SecureUtil.getIdentityCodes());
             SecureUtil.getDeptCodes().forEach(deptCode -> SecureUtil.getRoles().forEach(roleCode -> groupCodes.add(StrUtil.join(StringPool.COLON, deptCode, roleCode))));
-            taskQuery.taskCandidateOrAssigned(SecureUtil.getUsername())
-                    .or()
-                    .taskCandidateGroupIn(groupCodes);
-            // 签收 : 未签收或者本人签收的任务
-            taskQuery.taskUnassigned().or().taskClaimedBy(SecureUtil.getUsername());
+            taskQuery.or()
+                    .taskCandidateOrAssigned(SecureUtil.getUsername())
+                    .taskCandidateGroupIn(groupCodes)
+                    .endOr();
         }
         // 排序
         taskQuery.orderByTaskCreateTime().desc();
@@ -118,7 +117,7 @@ public class RuntimeController {
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
         Assert.notNull(task,"任务不存在");
         BpmnModel bpmnModel = FlowableUtil.getBpmnModel(task.getProcessDefinitionId());
-        Activity flowElement = (Activity) bpmnModel.getFlowElement(task.getTaskDefinitionId());
+        Activity flowElement = (Activity) bpmnModel.getFlowElement(task.getTaskDefinitionKey());
         return FlowableUtil.getHandleButtons(flowElement);
     }
 

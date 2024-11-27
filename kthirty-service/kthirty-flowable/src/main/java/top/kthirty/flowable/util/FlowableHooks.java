@@ -27,7 +27,7 @@ import static cn.hutool.core.util.ClassUtil.getClassName;
 public class FlowableHooks {
     public interface BaseHook{ List<String> listenProcessDefinitionKey();}
     public interface ProcessStartBeforeHook extends BaseHook { Map<String, Object> onProcessStartBefore(String processDefinitionKey, String businessKey);}
-    public interface ProcessInstanceNameGenerator extends BaseHook {String generateProcessInstanceName(String processDefinitionKey, String businessKey);}
+    public interface ProcessInstanceNameGenerator extends BaseHook {String generateProcessInstanceName(ProcessInstance processInstance,String processDefinitionKey, String businessKey);}
     public interface ProcessStartAfterHook extends BaseHook { void onProcessStartAfter(String processDefinitionKey, String businessKey, ProcessInstance processInstance);}
     public interface TaskCompleteBeforeHook extends BaseHook {
         /**

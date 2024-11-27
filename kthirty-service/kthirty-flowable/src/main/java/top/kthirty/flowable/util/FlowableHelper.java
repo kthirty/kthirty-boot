@@ -8,21 +8,27 @@ import lombok.extern.slf4j.Slf4j;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.bpmn.model.EndEvent;
 import org.flowable.bpmn.model.FlowElement;
+import org.flowable.common.engine.api.FlowableObjectNotFoundException;
 import org.flowable.common.engine.impl.el.VariableContainerWrapper;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
 import org.flowable.engine.impl.util.CommandContextUtil;
+import org.flowable.engine.impl.util.ProcessInstanceHelper;
+import org.flowable.engine.repository.Model;
 import org.flowable.engine.runtime.ProcessInstance;
+import org.flowable.engine.runtime.ProcessInstanceBuilder;
 import org.flowable.task.api.Task;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import top.kthirty.core.boot.secure.SecureUtil;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.support.Kv;
+import top.kthirty.flowable.model.FlowModel;
 import top.kthirty.flowable.model.TaskCompleteReq;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -74,7 +80,7 @@ public class FlowableHelper {
         // 执行流程实例名称钩子
         FlowableHooks.getHooks(FlowableHooks.ProcessInstanceNameGenerator.class, processDefinitionKey)
                 .forEach(it -> {
-                    String processInstanceName = it.generateProcessInstanceName(processDefinitionKey, businessKey);
+                    String processInstanceName = it.generateProcessInstanceName(processInstance, processDefinitionKey, businessKey);
                     if (StrUtil.isNotBlank(processInstanceName)) {
                         runtimeService.setProcessInstanceName(processInstance.getProcessInstanceId(), processInstanceName);
                     }
@@ -126,5 +132,25 @@ public class FlowableHelper {
                 .forEach(hook -> hook.onTaskCompleteAfter(processInstance, task, req, variables));
     }
 
-
+    /**
+     * 保存模型
+     * @param flowModel 流程模型
+     * @return FlowModel
+     */
+    public FlowModel saveModel(FlowModel flowModel) {
+        Model model = repositoryService.createModelQuery().modelKey(flowModel.getKey()).count() != 0
+                ? repositoryService.createModelQuery().modelKey(flowModel.getKey()).singleResult()
+                : repositoryService.newModel();
+        model.setCategory(flowModel.getCategory());
+        model.setKey(flowModel.getKey());
+        model.setName(flowModel.getName());
+        model.setMetaInfo(flowModel.getMetaInfo());
+        model.setTenantId(flowModel.getTenantId());
+        repositoryService.saveModel(model);
+        flowModel.setId(model.getId());
+        if(StrUtil.isNotBlank(flowModel.getXml())){
+            repositoryService.addModelEditorSource(model.getId(),flowModel.getXml().getBytes(StandardCharsets.UTF_8));
+        }
+        return flowModel;
+    }
 }

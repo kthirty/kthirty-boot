@@ -7,3 +7,7 @@ spring:
     url: jdbc:mysql://mysql.kthirty.top:7091/test2024
     username: test2024
     password: ${KTHIRTY_PASSWORD}
+logging:
+  level:
+    org.flowable.engine.impl.persistence.entity.*: debug
+    org.flowable.task.service.impl.persistence.entity.*: debug

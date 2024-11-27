@@ -3,6 +3,8 @@ package top.kthirty.flowable.test;
 import cn.hutool.core.io.resource.ResourceUtil;
 import com.mybatisflex.core.paginate.Page;
 import lombok.extern.slf4j.Slf4j;
+import org.flowable.bpmn.converter.BpmnXMLConverter;
+import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.engine.ManagementService;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import top.kthirty.core.test.BaseKthirtyTest;
 import top.kthirty.core.test.KthirtyTest;
 import top.kthirty.core.tool.jackson.JsonUtil;
+import top.kthirty.core.tool.utils.Charsets;
 import top.kthirty.flowable.FlowableApplication;
 import top.kthirty.flowable.controller.ModelController;
 import top.kthirty.flowable.model.FlowModel;
@@ -41,7 +44,7 @@ public class FlowModelTest extends BaseKthirtyTest {
 
     @Test
     public void testDeploy(){
-        modelController.deploy("1861304527878299648");
+        modelController.deploy("1861604520434573312");
     }
 
     @Test
@@ -52,6 +55,13 @@ public class FlowModelTest extends BaseKthirtyTest {
 
     @Test
     public void testDelete(){
-        modelController.delete("1861303264725827584");
+        modelController.delete("1861688508788490240");
+    }
+
+    @Test
+    public void testGetXml(){
+        BpmnModel bpmnModel = new BpmnXMLConverter().convertToBpmnModel(() -> ResourceUtil.getStream("test.bpmn")
+                , true, true, Charsets.UTF_8_NAME);
+        System.out.println(bpmnModel.getMainProcess().getId());
     }
 }

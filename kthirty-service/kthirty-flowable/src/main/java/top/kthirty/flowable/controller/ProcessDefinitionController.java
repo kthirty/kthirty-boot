@@ -1,5 +1,6 @@
 package top.kthirty.flowable.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
@@ -18,11 +19,11 @@ import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.repository.ProcessDefinitionQuery;
 import org.springframework.web.bind.annotation.*;
 import top.kthirty.core.tool.Func;
-import top.kthirty.core.tool.utils.BeanUtil;
 import top.kthirty.core.tool.utils.Charsets;
 import top.kthirty.core.web.base.BaseController;
 import top.kthirty.flowable.model.FlowProcessDefModel;
 import top.kthirty.flowable.model.FlowProcessDefQuery;
+import top.kthirty.flowable.util.FlowConstants;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -73,7 +74,8 @@ public class ProcessDefinitionController extends BaseController {
             , @Parameter(description = "是否查询xml") @RequestParam(required = false) boolean queryXml
             , @Parameter(description = "是否查询缩略图") @RequestParam(required = false) boolean queryThumbnail){
         ProcessDefinition processDefinition = repositoryService.getProcessDefinition(id);
-        FlowProcessDefModel flowProcessDefModel = BeanUtil.copy(processDefinition, FlowProcessDefModel.class);
+        FlowProcessDefModel flowProcessDefModel = new FlowProcessDefModel();
+        BeanUtil.copyProperties(processDefinition, FlowProcessDefModel.class, FlowConstants.COPY_OPTIONS);
         if(queryXml || queryThumbnail){
             @Cleanup
             InputStream xmlStream = repositoryService.getResourceAsStream(processDefinition.getDeploymentId(),"process.bpmn");

@@ -1,5 +1,6 @@
 package top.kthirty.flowable.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
@@ -23,12 +24,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.jackson.JsonUtil;
-import top.kthirty.core.tool.utils.BeanUtil;
 import top.kthirty.core.tool.utils.Charsets;
 import top.kthirty.core.web.base.BaseController;
 import top.kthirty.core.web.utils.WebUtil;
 import top.kthirty.flowable.model.FlowModel;
 import top.kthirty.flowable.model.FlowModelQuery;
+import top.kthirty.flowable.util.FlowConstants;
+import top.kthirty.flowable.util.FlowableHelper;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -52,6 +54,7 @@ public class ModelController extends BaseController {
     private final RepositoryService repositoryService;
     private final ManagementService managementService;
     private final ProcessEngine processEngine;
+    private final FlowableHelper flowableHelper;
     public static final String MODEL_JSON_FILE_NAME = "models.json";
 
     @GetMapping("page")
@@ -70,14 +73,7 @@ public class ModelController extends BaseController {
     @PostMapping("save")
     @Operation(summary = "保存流程模型")
     public FlowModel save(@RequestBody @Parameter(description = "模型信息") FlowModel flowModel){
-        String xml = flowModel.getXml();
-        Model modelEntity = flowModel.getModel();
-        repositoryService.saveModel(modelEntity);
-        if(StrUtil.isNotBlank(xml)){
-            repositoryService.addModelEditorSource(modelEntity.getId(),xml.getBytes(StandardCharsets.UTF_8));
-        }
-        flowModel.setByModel(modelEntity);
-        return flowModel;
+        return flowableHelper.saveModel(flowModel);
     }
 
     @GetMapping("get")
@@ -86,8 +82,7 @@ public class ModelController extends BaseController {
     public FlowModel get(@Parameter(description = "模型ID") String modelId
             , @Parameter(description = "是否查询xml") @RequestParam(required = false, defaultValue = "true") boolean queryXml
             , @Parameter(description = "是否查询缩略图") @RequestParam(required = false) boolean queryThumbnail){
-        Model model = repositoryService.getModel(modelId);
-        FlowModel flowModel = BeanUtil.copy(model, FlowModel.class);
+        FlowModel flowModel = new FlowModel(repositoryService.getModel(modelId));
         if(queryXml || queryThumbnail){
             byte[] modelEditorSource = repositoryService.getModelEditorSource(modelId);
             if(ObjUtil.isNotEmpty(modelEditorSource)){

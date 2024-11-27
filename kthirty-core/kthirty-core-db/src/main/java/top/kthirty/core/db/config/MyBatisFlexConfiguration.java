@@ -28,7 +28,7 @@ public class MyBatisFlexConfiguration implements MyBatisFlexCustomizer {
         // Id 生成策略
         FlexGlobalConfig.KeyConfig keyConfig = new FlexGlobalConfig.KeyConfig();
         keyConfig.setKeyType(KeyType.Generator);
-        keyConfig.setValue(KeyGenerators.flexId);
+        keyConfig.setValue(KeyGenerators.snowFlakeId);
         flexGlobalConfig.setKeyConfig(keyConfig);
         // 是否打印Banner
         flexGlobalConfig.setPrintBanner(false);

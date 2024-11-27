@@ -14,6 +14,10 @@
         </bpmn:startEvent>
         <bpmn:sequenceFlow id="Flow_1vbj2st" sourceRef="start" targetRef="task1"/>
         <bpmn:userTask id="task1" name="任务1" flowable:assignee="admin">
+            <bpmn:extensionElements>
+                <flowable:handleButton code="PASS" name="通过" description="通过审批" resultCode="PASS"/>
+                <flowable:handleButton code="REJECT" name="驳回" description="驳回" resultCode="REJECT"/>
+            </bpmn:extensionElements>
             <bpmn:incoming>Flow_1vbj2st</bpmn:incoming>
             <bpmn:outgoing>Flow_055pmgw</bpmn:outgoing>
         </bpmn:userTask>
