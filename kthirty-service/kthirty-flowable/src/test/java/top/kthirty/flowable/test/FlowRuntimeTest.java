@@ -2,27 +2,24 @@ package top.kthirty.flowable.test;
 
 import com.mybatisflex.core.paginate.Page;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.annotation.Before;
 import org.flowable.common.engine.impl.identity.Authentication;
 import org.flowable.engine.FormService;
 import org.flowable.engine.RuntimeService;
-import org.flowable.engine.impl.runtime.ProcessInstanceBuilderImpl;
-import org.flowable.engine.runtime.ProcessInstance;
-import org.flowable.form.api.FormInfo;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.event.annotation.BeforeTestClass;
 import top.kthirty.core.boot.secure.SecureUtil;
 import top.kthirty.core.boot.secure.SysUser;
-import top.kthirty.core.boot.secure.SysUserProvider;
 import top.kthirty.core.test.BaseKthirtyTest;
 import top.kthirty.core.test.KthirtyTest;
 import top.kthirty.core.tool.jackson.JsonUtil;
 import top.kthirty.flowable.FlowableApplication;
 import top.kthirty.flowable.controller.ProcessInstanceController;
-import top.kthirty.flowable.controller.RuntimeController;
-import top.kthirty.flowable.model.*;
+import top.kthirty.flowable.controller.TaskController;
+import top.kthirty.flowable.model.FlowCompletePre;
+import top.kthirty.flowable.model.FlowTask;
+import top.kthirty.flowable.model.FlowTaskQuery;
+import top.kthirty.flowable.model.TaskCompleteReq;
 
 import java.util.List;
 
@@ -30,7 +27,7 @@ import java.util.List;
 @KthirtyTest(appName = "flowable", classes = FlowableApplication.class)
 public class FlowRuntimeTest extends BaseKthirtyTest {
     @Autowired
-    private RuntimeController runtimeController;
+    private TaskController taskController;
     @Autowired
     private ProcessInstanceController processInstanceController;
     @Autowired
@@ -46,7 +43,7 @@ public class FlowRuntimeTest extends BaseKthirtyTest {
 
     @Test
     public void testStartProcess() {
-        runtimeController.start("test", "business_id_1");
+        taskController.start("test", "business_id_1");
     }
 
     @Test
@@ -56,29 +53,34 @@ public class FlowRuntimeTest extends BaseKthirtyTest {
 
     @Test
     public void testTodo() {
-        Page<FlowTask> todo = runtimeController.todo(new FlowTodoQuery());
+        Page<FlowTask> todo = taskController.todo(new FlowTaskQuery());
         System.out.println(JsonUtil.toJsonPrettyStr(todo));
         System.out.println(todo);
+    }
+    @Test
+    public void testDone() {
+        Page<FlowTask> done = taskController.done(new FlowTaskQuery());
+        log.info("done: {}", JsonUtil.toJsonPrettyStr(done));
     }
 
     @Test
     public void testCompletePre() {
-        FlowCompletePre flowCompletePre = runtimeController.completePre("1861972122361118720");
+        FlowCompletePre flowCompletePre = taskController.completePre("1861972122361118720");
         System.out.println(flowCompletePre);
     }
 
     @Test
     public void testComplete() {
-        runtimeController.complete(new TaskCompleteReq().setTaskId("1862004034668482560").setResult("PASS").setComment("测试"));
+        taskController.complete(new TaskCompleteReq().setTaskId("1862004034668482560").setResult("PASS").setComment("测试"));
     }
 
     @Test
     public void testSuspend() {
-        runtimeController.suspend("1861972122361118720");
+        taskController.suspend("1861972122361118720");
     }
 
     @Test
     public void testActivate() {
-        runtimeController.activate("1861972122361118720");
+        taskController.activate("1861972122361118720");
     }
 }

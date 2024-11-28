@@ -1,7 +1,5 @@
 package top.kthirty.flowable.controller;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.*;
@@ -9,7 +7,6 @@ import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.bpmn.converter.BpmnXMLConverter;
@@ -30,15 +27,10 @@ import top.kthirty.core.web.base.BaseController;
 import top.kthirty.core.web.utils.WebUtil;
 import top.kthirty.flowable.model.FlowModel;
 import top.kthirty.flowable.model.FlowModelQuery;
-import top.kthirty.flowable.util.FlowConstants;
 import top.kthirty.flowable.util.FlowableHelper;
 import top.kthirty.flowable.util.FlowableUtil;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;

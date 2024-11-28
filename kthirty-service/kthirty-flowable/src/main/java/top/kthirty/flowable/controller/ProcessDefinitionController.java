@@ -1,40 +1,23 @@
 package top.kthirty.flowable.controller;
 
-import cn.hutool.core.codec.Base64;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.flowable.bpmn.converter.BpmnXMLConverter;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.engine.ProcessEngine;
-import org.flowable.engine.ProcessEngineConfiguration;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.repository.ProcessDefinitionQuery;
 import org.springframework.web.bind.annotation.*;
 import top.kthirty.core.tool.Func;
-import top.kthirty.core.tool.utils.Charsets;
 import top.kthirty.core.web.base.BaseController;
 import top.kthirty.flowable.model.FlowProcessDefModel;
 import top.kthirty.flowable.model.FlowProcessDefQuery;
 import top.kthirty.flowable.util.FlowableUtil;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -43,7 +26,7 @@ import java.util.List;
  * @since 2024/11/22 15:30
  */
 @RestController
-@RequestMapping("pd")
+@RequestMapping("process/definition")
 @RequiredArgsConstructor
 @Tag(name = "流程定义")
 public class ProcessDefinitionController extends BaseController {

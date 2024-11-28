@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.engine.HistoryService;
-import org.flowable.engine.ProcessEngine;
-import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.history.HistoricProcessInstanceQuery;
@@ -19,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import top.kthirty.core.tool.Func;
 import top.kthirty.flowable.model.FlowProcessInstQuery;
-import top.kthirty.flowable.util.FlowableHelper;
 import top.kthirty.flowable.util.FlowableHooks;
 import top.kthirty.flowable.util.FlowableUtil;
 
@@ -31,7 +28,7 @@ import java.util.List;
  * @since 2024/11/22 16:39
  */
 @RestController
-@RequestMapping("pi")
+@RequestMapping("process/instance")
 @RequiredArgsConstructor
 @Tag(name = "流程实例")
 @Transactional(rollbackFor = Exception.class)
