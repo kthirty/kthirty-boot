@@ -216,6 +216,7 @@ public class FlowableUtil {
      * @param highLightedFlows 高亮线
      * @return 图片流
      */
+    @SneakyThrows
     public static InputStream generateThumbnail(BpmnModel bpmnModel, String imageType, List<String> highLightedActivities, List<String> highLightedFlows){
         ProcessEngineConfiguration processEngineConfiguration = SpringUtil.getBean(ProcessEngineConfiguration.class);
         return processEngineConfiguration.getProcessDiagramGenerator()
@@ -230,15 +231,18 @@ public class FlowableUtil {
                         , 1.0
                         , true);
     }
+    @SneakyThrows
     public static InputStream generateThumbnail(BpmnModel bpmnModel, String imageType){
         return generateThumbnail(bpmnModel, imageType, List.of(), List.of());
     }
 
+    @SneakyThrows
     public static String generateThumbnailBase64(BpmnModel bpmnModel, String imageType, List<String> highLightedActivities, List<String> highLightedFlows){
         @Cleanup
         InputStream inputStream = generateThumbnail(bpmnModel, imageType, highLightedActivities, highLightedFlows);
         return "data:image/png;base64,"+Base64.encode(inputStream);
     }
+    @SneakyThrows
     public static String generateThumbnailBase64(BpmnModel bpmnModel, String imageType){
         return generateThumbnailBase64(bpmnModel, imageType, List.of(), List.of());
     }

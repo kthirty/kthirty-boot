@@ -1,11 +1,9 @@
 package top.kthirty.flowable.controller;
 
-import cn.hutool.core.codec.Base64;
 import cn.hutool.core.lang.Assert;
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.bpmn.model.BpmnModel;
@@ -25,7 +23,6 @@ import top.kthirty.flowable.util.FlowableHelper;
 import top.kthirty.flowable.util.FlowableHooks;
 import top.kthirty.flowable.util.FlowableUtil;
 
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -41,9 +38,6 @@ import java.util.List;
 public class ProcessInstanceController {
     private final RuntimeService runtimeService;
     private final HistoryService historyService;
-    private final ProcessEngine processEngine;
-    private final RepositoryService repositoryService;
-    private final FlowableHelper flowableHelper;
 
     @GetMapping("page")
     @Operation(summary = "分页查询流程实例")
