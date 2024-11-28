@@ -9,6 +9,7 @@ import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.bpmn.converter.BpmnXMLConverter;
@@ -31,11 +32,13 @@ import top.kthirty.flowable.model.FlowModel;
 import top.kthirty.flowable.model.FlowModelQuery;
 import top.kthirty.flowable.util.FlowConstants;
 import top.kthirty.flowable.util.FlowableHelper;
+import top.kthirty.flowable.util.FlowableUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
@@ -89,15 +92,8 @@ public class ModelController extends BaseController {
                 flowModel.setXml(new String(modelEditorSource));
                 // 查询缩略图
                 if(queryThumbnail){
-                    BpmnModel bpmnModel = new BpmnXMLConverter()
-                            .convertToBpmnModel(() -> IoUtil.toStream(modelEditorSource), true, true, Charsets.UTF_8_NAME);
-                    BufferedImage bufferedImage = processEngine.getProcessEngineConfiguration()
-                            .getProcessDiagramGenerator()
-                            .generatePngImage(bpmnModel, 1.0D);
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    ImageIO.write(bufferedImage, "png", stream);
-                    String imageBase64 = Base64.encode(stream.toByteArray());
-                    flowModel.setThumbnail(imageBase64);
+                    BpmnModel bpmnModel = new BpmnXMLConverter().convertToBpmnModel(() -> IoUtil.toStream(modelEditorSource), true, true, Charsets.UTF_8_NAME);
+                    flowModel.setThumbnail(FlowableUtil.generateThumbnailBase64(bpmnModel, "png"));
                 }
             }
         }

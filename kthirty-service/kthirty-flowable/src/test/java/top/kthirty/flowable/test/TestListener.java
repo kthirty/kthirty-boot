@@ -1,6 +1,5 @@
 package top.kthirty.flowable.test;
 
-import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +11,6 @@ import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import top.kthirty.core.tool.support.Kv;
-import top.kthirty.core.tool.utils.SpringUtil;
 import top.kthirty.flowable.model.TaskCompleteReq;
 import top.kthirty.flowable.util.FlowableHooks;
 
@@ -48,10 +45,9 @@ public class TestListener implements FlowableHooks.NativeEventHook
     }
 
     @Override
-    public String generateProcessInstanceName(ProcessInstance processInstance,String processDefinitionKey, String businessKey) {
+    public String generateProcessInstanceName(String processDefinitionKey,String processDefinitionName, String businessKey) {
         log.info("监听到 generateProcessInstanceName {} {}",processDefinitionKey,businessKey);
-        String name = repositoryService.createProcessDefinitionQuery().processDefinitionId(processInstance.getProcessDefinitionId()).singleResult().getName();
-        return name + ":" + businessKey;
+        return processDefinitionName + ":" + businessKey;
     }
 
     @Override
@@ -68,7 +64,11 @@ public class TestListener implements FlowableHooks.NativeEventHook
 
     @Override
     public void onTaskCompleteAfter(ProcessInstance processInstance, Task task, TaskCompleteReq req, Map<String, Object> variables) {
-        log.info("监听到 onTaskCompleteBefore processInstance{} task{} req{} variables{}",JSONUtil.toJsonStr(processInstance),JSONUtil.toJsonStr(task), JSONUtil.toJsonStr(req),JSONUtil.toJsonStr(variables));
+        log.info("监听到 onTaskCompleteBefore processInstance{} task{} req{} variables{}"
+                ,processInstance.getProcessInstanceId()
+                ,task.getTaskDefinitionId() + "_" + task.getId()
+                , JSONUtil.toJsonStr(req)
+                ,JSONUtil.toJsonStr(variables));
     }
 
     @Override

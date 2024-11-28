@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.flowable.bpmn.model.Activity;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.bpmn.model.UserTask;
+import org.flowable.common.engine.impl.identity.Authentication;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
 import org.flowable.engine.runtime.Execution;
@@ -140,12 +141,14 @@ public class RuntimeController {
 
     @PutMapping("activate")
     @Operation(summary = "任务激活")
-    public void complete(@Parameter(description = "任务ID") String taskId) {
+    public void activate(@Parameter(description = "任务ID") String taskId) {
+        Authentication.setAuthenticatedUserId(SecureUtil.getUsername());
         taskService.activateTask(taskId, SecureUtil.getUsername());
     }
     @PutMapping("suspend")
     @Operation(summary = "任务挂起")
     public void suspend(@Parameter(description = "任务ID") String taskId) {
+        Authentication.setAuthenticatedUserId(SecureUtil.getUsername());
         taskService.suspendTask(taskId, SecureUtil.getUsername());
     }
 }

@@ -1,7 +1,7 @@
 package top.kthirty.flowable.controller;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.paginate.Page;
@@ -14,8 +14,8 @@ import lombok.SneakyThrows;
 import org.flowable.bpmn.converter.BpmnXMLConverter;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.engine.ProcessEngine;
+import org.flowable.engine.ProcessEngineConfiguration;
 import org.flowable.engine.RepositoryService;
-import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.repository.ProcessDefinitionQuery;
 import org.springframework.web.bind.annotation.*;
 import top.kthirty.core.tool.Func;
@@ -23,13 +23,19 @@ import top.kthirty.core.tool.utils.Charsets;
 import top.kthirty.core.web.base.BaseController;
 import top.kthirty.flowable.model.FlowProcessDefModel;
 import top.kthirty.flowable.model.FlowProcessDefQuery;
-import top.kthirty.flowable.util.FlowConstants;
+import top.kthirty.flowable.util.FlowableUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * @description 流程相关接口
@@ -46,7 +52,7 @@ public class ProcessDefinitionController extends BaseController {
 
     @GetMapping("page")
     @Operation(summary = "获取流程定义分页")
-    public Page<ProcessDefinition> defPage(FlowProcessDefQuery req){
+    public Page<FlowProcessDefModel> defPage(FlowProcessDefQuery req){
         ProcessDefinitionQuery query = repositoryService.createProcessDefinitionQuery();
         Func.doIf(StrUtil.isNotBlank(req.getCategory()), () -> query.processDefinitionKeyLike(req.getCategory()));
         Func.doIf(StrUtil.isNotBlank(req.getKey()), () -> query.processDefinitionKeyLike(req.getKey()));
@@ -54,16 +60,20 @@ public class ProcessDefinitionController extends BaseController {
         Func.doIf(req.getActive() != null && req.getActive() , query::active);
         Func.doIf(req.getActive() != null && !req.getActive() , query::suspended);
         query.latestVersion();
-        return req.getPage(query.count(),query.listPage(req.getPageNumber() - 1,req.getPageSize()));
+        List<FlowProcessDefModel> list = query.listPage(req.getFirstResult(), req.getPageSize())
+                .stream()
+                .map(FlowProcessDefModel::new)
+                .toList();
+        return req.getPage(query.count(),list);
     }
     @PutMapping("active")
     @Operation(summary = "流程激活")
-    public void devActive(String processDefId){
+    public void active(String processDefId){
         repositoryService.activateProcessDefinitionById(processDefId);
     }
     @PutMapping("suspended")
     @Operation(summary = "流程激活")
-    public void devSuspended(String processDefId){
+    public void suspended(String processDefId){
         repositoryService.suspendProcessDefinitionById(processDefId);
     }
 
@@ -73,25 +83,13 @@ public class ProcessDefinitionController extends BaseController {
     public FlowProcessDefModel get(@Parameter(description = "流程定义ID") String id
             , @Parameter(description = "是否查询xml") @RequestParam(required = false) boolean queryXml
             , @Parameter(description = "是否查询缩略图") @RequestParam(required = false) boolean queryThumbnail){
-        ProcessDefinition processDefinition = repositoryService.getProcessDefinition(id);
-        FlowProcessDefModel flowProcessDefModel = new FlowProcessDefModel();
-        BeanUtil.copyProperties(processDefinition, FlowProcessDefModel.class, FlowConstants.COPY_OPTIONS);
-        if(queryXml || queryThumbnail){
-            @Cleanup
-            InputStream xmlStream = repositoryService.getResourceAsStream(processDefinition.getDeploymentId(),"process.bpmn");
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            IoUtil.copy(xmlStream,baos);
-            flowProcessDefModel.setXml(StrUtil.str(baos.toByteArray(), Charsets.UTF_8));
-            if(queryThumbnail){
-                BpmnModel bpmnModel = new BpmnXMLConverter().convertToBpmnModel(() -> new ByteArrayInputStream(baos.toByteArray()), true, true, Charsets.UTF_8_NAME);
-                BufferedImage bufferedImage = processEngine.getProcessEngineConfiguration()
-                        .getProcessDiagramGenerator()
-                        .generatePngImage(bpmnModel, 1.0D);
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                ImageIO.write(bufferedImage, "png", stream);
-                String imageBase64 = Base64.encode(stream.toByteArray());
-                flowProcessDefModel.setThumbnail(imageBase64);
-            }
+        FlowProcessDefModel flowProcessDefModel = new FlowProcessDefModel(repositoryService.getProcessDefinition(id));
+        if(queryXml){
+            flowProcessDefModel.setXml(FlowableUtil.getXml(flowProcessDefModel.getDeploymentId()));
+        }
+        if(queryThumbnail){
+            BpmnModel bpmnModel = FlowableUtil.getBpmnModel(flowProcessDefModel.getId());
+            flowProcessDefModel.setThumbnail(FlowableUtil.generateThumbnailBase64(bpmnModel, "png"));
         }
         return flowProcessDefModel;
     }

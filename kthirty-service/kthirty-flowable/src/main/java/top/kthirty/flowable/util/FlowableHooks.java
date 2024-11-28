@@ -9,10 +9,12 @@ import org.flowable.common.engine.api.delegate.event.FlowableEngineEventType;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import org.springframework.beans.BeansException;
+import org.springframework.core.Ordered;
 import top.kthirty.core.tool.utils.SpringUtil;
 import top.kthirty.flowable.model.TaskCompleteReq;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,9 +27,13 @@ import static cn.hutool.core.util.ClassUtil.getClassName;
  */
 @Slf4j
 public class FlowableHooks {
-    public interface BaseHook{ List<String> listenProcessDefinitionKey();}
+    public interface BaseHook{ List<String> listenProcessDefinitionKey();
+    default int getOrder(){return Ordered.LOWEST_PRECEDENCE;}
+    }
     public interface ProcessStartBeforeHook extends BaseHook { Map<String, Object> onProcessStartBefore(String processDefinitionKey, String businessKey);}
-    public interface ProcessInstanceNameGenerator extends BaseHook {String generateProcessInstanceName(ProcessInstance processInstance,String processDefinitionKey, String businessKey);}
+    public interface ProcessInstanceNameGenerator extends BaseHook {
+        String generateProcessInstanceName(String processDefinitionKey,String processDefinitionName, String businessKey);
+    }
     public interface ProcessStartAfterHook extends BaseHook { void onProcessStartAfter(String processDefinitionKey, String businessKey, ProcessInstance processInstance);}
     public interface TaskCompleteBeforeHook extends BaseHook {
         /**
@@ -70,6 +76,10 @@ public class FlowableHooks {
      * flowable 引擎原生监听器
      */
     public interface NativeEventHook extends BaseHook {
+        /**
+         * 需要监听的事件，为空监听所有
+         */
+        default List<FlowableEngineEventType> listenEventTypes(){return null;}
         void onNativeEvent(FlowableEngineEventType eventType, FlowableEngineEvent flowableEngineEvent);
     }
 
@@ -92,12 +102,13 @@ public class FlowableHooks {
      * 获取所有钩子
      * @param hookClass 钩子类型
      */
-    public static <T extends BaseHook> Collection<T> getHooks(Class<T> hookClass, String processDefinitionKey){
+    public static <T extends BaseHook> List<T> getHooks(Class<T> hookClass, String processDefinitionKey){
         try{
             List<T> hooks = SpringUtil.getBeansOfType(hookClass)
                     .values()
                     .stream()
                     .filter(hook -> CollUtil.contains(hook.listenProcessDefinitionKey(), processDefinitionKey))
+                    .sorted(Comparator.comparingInt(BaseHook::getOrder))
                     .toList();
             log.info("获取到 {} 个 {} 钩子 {}", hooks.size()
                     , getClassName(hookClass,false)

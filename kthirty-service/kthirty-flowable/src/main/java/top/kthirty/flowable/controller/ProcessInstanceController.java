@@ -58,7 +58,7 @@ public class ProcessInstanceController {
         Func.doIf(req.getDeleted() != null && req.getDeleted(), query::deleted);
         Func.doIf(req.getDeleted() != null && !req.getDeleted(), query::notDeleted);
         query.orderByProcessInstanceStartTime().desc();
-        return req.getPage(query.count(),query.listPage(req.getPageNumber() - 1,req.getPageSize()));
+        return req.getPage(query.count(),query.listPage(req.getFirstResult(),req.getPageSize()));
     }
 
     @DeleteMapping("delete")
@@ -105,11 +105,7 @@ public class ProcessInstanceController {
         // 获取当前正在进行的节点
         List<String> activeActivityIds = runtimeService.getActiveActivityIds(procInstId);
         // 生成流程图
-        @Cleanup
-        InputStream inputStream = processEngine.getProcessEngineConfiguration()
-                .getProcessDiagramGenerator()
-                .generateDiagram(bpmnModel, "png", activeActivityIds, List.of(), true);
-        return Base64.encode(inputStream);
+        return FlowableUtil.generateThumbnailBase64(bpmnModel,"png",activeActivityIds,List.of());
     }
 
 

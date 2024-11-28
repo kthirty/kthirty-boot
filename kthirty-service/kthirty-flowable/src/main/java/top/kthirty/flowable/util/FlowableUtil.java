@@ -1,16 +1,19 @@
 package top.kthirty.flowable.util;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
+import lombok.Cleanup;
 import lombok.SneakyThrows;
 import org.flowable.bpmn.converter.BpmnXMLConverter;
 import org.flowable.bpmn.model.Process;
 import org.flowable.bpmn.model.*;
 import org.flowable.common.engine.impl.el.VariableContainerWrapper;
 import org.flowable.engine.ProcessEngine;
+import org.flowable.engine.ProcessEngineConfiguration;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.impl.util.CommandContextUtil;
 import org.flowable.engine.repository.ProcessDefinition;
@@ -18,9 +21,12 @@ import org.flowable.task.api.Task;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.support.Kv;
 import top.kthirty.core.tool.utils.Charsets;
+import top.kthirty.core.tool.utils.IoUtil;
 import top.kthirty.core.tool.utils.SpringUtil;
 import top.kthirty.flowable.model.FlowButton;
 
+import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -173,6 +179,77 @@ public class FlowableUtil {
             return null;
         }
         return extensionElement.getElementText();
+    }
+
+    public static String getProcessName(ProcessDefinition processDefinition, String businessKey, Map<String,Object> variables) {
+        String processDefinitionKey = processDefinition.getKey();
+        String processDefinitionName = processDefinition.getName();
+        String processDefinitionId = processDefinition.getId();
+        BpmnModel bpmnModel = FlowableUtil.getBpmnModel(processDefinitionId);
+        String processNameExp = FlowableUtil.getProcessNameExp(bpmnModel.getMainProcess());
+        if(StrUtil.isNotBlank(processNameExp)){
+            Kv tempVar = Kv.init().setAll(variables).set("processDefinitionKey", processDefinitionKey)
+                    .set("processDefinitionName", processDefinitionName)
+                    .set("businessKey", businessKey);
+            String processNameByExp = StrUtil.toString(CommandContextUtil.getProcessEngineConfiguration()
+                    .getExpressionManager()
+                    .createExpression(processNameExp)
+                    .getValue(new VariableContainerWrapper(tempVar)));
+            if(StrUtil.isNotBlank(processNameByExp)){
+                return processNameByExp;
+            }
+        }
+        // 执行流程实例名称钩子
+        List<FlowableHooks.ProcessInstanceNameGenerator> hooks = FlowableHooks.getHooks(FlowableHooks.ProcessInstanceNameGenerator.class, processDefinitionKey);
+        if(CollUtil.isNotEmpty(hooks)){
+            String hookGenProcessInstanceName = hooks.get(0).generateProcessInstanceName(processDefinitionKey, processDefinitionName, businessKey);
+            return StrUtil.blankToDefault(hookGenProcessInstanceName,processDefinitionName);
+        }
+        return processDefinitionName;
+    }
+
+    /**
+     * 生成流程图
+     * @param bpmnModel 流程模型
+     * @param imageType 图片类型
+     * @param highLightedActivities 高亮节点
+     * @param highLightedFlows 高亮线
+     * @return 图片流
+     */
+    public static InputStream generateThumbnail(BpmnModel bpmnModel, String imageType, List<String> highLightedActivities, List<String> highLightedFlows){
+        ProcessEngineConfiguration processEngineConfiguration = SpringUtil.getBean(ProcessEngineConfiguration.class);
+        return processEngineConfiguration.getProcessDiagramGenerator()
+                .generateDiagram(bpmnModel
+                        , imageType
+                        , highLightedActivities
+                        , highLightedFlows
+                        , processEngineConfiguration.getActivityFontName()
+                        , processEngineConfiguration.getLabelFontName()
+                        , processEngineConfiguration.getAnnotationFontName()
+                        , processEngineConfiguration.getClassLoader()
+                        , 1.0
+                        , true);
+    }
+    public static InputStream generateThumbnail(BpmnModel bpmnModel, String imageType){
+        return generateThumbnail(bpmnModel, imageType, List.of(), List.of());
+    }
+
+    public static String generateThumbnailBase64(BpmnModel bpmnModel, String imageType, List<String> highLightedActivities, List<String> highLightedFlows){
+        @Cleanup
+        InputStream inputStream = generateThumbnail(bpmnModel, imageType, highLightedActivities, highLightedFlows);
+        return "data:image/png;base64,"+Base64.encode(inputStream);
+    }
+    public static String generateThumbnailBase64(BpmnModel bpmnModel, String imageType){
+        return generateThumbnailBase64(bpmnModel, imageType, List.of(), List.of());
+    }
+
+    /**
+     * 获取流程的xml
+     * @param deploymentId 部署id
+     * @return xml
+     */
+    public static String getXml(String deploymentId){
+        return IoUtil.toString(SpringUtil.getBean(RepositoryService.class).getResourceAsStream(deploymentId, "process.bpmn"),Charsets.UTF_8);
     }
 
     public static void main(String[] args) {

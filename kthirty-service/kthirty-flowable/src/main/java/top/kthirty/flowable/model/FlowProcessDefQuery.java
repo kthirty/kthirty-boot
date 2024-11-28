@@ -12,7 +12,7 @@ import top.kthirty.core.db.support.Query;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class FlowProcessDefQuery extends Query<ProcessDefinition> {
+public class FlowProcessDefQuery extends Query<FlowProcessDefModel> {
     @Schema(description = "流程定义KEY")
     private String key;
     @Schema(description = "流程定义名称")

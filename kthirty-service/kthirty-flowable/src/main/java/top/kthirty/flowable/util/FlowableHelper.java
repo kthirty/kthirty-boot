@@ -10,6 +10,7 @@ import org.flowable.bpmn.model.EndEvent;
 import org.flowable.bpmn.model.FlowElement;
 import org.flowable.common.engine.api.FlowableObjectNotFoundException;
 import org.flowable.common.engine.impl.el.VariableContainerWrapper;
+import org.flowable.common.engine.impl.identity.Authentication;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
@@ -17,6 +18,7 @@ import org.flowable.engine.TaskService;
 import org.flowable.engine.impl.util.CommandContextUtil;
 import org.flowable.engine.impl.util.ProcessInstanceHelper;
 import org.flowable.engine.repository.Model;
+import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.engine.runtime.ProcessInstanceBuilder;
 import org.flowable.task.api.Task;
@@ -57,35 +59,22 @@ public class FlowableHelper {
     public ProcessInstance start(String processDefinitionKey, String businessKey) {
         Assert.notBlank(processDefinitionKey, "流程定义KEY不可为空");
         Assert.notBlank(businessKey, "业务流程KEY不可为空");
+        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionKey(processDefinitionKey).latestVersion().singleResult();
+        Assert.notNull(processDefinition, "流程定义不存在");
         Assert.isTrue(runtimeService.createProcessInstanceQuery().processInstanceBusinessKey(businessKey).count() == 0, "当前业务流程KEY已存在正在运行的流程，无法重复发起");
         Kv variables = Kv.init();
         // 执行前置钩子
         FlowableHooks.getHooks(FlowableHooks.ProcessStartBeforeHook.class, processDefinitionKey)
                 .forEach(hook -> variables.putAll(ObjUtil.defaultIfNull(hook.onProcessStartBefore(processDefinitionKey, businessKey), Map.of())));
         // 启动流程
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, businessKey, variables);
-        variables.put("pi", processInstance);
-        // 判断是否存在流程实例名称表达式
-        BpmnModel bpmnModel = FlowableUtil.getBpmnModel(processInstance.getProcessDefinitionId());
-        String processNameExp = FlowableUtil.getProcessNameExp(bpmnModel.getMainProcess());
-        if (StrUtil.isNotBlank(processNameExp)) {
-            String procInstName = StrUtil.toString(CommandContextUtil.getProcessEngineConfiguration()
-                    .getExpressionManager()
-                    .createExpression(processNameExp)
-                    .getValue(new VariableContainerWrapper(variables)));
-            if (StrUtil.isNotBlank(procInstName)) {
-                runtimeService.setProcessInstanceName(processInstance.getProcessInstanceId(), procInstName);
-            }
-        }
-        // 执行流程实例名称钩子
-        FlowableHooks.getHooks(FlowableHooks.ProcessInstanceNameGenerator.class, processDefinitionKey)
-                .forEach(it -> {
-                    String processInstanceName = it.generateProcessInstanceName(processInstance, processDefinitionKey, businessKey);
-                    if (StrUtil.isNotBlank(processInstanceName)) {
-                        runtimeService.setProcessInstanceName(processInstance.getProcessInstanceId(), processInstanceName);
-                    }
-
-                });
+        ProcessInstance processInstance = runtimeService.createProcessInstanceBuilder()
+                .processDefinitionKey(processDefinitionKey)
+                .businessKey(businessKey)
+                .variables(variables)
+                .tenantId(SecureUtil.getTenantId())
+                .owner(SecureUtil.getUsername())
+                .name(FlowableUtil.getProcessName(processDefinition, businessKey, variables))
+                .start();
         // 执行后置钩子
         FlowableHooks.getHooks(FlowableHooks.ProcessStartAfterHook.class, processDefinitionKey)
                 .forEach(it -> it.onProcessStartAfter(processDefinitionKey, businessKey, processInstance));

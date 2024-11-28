@@ -39,6 +39,11 @@ public class Cache {
         CACHE_HANDLER.clear();
     }
 
+    /**
+     * 获取多个KEY
+     * @param pattern *str*
+     * @return 符合的KEY
+     */
     public static Set<String> keys(String pattern){
         return CACHE_HANDLER.keys(pattern);
     }
