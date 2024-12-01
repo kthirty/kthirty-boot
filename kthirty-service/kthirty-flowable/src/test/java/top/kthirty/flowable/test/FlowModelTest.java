@@ -55,7 +55,7 @@ public class FlowModelTest extends BaseKthirtyTest {
 
     @Test
     public void testDelete(){
-        modelController.delete("1861688508788490240");
+        modelController.delete("1863146653876482048");
     }
 
     @Test

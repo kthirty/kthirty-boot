@@ -45,7 +45,7 @@ public class FlowRuntimeTest extends BaseKthirtyTest {
 
     @Test
     public void testStartProcess() {
-        taskController.start("test02", "bid_02");
+        taskController.start("test02", "bid_05");
     }
 
     @Test
