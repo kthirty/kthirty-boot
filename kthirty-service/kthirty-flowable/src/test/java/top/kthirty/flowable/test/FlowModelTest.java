@@ -35,16 +35,16 @@ public class FlowModelTest extends BaseKthirtyTest {
     @Test
     public void testAddModel(){
         FlowModel model = new FlowModel();
-        model.setName("测试流程");
-        model.setKey("test");
-        model.setXml(ResourceUtil.readUtf8Str("test.bpmn"));
+//        model.setName("测试流程02");
+//        model.setKey("test");
+        model.setXml(ResourceUtil.readUtf8Str("test02.bpmn"));
         modelController.save(model);
         log.info("id {} key {}",model.getId(),model.getKey());
     }
 
     @Test
     public void testDeploy(){
-        modelController.deploy("1861604520434573312");
+        modelController.deploy("1863096716195143680");
     }
 
     @Test

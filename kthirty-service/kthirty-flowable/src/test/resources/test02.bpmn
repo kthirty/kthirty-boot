@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  xmlns:flowable="http://flowable.org/bpmn" id="Definitions_Process_1732973010540"
+                  targetNamespace="http://bpmn.io/schema/bpmn">
+    <bpmn:process id="test02" name="测试流程02" isExecutable="true">
+        <bpmn:startEvent id="start" name="开始" flowable:initiator="starter">
+            <bpmn:outgoing>Flow_0krpyod</bpmn:outgoing>
+        </bpmn:startEvent>
+        <bpmn:sequenceFlow id="Flow_0krpyod" sourceRef="start" targetRef="task1"/>
+        <bpmn:sequenceFlow id="Flow_0oc4a10" name="通过" sourceRef="task1" targetRef="task2">
+            <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_result=='PASS'}</bpmn:conditionExpression>
+        </bpmn:sequenceFlow>
+        <bpmn:endEvent id="end" name="结束">
+            <bpmn:incoming>Flow_0qobg0s</bpmn:incoming>
+        </bpmn:endEvent>
+        <bpmn:sequenceFlow id="Flow_01d63tp" name="通过" sourceRef="task2" targetRef="task3">
+            <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_result=='PASS'}</bpmn:conditionExpression>
+        </bpmn:sequenceFlow>
+        <bpmn:sequenceFlow id="Flow_1swd2aj" name="拒绝" sourceRef="task1" targetRef="th">
+            <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_result=='REJECT'}</bpmn:conditionExpression>
+        </bpmn:sequenceFlow>
+        <bpmn:userTask id="th" name="退回" flowable:assignee="${starter}">
+            <bpmn:extensionElements>
+                <flowable:handleButton code="1" name="通过" resultCode="PASS"/>
+                <flowable:handleButton code="2" name="取消流程" resultCode="CANCEL"/>
+            </bpmn:extensionElements>
+            <bpmn:incoming>Flow_1swd2aj</bpmn:incoming>
+            <bpmn:incoming>Flow_1lmt5fn</bpmn:incoming>
+            <bpmn:incoming>Flow_1fn0j7y</bpmn:incoming>
+            <bpmn:outgoing>Flow_11datlu</bpmn:outgoing>
+        </bpmn:userTask>
+        <bpmn:sequenceFlow id="Flow_1lmt5fn" name="拒绝" sourceRef="task2" targetRef="th">
+            <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_result=='REJECT'}</bpmn:conditionExpression>
+        </bpmn:sequenceFlow>
+        <bpmn:userTask id="task1" name="任务1" flowable:assignee="user01">
+            <bpmn:extensionElements>
+                <flowable:handleButton code="1" name="通过" resultCode="PASS"/>
+                <flowable:handleButton code="2" name="拒绝" resultCode="REJECT"/>
+            </bpmn:extensionElements>
+            <bpmn:incoming>Flow_0krpyod</bpmn:incoming>
+            <bpmn:incoming>Flow_11datlu</bpmn:incoming>
+            <bpmn:outgoing>Flow_0oc4a10</bpmn:outgoing>
+            <bpmn:outgoing>Flow_1swd2aj</bpmn:outgoing>
+        </bpmn:userTask>
+        <bpmn:userTask id="task2" name="任务2" flowable:candidateUsers="user02,user03">
+            <bpmn:extensionElements>
+                <flowable:handleButton code="2" name="拒绝" resultCode="REJECT"/>
+                <flowable:handleButton code="1" name="通过" resultCode="PASS"/>
+            </bpmn:extensionElements>
+            <bpmn:incoming>Flow_0oc4a10</bpmn:incoming>
+            <bpmn:outgoing>Flow_01d63tp</bpmn:outgoing>
+            <bpmn:outgoing>Flow_1lmt5fn</bpmn:outgoing>
+        </bpmn:userTask>
+        <bpmn:userTask id="task3" name="任务3" flowable:candidateGroups="${flowExp.queryStarterDeptRole(execution,'A003')}">
+            <bpmn:extensionElements>
+                <flowable:handleButton code="1" name="通过" resultCode="PASS"/>
+                <flowable:handleButton code="2" name="拒绝" resultCode="REJECT"/>
+            </bpmn:extensionElements>
+            <bpmn:incoming>Flow_01d63tp</bpmn:incoming>
+            <bpmn:outgoing>Flow_0qobg0s</bpmn:outgoing>
+            <bpmn:outgoing>Flow_1fn0j7y</bpmn:outgoing>
+        </bpmn:userTask>
+        <bpmn:sequenceFlow id="Flow_0qobg0s" name="通过" sourceRef="task3" targetRef="end">
+            <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_result=='PASS'}</bpmn:conditionExpression>
+        </bpmn:sequenceFlow>
+        <bpmn:sequenceFlow id="Flow_1fn0j7y" name="拒绝" sourceRef="task3" targetRef="th">
+            <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_result=='REJECT'}</bpmn:conditionExpression>
+        </bpmn:sequenceFlow>
+        <bpmn:sequenceFlow id="Flow_11datlu" name="重新申请" sourceRef="th" targetRef="task1"/>
+    </bpmn:process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1732973010540">
+            <bpmndi:BPMNShape id="Event_09qw7fz_di" bpmnElement="start">
+                <dc:Bounds x="302" y="222" width="36" height="36"/>
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="309" y="265" width="22" height="14"/>
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Event_111by0w_di" bpmnElement="end">
+                <dc:Bounds x="942" y="222" width="36" height="36"/>
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="949" y="265" width="22" height="14"/>
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Activity_06s5d78_di" bpmnElement="th">
+                <dc:Bounds x="390" y="370" width="100" height="80"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Activity_1j0vkjp_di" bpmnElement="task1">
+                <dc:Bounds x="390" y="200" width="100" height="80"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Activity_1wp09ex_di" bpmnElement="task2">
+                <dc:Bounds x="550" y="200" width="100" height="80"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Activity_1ftqi8j_di" bpmnElement="task3">
+                <dc:Bounds x="750" y="200" width="100" height="80"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="Flow_0krpyod_di" bpmnElement="Flow_0krpyod">
+                <di:waypoint x="338" y="240"/>
+                <di:waypoint x="390" y="240"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_0oc4a10_di" bpmnElement="Flow_0oc4a10">
+                <di:waypoint x="490" y="240"/>
+                <di:waypoint x="550" y="240"/>
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="509" y="222" width="22" height="14"/>
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_01d63tp_di" bpmnElement="Flow_01d63tp">
+                <di:waypoint x="650" y="240"/>
+                <di:waypoint x="750" y="240"/>
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="689" y="222" width="22" height="14"/>
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_1swd2aj_di" bpmnElement="Flow_1swd2aj">
+                <di:waypoint x="440" y="280"/>
+                <di:waypoint x="440" y="370"/>
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="444" y="322" width="22" height="14"/>
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_1lmt5fn_di" bpmnElement="Flow_1lmt5fn">
+                <di:waypoint x="600" y="280"/>
+                <di:waypoint x="600" y="410"/>
+                <di:waypoint x="490" y="410"/>
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="604" y="342" width="22" height="14"/>
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_0qobg0s_di" bpmnElement="Flow_0qobg0s">
+                <di:waypoint x="850" y="240"/>
+                <di:waypoint x="942" y="240"/>
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="885" y="222" width="22" height="14"/>
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_1fn0j7y_di" bpmnElement="Flow_1fn0j7y">
+                <di:waypoint x="800" y="280"/>
+                <di:waypoint x="800" y="410"/>
+                <di:waypoint x="490" y="410"/>
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="804" y="342" width="22" height="14"/>
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_11datlu_di" bpmnElement="Flow_11datlu">
+                <di:waypoint x="410" y="370"/>
+                <di:waypoint x="410" y="280"/>
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="403" y="322" width="44" height="14"/>
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</bpmn:definitions>

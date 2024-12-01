@@ -37,13 +37,15 @@ public class FlowRuntimeTest extends BaseKthirtyTest {
 
     @BeforeAll
     public static void init(){
-        SecureUtil.setSysUserProvider(() -> new SysUser().setUsername("admin").setDeptCodes(List.of("A01A01", "A01A02")).setRoles(List.of("ADMIN", "TEST_USER")).setIdentityCodes(List.of("A01A01:PM")));
+        SecureUtil.setSysUserProvider(() -> new SysUser().setUsername("admin")
+                .setDeptCodes(List.of("A01A01", "A01A02"))
+                .setRoles(List.of("ADMIN", "TEST_USER",SecureUtil.SUPER_ADMIN_CODE)).setIdentityCodes(List.of("A01A01:PM")));
         Authentication.setAuthenticatedUserId(SecureUtil.getUsername());
     }
 
     @Test
     public void testStartProcess() {
-        taskController.start("test", "business_id_1");
+        taskController.start("test02", "bid_01");
     }
 
     @Test
@@ -65,13 +67,14 @@ public class FlowRuntimeTest extends BaseKthirtyTest {
 
     @Test
     public void testCompletePre() {
-        FlowCompletePre flowCompletePre = taskController.completePre("1861972122361118720");
+        FlowCompletePre flowCompletePre = taskController.completePre("1863113192989970432");
         System.out.println(flowCompletePre);
     }
 
     @Test
     public void testComplete() {
-        taskController.complete(new TaskCompleteReq().setTaskId("1862004034668482560").setResult("PASS").setComment("测试"));
+        taskController.complete(new TaskCompleteReq().setTaskId("1863115389890871296").setResult("PASS")
+                .setComment("测试"));
     }
 
     @Test

@@ -11,12 +11,15 @@ import lombok.SneakyThrows;
 import org.flowable.bpmn.converter.BpmnXMLConverter;
 import org.flowable.bpmn.model.Process;
 import org.flowable.bpmn.model.*;
+import org.flowable.common.engine.impl.el.ExpressionManager;
 import org.flowable.common.engine.impl.el.VariableContainerWrapper;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.ProcessEngineConfiguration;
 import org.flowable.engine.RepositoryService;
+import org.flowable.engine.impl.context.Context;
 import org.flowable.engine.impl.util.CommandContextUtil;
 import org.flowable.engine.repository.ProcessDefinition;
+import org.flowable.spring.SpringProcessEngineConfiguration;
 import org.flowable.task.api.Task;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.support.Kv;
@@ -25,7 +28,9 @@ import top.kthirty.core.tool.utils.IoUtil;
 import top.kthirty.core.tool.utils.SpringUtil;
 import top.kthirty.flowable.model.FlowButton;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +64,8 @@ public class FlowableUtil {
      * @return FlowElement 节点定义
      */
     public static List<FlowElement> getNextNodes(BpmnModel bpmnModel, FlowNode currentNode, Map<String, Object> variables) {
+        SpringProcessEngineConfiguration springProcessEngineConfiguration = SpringUtil.getBean(SpringProcessEngineConfiguration.class);
+        ExpressionManager expressionManager = springProcessEngineConfiguration.getExpressionManager();
         // 可能产生多个节点
         if (currentNode instanceof ParallelGateway
                 || currentNode instanceof InclusiveGateway
@@ -67,8 +74,7 @@ public class FlowableUtil {
                     .stream()
                     .filter(sequenceFlow ->
                             Func.isNull(sequenceFlow.getConditionExpression())
-                                    || Convert.toBool(CommandContextUtil.getProcessEngineConfiguration()
-                                    .getExpressionManager()
+                                    || Convert.toBool(expressionManager
                                     .createExpression(sequenceFlow.getConditionExpression())
                                     .getValue(new VariableContainerWrapper(variables)), false))
                     .map(SequenceFlow::getTargetFlowElement)
@@ -79,8 +85,7 @@ public class FlowableUtil {
                     .stream()
                     .filter(sequenceFlow ->
                             Func.isNull(sequenceFlow.getConditionExpression())
-                                    || Convert.toBool(CommandContextUtil.getProcessEngineConfiguration()
-                                    .getExpressionManager()
+                                    || Convert.toBool(expressionManager
                                     .createExpression(sequenceFlow.getConditionExpression())
                                     .getValue(new VariableContainerWrapper(variables)), false))
                     .map(SequenceFlow::getTargetFlowElement)
@@ -138,6 +143,13 @@ public class FlowableUtil {
         return new BpmnXMLConverter()
                 .convertToBpmnModel(() -> repositoryService.getResourceAsStream(
                                 processDefinition.getDeploymentId(), "process.bpmn")
+                        , true
+                        , true
+                        , Charsets.UTF_8_NAME);
+    }
+    public static BpmnModel getBpmnModelByXml(String xml){
+        return new BpmnXMLConverter()
+                .convertToBpmnModel(() -> new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))
                         , true
                         , true
                         , Charsets.UTF_8_NAME);

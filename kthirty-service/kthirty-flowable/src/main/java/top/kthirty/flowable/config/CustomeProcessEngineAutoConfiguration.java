@@ -27,6 +27,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 import top.kthirty.core.boot.secure.SecureUtil;
+import top.kthirty.flowable.support.FlowableExpressionUtil;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -106,6 +107,11 @@ public class CustomeProcessEngineAutoConfiguration extends ProcessEngineAutoConf
                 doFilter(servletRequest, servletResponse, filterChain);
             }
         };
+    }
+
+    @Bean(name = "flowExp")
+    public FlowableExpressionUtil flowableExpressionUtil() {
+        return new FlowableExpressionUtil();
     }
 
 }

@@ -28,6 +28,10 @@ import java.util.stream.Collectors;
 @Accessors(chain = true)
 @NoArgsConstructor
 public class FlowTask  {
+    @Schema(title = "任务ID")
+    private String taskId;
+    @Schema(title = "任务ID")
+    private String id;
     @Schema(title = "流程实例名称")
     private String processInstanceName;
     @Schema(title = "流程定义名称")
@@ -76,6 +80,8 @@ public class FlowTask  {
     private String tenantId;
 
     public FlowTask(TaskInfo task){
+        this.taskId = task.getId();
+        this.id = task.getId();
         this.owner = task.getOwner();
         this.assignee = task.getAssignee();
         this.name = task.getName();

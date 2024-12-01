@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.bpmn.model.EndEvent;
 import org.flowable.bpmn.model.FlowElement;
+import org.flowable.bpmn.model.Process;
 import org.flowable.common.engine.api.FlowableObjectNotFoundException;
 import org.flowable.common.engine.impl.el.VariableContainerWrapper;
 import org.flowable.common.engine.impl.identity.Authentication;
@@ -116,6 +117,7 @@ public class FlowableHelper {
             taskService.addComment(req.getTaskId(), processInstance.getProcessInstanceId(), req.getComment());
         }
         // 任务处理
+        taskService.setVariable(req.getTaskId(),FlowConstants.TASK_COMPLETE_VAR_NAME, req.getResult());
         taskService.complete(req.getTaskId(), SecureUtil.getUsername(), variables);
         // 执行后置钩子
         FlowableHooks.getHooks(FlowableHooks.TaskCompleteAfterHook.class, processInstance.getProcessDefinitionKey())
@@ -128,6 +130,16 @@ public class FlowableHelper {
      * @return FlowModel
      */
     public FlowModel saveModel(FlowModel flowModel) {
+        Assert.notBlank(flowModel.getXml(),"流程模型XML不能为空");
+        BpmnModel bpmnModel = FlowableUtil.getBpmnModelByXml(flowModel.getXml());
+        Process mainProcess = bpmnModel.getMainProcess();
+        if(StrUtil.isBlank(flowModel.getKey())){
+            flowModel.setKey(mainProcess.getId());
+        }
+        if(StrUtil.isBlank(flowModel.getName())){
+            flowModel.setName(mainProcess.getName());
+        }
+
         Model model = repositoryService.createModelQuery().modelKey(flowModel.getKey()).count() != 0
                 ? repositoryService.createModelQuery().modelKey(flowModel.getKey()).singleResult()
                 : repositoryService.newModel();
