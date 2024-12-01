@@ -6,6 +6,42 @@
                   xmlns:flowable="http://flowable.org/bpmn" id="Definitions_Process_1732973010540"
                   targetNamespace="http://bpmn.io/schema/bpmn">
     <bpmn:process id="test02" name="测试流程02" isExecutable="true">
+        <bpmn:extensionElements>
+            <flowable:eventListener class="top.kthirty.flowable.support.TableFieldModifier" events="PROCESS_COMPLETED">
+                <flowable:field name="tableName">
+                    <flowable:string>BAS_TABLE</flowable:string>
+                </flowable:field>
+                <flowable:field name="tableColumn">
+                    <flowable:string>STATUS</flowable:string>
+                </flowable:field>
+                <flowable:field name="columnValue">
+                    <flowable:string>2</flowable:string>
+                </flowable:field>
+            </flowable:eventListener>
+            <flowable:eventListener class="top.kthirty.flowable.support.TableFieldModifier" events="PROCESS_STARTED">
+                <flowable:field name="columnValue">
+                    <flowable:string>2</flowable:string>
+                </flowable:field>
+                <flowable:field name="tableName">
+                    <flowable:string>BAS_TABLE</flowable:string>
+                </flowable:field>
+                <flowable:field name="tableColumn">
+                    <flowable:string>STATUS</flowable:string>
+                </flowable:field>
+            </flowable:eventListener>
+            <flowable:eventListener class="top.kthirty.flowable.support.TableFieldModifier"
+                                    events="PROCESS_COMPLETED_WITH_TERMINATE_END_EVENT">
+                <flowable:field name="tableColumn">
+                    <flowable:string>STATUS</flowable:string>
+                </flowable:field>
+                <flowable:field name="tableName">
+                    <flowable:string>BAS_TABLE</flowable:string>
+                </flowable:field>
+                <flowable:field name="columnValue">
+                    <flowable:string>3</flowable:string>
+                </flowable:field>
+            </flowable:eventListener>
+        </bpmn:extensionElements>
         <bpmn:startEvent id="start" name="开始" flowable:initiator="starter">
             <bpmn:outgoing>Flow_0krpyod</bpmn:outgoing>
         </bpmn:startEvent>
@@ -54,7 +90,7 @@
             <bpmn:outgoing>Flow_01d63tp</bpmn:outgoing>
             <bpmn:outgoing>Flow_1lmt5fn</bpmn:outgoing>
         </bpmn:userTask>
-        <bpmn:userTask id="task3" name="任务3" flowable:candidateGroups="${flowExp.queryStarterDeptRole(execution,'A003')}">
+        <bpmn:userTask id="task3" name="任务3" flowable:candidateGroups="${flow.queryStarterDeptManager(execution,'A003')}">
             <bpmn:extensionElements>
                 <flowable:handleButton code="1" name="通过" resultCode="PASS"/>
                 <flowable:handleButton code="2" name="拒绝" resultCode="REJECT"/>

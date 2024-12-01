@@ -1,8 +1,11 @@
 package top.kthirty.flowable.support;
 
-import lombok.Setter;
-import org.flowable.common.engine.api.delegate.event.FlowableEvent;
-import org.flowable.common.engine.api.delegate.event.FlowableEventListener;
+import cn.hutool.core.convert.Convert;
+import lombok.extern.slf4j.Slf4j;
+import org.flowable.engine.delegate.DelegateExecution;
+import org.flowable.engine.delegate.ExecutionListener;
+import org.springframework.stereotype.Component;
+
 /**
  * <p>
  * 数据库字段修改工具
@@ -11,25 +14,15 @@ import org.flowable.common.engine.api.delegate.event.FlowableEventListener;
  * @author KThirty
  * @since 2024/11/25
  */
-@Setter
-public class TableFieldModifier implements FlowableEventListener {
-    private String tableName;
-    private String tableColumn;
-    private String columnValue;
+@Slf4j
+@Component
+public class TableFieldModifier implements ExecutionListener {
     @Override
-    public void onEvent(FlowableEvent event) {
-        // 处理监听到的事件
-        System.out.println("Event detected: " + event.getType());
-        System.out.println("Table: " + tableName);
-        System.out.println("Column: " + tableColumn);
-        System.out.println("Value: " + columnValue);
-        // TODO 实际业务逻辑
+    public void notify(DelegateExecution execution) {
+        String tableName = Convert.toStr(execution.getVariable("tableName"));
+        String tableColumn = Convert.toStr(execution.getVariable("tableColumn"));
+        String columnValue = Convert.toStr(execution.getVariable("columnValue"));
+        log.info("修改表[{}]字段[{}]为[{}]", tableName, tableColumn, columnValue);
+        throw new RuntimeException("测试监听异常");
     }
-
-    @Override
-    public boolean isFailOnException() {return true;}
-    @Override
-    public boolean isFireOnTransactionLifecycleEvent() {return true;}
-    @Override
-    public String getOnTransaction() {return "COMMITTED";}
 }
