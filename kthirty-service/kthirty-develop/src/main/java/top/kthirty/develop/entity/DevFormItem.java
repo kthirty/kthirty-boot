@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
+import top.kthirty.develop.enums.FieldAttribute;
 
 import java.io.Serial;
 
@@ -23,7 +24,7 @@ import java.io.Serial;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(description = "")
+@Schema(description = "Form开发字段")
 @Table("dev_form_item")
 public class DevFormItem extends LogicEntity {
     @Serial
@@ -69,7 +70,7 @@ public class DevFormItem extends LogicEntity {
      * 是否允许为空
      */
     @Schema(description = "是否允许为空")
-    private Integer columnNullable;
+    private Boolean columnNullable;
 
     /**
      * 字段备注
@@ -85,6 +86,7 @@ public class DevFormItem extends LogicEntity {
 
     /**
      * 字段属性[1普通字段2主键3删除标记4非数据库字段]
+     * @see FieldAttribute
      */
     @Schema(description = "字段属性[1普通字段2主键3删除标记4非数据库字段]")
     private String fieldAttribute;
@@ -135,25 +137,25 @@ public class DevFormItem extends LogicEntity {
      * 是否Form中显示
      */
     @Schema(description = "是否Form中显示")
-    private Integer isShowForm;
+    private Boolean isShowForm;
 
     /**
      * 是否List中显示
      */
     @Schema(description = "是否List中显示")
-    private Integer isShowList;
+    private Boolean isShowList;
 
     /**
      * 是否允许排序
      */
     @Schema(description = "是否允许排序")
-    private Integer isAllowSort;
+    private Boolean isAllowSort;
 
     /**
      * 是否只读
      */
     @Schema(description = "是否只读")
-    private Integer isReadonly;
+    private Boolean isReadonly;
 
     /**
      * 外键主表名
