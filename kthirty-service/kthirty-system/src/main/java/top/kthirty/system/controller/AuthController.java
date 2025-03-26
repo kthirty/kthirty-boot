@@ -39,10 +39,12 @@ public class AuthController extends BaseController {
         return SecureUtil.getPermissions();
     }
 
-    @GetMapping("logout")
+    @PostMapping("logout")
     @IgnoreSecure
     @Operation(summary = "退出登录",description = "退出登录")
-    public void logout(){}
+    public void logout(){
+       
+    }
 
     @Operation(summary = "获取验证码")
     @GetMapping("code")

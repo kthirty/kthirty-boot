@@ -59,6 +59,10 @@ public class SysUser implements Serializable {
      */
     private List<String> tenantIds;
     /**
+     * 用户主页地址
+     */
+    private String homePath;
+    /**
      * 额外拓展
      */
     private Dict extra;

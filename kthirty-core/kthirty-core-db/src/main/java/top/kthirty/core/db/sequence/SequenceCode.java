@@ -6,6 +6,7 @@ import java.lang.annotation.*;
 
 /**
  * 序列号自动填充
+ * @author KThirty
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

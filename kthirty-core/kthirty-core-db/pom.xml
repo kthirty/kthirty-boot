@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>kthirty-core-db</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
         <!--Auto Service-->
@@ -42,6 +43,10 @@
             <groupId>top.kthirty</groupId>
             <artifactId>kthirty-core-tool</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tangzc</groupId>
+            <artifactId>mybatis-flex-ext-spring-boot3-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>top.kthirty</groupId>

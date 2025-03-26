@@ -1,6 +1,5 @@
 package top.kthirty.core.secure.token;
 
-import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
 import org.springframework.util.Assert;
 import top.kthirty.core.boot.secure.SysUser;
@@ -42,10 +41,12 @@ public class JwtTokenProvider implements TokenProvider{
         String refreshToken = JwtUtil.getToken(claim, secureProperties.getRefreshTokenValidity());
         tokenInfo.setRefreshToken(refreshToken);
         tokenInfo.setExpiresIn(secureProperties.getAccessTokenValidity());
-
-        // 存储username 对User缓存,时长使用Max(AccessTokenValidity,RefreshTokenValidity)
-        int maxSecond = Math.max(secureProperties.getAccessTokenValidity(), secureProperties.getRefreshTokenValidity());
-        putCache(USER_PREFIX + username, sysUser,maxSecond);
+        tokenInfo.setRealName(sysUser.getRealName());
+        tokenInfo.setRoles(sysUser.getRoles());
+        // 存储AccessToken 对User缓存
+        putCache(USER_PREFIX + ClaimKey.ACCESS_TOKEN + ":" + accessToken, sysUser,secureProperties.getAccessTokenValidity());
+        // 存储RefreshToken 对User缓存
+        putCache(USER_PREFIX + ClaimKey.REFRESH_TOKEN + ":" + refreshToken, sysUser, secureProperties.getRefreshTokenValidity());
         return tokenInfo;
     }
 
@@ -53,15 +54,18 @@ public class JwtTokenProvider implements TokenProvider{
     @Override
     public TokenInfo refresh(String refreshToken) {
         try{
-            String username = JwtUtil.getClaims(refreshToken).get("username", String.class);
+            SysUser sysUser = getCache(USER_PREFIX + ClaimKey.REFRESH_TOKEN + ":" + refreshToken);
+            int accessTokenValidity = secureProperties.getAccessTokenValidity();
+            String username = sysUser.getUsername();
             TokenInfo tokenInfo = new TokenInfo();
             Map<String, Object> claim = new HashMap<>();
             claim.put(ClaimKey.USERNAME, username);
             claim.put(ClaimKey.TOKEN_TYPE, ClaimKey.ACCESS_TOKEN);
-            String accessToken = JwtUtil.getToken(claim,secureProperties.getAccessTokenValidity());
+            String accessToken = JwtUtil.getToken(claim,accessTokenValidity);
             tokenInfo.setAccessToken(accessToken);
             tokenInfo.setRefreshToken(refreshToken);
-            tokenInfo.setExpiresIn(secureProperties.getAccessTokenValidity());
+            tokenInfo.setExpiresIn(accessTokenValidity);
+            putCache(USER_PREFIX + ClaimKey.ACCESS_TOKEN + ":" + accessToken, sysUser,accessTokenValidity);
             return tokenInfo;
         }catch (Exception e){
             throw new NotLoginException(e);
@@ -71,9 +75,7 @@ public class JwtTokenProvider implements TokenProvider{
     @Override
     public SysUser getCurrentUser(String accessToken) {
         try{
-            Claims claims = JwtUtil.getClaims(accessToken);
-            String username = claims.get(ClaimKey.USERNAME, String.class);
-            return getCache(USER_PREFIX + username);
+            return getCache(USER_PREFIX + ClaimKey.ACCESS_TOKEN + ":" + accessToken);
         }catch (Exception e){
             return null;
         }
@@ -84,6 +86,12 @@ public class JwtTokenProvider implements TokenProvider{
     }
     private SysUser getCache(String key){
         return Cache.get(key);
+    }
+
+
+    @Override
+    public void logout(String accessToken) {
+        Cache.del(USER_PREFIX + ClaimKey.ACCESS_TOKEN + ":" + accessToken);
     }
 
 }

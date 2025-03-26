@@ -10,6 +10,7 @@ import com.mybatisflex.spring.boot.MyBatisFlexCustomizer;
 import com.mybatisflex.spring.boot.MybatisFlexAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.plugin.Interceptor;
+import org.dromara.autotable.springboot.EnableAutoTable;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,7 @@ import top.kthirty.core.db.sequence.SequenceCodeListener;
 @Slf4j
 @Configuration
 @AutoConfigureAfter(MybatisFlexAutoConfiguration.class)
+@EnableAutoTable(basePackages = "top.kthirty")
 public class MyBatisFlexConfiguration implements MyBatisFlexCustomizer {
     @Override
     public void customize(FlexGlobalConfig flexGlobalConfig) {
@@ -42,6 +44,7 @@ public class MyBatisFlexConfiguration implements MyBatisFlexCustomizer {
 
         // 数据权限
         DialectFactory.registerDialect(DbType.MYSQL,new DataPermissionDialectImpl());
+        DialectFactory.registerDialect(DbType.ORACLE,new DataPermissionDialectImpl());
 
     }
 

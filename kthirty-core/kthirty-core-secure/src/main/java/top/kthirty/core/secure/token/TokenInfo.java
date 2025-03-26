@@ -1,5 +1,7 @@
 package top.kthirty.core.secure.token;
 
+import java.util.List;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -15,6 +17,10 @@ public class TokenInfo {
     private String license = "Powered by KTHIRTY";
     @Schema(title = "用户名")
     private String username;
+    @Schema(title = "真实姓名")
+    private String realName;
     @Schema(title = "用户ID")
     private String userId;
+    @Schema(title = "角色列表")
+    private List<String> roles;
 }

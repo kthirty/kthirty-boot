@@ -31,4 +31,10 @@ public interface TokenProvider {
      * @return 当前用户信息
      */
     SysUser getCurrentUser(String accessToken);
+
+    /**
+     * 退出登录
+     * @param accessToken 认证Token
+     */
+    void logout(String accessToken);
 }

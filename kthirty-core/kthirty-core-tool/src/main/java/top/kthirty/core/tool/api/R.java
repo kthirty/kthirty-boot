@@ -30,12 +30,13 @@ public class R<T> implements Serializable {
      * 承载数据
      */
     @Schema(title = "承载数据")
-    private T result;
+    private T data;
     /**
      * 响应码描述
      */
     @Schema(title = "返回消息")
     private String message;
+
     /**
      * 构造函数
      * @param resultCode 响应码
@@ -44,7 +45,7 @@ public class R<T> implements Serializable {
      */
     private R(IResultCode resultCode,T result,String message){
         this.code = resultCode.getCode();
-        this.result = result;
+        this.data = result;
         this.message = message==null?resultCode.getMessage():message;
         this.success =  SystemResultCode.SUCCESS.code.equals(this.code);
     }
@@ -89,7 +90,7 @@ public class R<T> implements Serializable {
         return this;
     }
     public R data(T result){
-        this.result = result;
+        this.data = result;
         return this;
     }
 }

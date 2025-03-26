@@ -103,6 +103,7 @@ public class AuthServiceImpl implements AuthService {
                 .and(MENU.STATUS.eq("1"))
                 .list()
                 .stream().map(it -> {
+                    it.setSort(Func.toInt(it.getSort(), 0));
                     TreeNode<String> treeNode = new TreeNode<>();
                     treeNode.setParentId(it.getParentId());
                     treeNode.setId(it.getId());
@@ -110,6 +111,7 @@ public class AuthServiceImpl implements AuthService {
                     treeNode.setWeight(Func.toInt(it.getSort(), 0));
                     Kv extra = Kv.init().set("meta", Kv.init()
                                     .set("title", it.getName())
+                                    .set("order", Func.toInt(it.getSort(), 0))
                                     .set("hideMenu", !BooleanUtil.toBoolean(it.getShow()))
                                     .set("icon", it.getIcon()))
                             .set("path",it.getPath())
