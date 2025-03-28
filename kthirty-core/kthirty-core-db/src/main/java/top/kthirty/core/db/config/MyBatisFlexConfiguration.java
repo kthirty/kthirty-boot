@@ -23,7 +23,6 @@ import top.kthirty.core.db.sequence.SequenceCodeListener;
 @Slf4j
 @Configuration
 @AutoConfigureAfter(MybatisFlexAutoConfiguration.class)
-@EnableAutoTable(basePackages = "top.kthirty")
 public class MyBatisFlexConfiguration implements MyBatisFlexCustomizer {
     @Override
     public void customize(FlexGlobalConfig flexGlobalConfig) {

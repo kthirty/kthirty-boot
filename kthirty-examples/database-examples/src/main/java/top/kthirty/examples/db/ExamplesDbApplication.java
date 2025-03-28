@@ -1,5 +1,7 @@
 package top.kthirty.examples.db;
 
+import org.dromara.autotable.springboot.EnableAutoTable;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import top.kthirty.core.boot.KthirtyApplication;
 
@@ -12,6 +14,8 @@ import top.kthirty.core.boot.KthirtyApplication;
  * @since 2023/11/20
  */
 @SpringBootApplication
+@MapperScan
+@EnableAutoTable
 public class ExamplesDbApplication {
     public static void main(String[] args) {
         KthirtyApplication.run(ExamplesDbApplication.class,args);
