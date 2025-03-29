@@ -2,6 +2,7 @@ package top.kthirty.system.entity;
 
 import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Table;
+import com.tangzc.mybatisflex.annotation.FillData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import top.kthirty.core.db.base.entity.LogicEntity;

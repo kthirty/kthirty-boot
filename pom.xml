@@ -219,7 +219,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${maven-javadoc-plugin.version}</version>
                 <configuration>
-                    <additionalOptions>-Xdoclint:none</additionalOptions>
+                    <failOnError>false</failOnError>
                     <show>private</show>
                     <nohelp>true</nohelp>
                     <charset>UTF-8</charset>

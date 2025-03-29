@@ -5,6 +5,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
+import org.dromara.autotable.annotation.AutoTable;
 import top.kthirty.core.tool.cache.Cache;
 
 /**
