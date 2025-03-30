@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 /**
  * 本地缓存
+ *
+ * @author KTHIRTY
  */
 @SuppressWarnings("unchecked")
 public class RuntimeCacheHandler implements CacheHandler {
@@ -57,5 +59,10 @@ public class RuntimeCacheHandler implements CacheHandler {
                 return StrUtil.equals(it, pattern);
             }
         }).collect(Collectors.toSet());
+    }
+
+    @Override
+    public boolean isPersistence() {
+        return false;
     }
 }

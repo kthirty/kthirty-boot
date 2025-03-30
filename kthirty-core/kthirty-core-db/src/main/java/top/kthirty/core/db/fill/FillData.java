@@ -31,12 +31,11 @@ public @interface FillData {
      */
     String[] args() default {};
 
+    /*
+     * 填充时机
+     */
     enum Scope {
-        INSERT, UPDATE,
-        /**
-         * 插入和更新
-         */
-        INSERT_UPDATE
+        INSERT, UPDATE, INSERT_UPDATE
     }
 }
 

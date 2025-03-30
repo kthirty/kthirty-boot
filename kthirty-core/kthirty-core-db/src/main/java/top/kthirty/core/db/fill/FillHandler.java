@@ -1,7 +1,5 @@
 package top.kthirty.core.db.fill;
 
-import top.kthirty.core.db.base.entity.BaseEntity;
-
 import java.lang.reflect.Field;
 /**
  * <p>

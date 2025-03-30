@@ -4,6 +4,7 @@ import java.util.Set;
 
 /**
  * 缓存处理器
+ * @author KTHIRTY
  */
 public interface CacheHandler {
     /**
@@ -32,4 +33,9 @@ public interface CacheHandler {
     void clear();
 
     Set<String> keys(String pattern);
+
+    /**
+     * 是否持久化
+     */
+    default boolean isPersistence(){return true;}
 }
