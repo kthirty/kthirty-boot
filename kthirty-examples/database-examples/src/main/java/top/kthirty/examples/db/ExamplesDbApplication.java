@@ -4,6 +4,7 @@ import org.dromara.autotable.springboot.EnableAutoTable;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import top.kthirty.core.boot.KthirtyApplication;
+import top.kthirty.core.db.config.MyBatisFlexConfiguration;
 
 /**
  * <p>

@@ -1,8 +1,10 @@
 package top.kthirty.core.db.auto;
 
 import com.tangzc.mybatisflex.autotable.annotation.ColumnDefine;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import org.dromara.autotable.annotation.ColumnComment;
+import org.dromara.autotable.annotation.ColumnNotNull;
+import org.dromara.autotable.annotation.ColumnType;
+import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -16,7 +18,8 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-@ColumnDefine
+@ColumnNotNull
+@ColumnComment("")
 public @interface KtColumn {
     /**
      * 字段类型
@@ -28,19 +31,23 @@ public @interface KtColumn {
     /**
      * 是否非空字段
      */
+    @AliasFor(annotation = ColumnNotNull.class, attribute = "value")
     boolean notNull() default false;
     /**
      * 字段备注
      */
+    @AliasFor(annotation = ColumnComment.class, attribute = "value")
     String comment() default "";
 
 
     enum Type{
-        // 短字符串
+        /**
+         * 字符串 32
+         */
         SHORT_STRING,
-        // 常规字符串
+        // 常规字符串 - 100
         STRING,
-        // 长字符串
+        // 长字符串 - 2000
         LONG_STRING,
         // 金额
         MONEY,
@@ -54,12 +61,10 @@ public @interface KtColumn {
         TEXT,
         // 日期时间
         DATETIME,
-        // 日期
-        DATE,
         // 布尔值
         BOOLEAN,
         // 长整型
-        LONG;
+        LONG
     }
 }
 

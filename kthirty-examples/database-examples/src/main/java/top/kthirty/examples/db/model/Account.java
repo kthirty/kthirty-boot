@@ -19,6 +19,7 @@ import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
+import com.tangzc.mybatisflex.autotable.annotation.ColumnDefine;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import top.kthirty.core.db.base.entity.BaseEntity;
@@ -32,7 +33,7 @@ public class Account extends BaseEntity {
 
     @Id(keyType = KeyType.Auto)
     private Long id;
-    @Column
+    @ColumnDefine
     private String userName;
     private Integer age;
     private Date birthday;

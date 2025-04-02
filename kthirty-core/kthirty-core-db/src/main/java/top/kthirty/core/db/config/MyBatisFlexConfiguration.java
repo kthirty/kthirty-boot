@@ -40,10 +40,6 @@ public class MyBatisFlexConfiguration implements MyBatisFlexCustomizer {
         // 是否打印Banner
         flexGlobalConfig.setPrintBanner(false);
         // 插入与更新监听
-//        flexGlobalConfig.registerInsertListener(new OperatingListener(), BaseEntity.class);
-//        flexGlobalConfig.registerUpdateListener(new OperatingListener(), BaseEntity.class);
-        flexGlobalConfig.registerInsertListener(new SequenceCodeListener(), BaseEntity.class);
-
         flexGlobalConfig.registerInsertListener(new EntityFillListener(),BaseEntity.class);
         flexGlobalConfig.registerUpdateListener(new EntityFillListener(),BaseEntity.class);
         // Sql审计功能
