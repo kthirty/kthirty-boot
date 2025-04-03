@@ -4,6 +4,7 @@ import com.mybatisflex.annotation.Table;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
+import top.kthirty.core.db.auto.ColumnDefine;
 import top.kthirty.core.db.base.entity.IdEntity;
 
 /**
@@ -26,12 +27,14 @@ public class UserDeptRl extends IdEntity {
      * 部门ID
      */
     @Schema(description = "部门ID")
+    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
     private String deptId;
 
     /**
      * 用户ID
      */
     @Schema(description = "用户ID")
+    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
     private String userId;
 
 }

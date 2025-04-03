@@ -3,6 +3,7 @@ package top.kthirty.system.entity;
 import com.mybatisflex.annotation.Table;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import top.kthirty.core.db.auto.ColumnDefine;
 import top.kthirty.core.db.base.entity.IdEntity;
 
 /**
@@ -24,12 +25,14 @@ public class RoleMenuRl extends IdEntity {
      * 角色ID
      */
     @Schema(description = "角色ID")
+    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
     private String roleId;
 
     /**
      * 菜单ID
      */
     @Schema(description = "菜单ID")
+    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
     private String menuId;
 
 }

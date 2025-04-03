@@ -1,10 +1,7 @@
 package top.kthirty.core.db.auto;
 
-import com.tangzc.mybatisflex.autotable.annotation.ColumnDefine;
 import org.dromara.autotable.annotation.ColumnComment;
 import org.dromara.autotable.annotation.ColumnNotNull;
-import org.dromara.autotable.annotation.ColumnType;
-import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -18,9 +15,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-@ColumnNotNull
-@ColumnComment("")
-public @interface KtColumn {
+public @interface ColumnDefine {
     /**
      * 字段类型
      * @see ColumnSupport
@@ -28,42 +23,51 @@ public @interface KtColumn {
      */
     Type value();
 
-    /**
-     * 是否非空字段
-     */
-    @AliasFor(annotation = ColumnNotNull.class, attribute = "value")
-    boolean notNull() default false;
-    /**
-     * 字段备注
-     */
-    @AliasFor(annotation = ColumnComment.class, attribute = "value")
-    String comment() default "";
-
 
     enum Type{
         /**
          * 字符串 32
          */
         SHORT_STRING,
-        // 常规字符串 - 100
+        /**
+         * 字符串255长度
+         */
         STRING,
-        // 长字符串 - 2000
+        /**
+         * 字符串2000长度
+         */
         LONG_STRING,
-        // 金额
+        /**
+         * 金额(20,2)
+         */
         MONEY,
-        // 小数
+        /**
+         * 小数(10,2)
+         */
         DECIMAL,
-        // 长小数
+        /**
+         * 小数(20,4)
+         */
         LONG_DECIMAL,
-        // 整数
+        /**
+         * 整数11
+         */
         INTEGER,
-        // 大文本
+        /**
+         * 大文本 text/clob
+         */
         TEXT,
-        // 日期时间
+        /**
+         * 日期时间timestamp
+         */
         DATETIME,
-        // 布尔值
+        /**
+         * 布尔值
+         */
         BOOLEAN,
-        // 长整型
+        /**
+         * 长整型
+         */
         LONG
     }
 }

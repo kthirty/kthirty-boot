@@ -5,10 +5,12 @@ import com.mybatisflex.annotation.RelationManyToMany;
 import com.mybatisflex.annotation.Table;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import top.kthirty.core.db.auto.ColumnDefine;
 import top.kthirty.core.db.base.entity.IdEntity;
 import top.kthirty.core.db.base.entity.LogicEntity;
+import top.kthirty.core.db.fill.FillData;
+import top.kthirty.core.db.fill.handler.NumberSeqHandler;
 import top.kthirty.core.db.sequence.SequenceCode;
-import top.kthirty.core.db.sequence.handler.NumberSeqHandler;
 import top.kthirty.core.tool.dict.Dict;
 import top.kthirty.core.tool.jackson.generate.GenerateField;
 
@@ -34,55 +36,65 @@ public class User extends LogicEntity {
      * 用户名
      */
     @Schema(description = "用户名")
+    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
     private String username;
 
     /**
      * 真实姓名
      */
     @Schema(description = "真实姓名")
+    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
     private String realName;
 
     /**
      * 编码
      */
     @Schema(description = "编码")
-    @SequenceCode(handler = NumberSeqHandler.class, handlerParams = "6", rebuildCache = true)
+    @FillData(value = NumberSeqHandler.class,override = true,scope = FillData.Scope.INSERT)
+    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
     private String code;
 
     /**
      * 密码
      */
     @Schema(description = "密码")
+    @ColumnDefine(ColumnDefine.Type.STRING)
     private String password;
 
     /**
      * 邮箱
      */
     @Schema(description = "邮箱")
+    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
     private String email;
 
     /**
      * 手机号
      */
     @Schema(description = "手机号")
+    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
     private String phone;
 
     /**
      * 生日
      */
     @Schema(description = "生日")
+    @ColumnDefine(ColumnDefine.Type.DATETIME)
     private Timestamp birthday;
 
     /**
      * 性别
      */
     @Schema(description = "性别")
+    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
+    @Dict(code = "sex")
     private String sex;
 
     /**
      * 头像
      */
     @Schema(description = "头像")
+    @ColumnDefine(ColumnDefine.Type.LONG_STRING)
     private String avatar;
 
     /**
@@ -90,6 +102,7 @@ public class User extends LogicEntity {
      */
     @Schema(description = "状态")
     @Dict(code = "enable_status")
+    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
     private String status;
 
     @RelationManyToMany(

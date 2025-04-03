@@ -2,9 +2,11 @@ package top.kthirty.system.entity;
 
 import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Table;
-import com.tangzc.mybatisflex.autotable.annotation.ColumnDefine;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.dromara.autotable.annotation.ColumnDefault;
+import org.dromara.autotable.annotation.ColumnNotNull;
+import top.kthirty.core.db.auto.ColumnDefine;
 import top.kthirty.core.db.base.entity.LogicEntity;
 import top.kthirty.core.tool.dict.Dict;
 
@@ -29,48 +31,52 @@ public class DictItem extends LogicEntity {
      * 字典代码
      */
     @Schema(description = "字典代码")
-    @ColumnDefine(type = "varchar", length = 32, notNull = true)
+    @ColumnNotNull
+    @ColumnDefine(value = ColumnDefine.Type.SHORT_STRING)
     private String code;
 
     /**
      * 字典值
      */
     @Schema(description = "字典值")
-    @ColumnDefine(type = "varchar", length = 100)
+    @ColumnDefine(value = ColumnDefine.Type.STRING)
+    @ColumnNotNull
     private String value;
 
     /**
      * 字典标签
      */
     @Schema(description = "字典标签")
-    @ColumnDefine(type = "varchar", length = 100)
+    @ColumnDefine(ColumnDefine.Type.STRING)
     private String label;
 
     /**
      * 描述
      */
     @Schema(description = "描述")
-    @ColumnDefine(type = "varchar", length = 200)
+    @ColumnDefine(ColumnDefine.Type.STRING)
     private String description;
 
     /**
      * 排序
      */
     @Schema(description = "排序")
-    @ColumnDefine(type = "int")
+    @ColumnDefault("0")
+    @ColumnDefine(ColumnDefine.Type.INTEGER)
     private Integer weight;
 
     /**
      * 父ID
      */
     @Schema(description = "父ID")
-    @ColumnDefine(type = "varchar", length = 32, defaultValue = "0")
+    @ColumnDefault(value = "0")
+    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
     private String parentId;
 
 
     @Schema(description = "是否有效")
     @Dict(code = "enable_status")
-    @ColumnDefine(type = "varchar", length = 10)
+    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
     private String status;
 
 

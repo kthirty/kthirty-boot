@@ -1,10 +1,10 @@
 package top.kthirty.system.entity;
 
 import com.mybatisflex.annotation.Table;
-import com.tangzc.mybatisflex.autotable.annotation.ColumnDefine;
 import com.tangzc.mybatisflex.autotable.annotation.UniIndex;
 
 import lombok.*;
+import top.kthirty.core.db.auto.ColumnDefine;
 import top.kthirty.core.db.base.entity.LogicEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -27,7 +27,7 @@ public class Dict extends LogicEntity {
      * 字典代码
      */
     @Schema(description = "字典代码")
-    @ColumnDefine(type = "varchar", length = 32,notNull = true)
+    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
     @UniIndex(name = "sys_dict_uni_code")
     private String code;
 
@@ -35,14 +35,14 @@ public class Dict extends LogicEntity {
      * 字典名称
      */
     @Schema(description = "字典名称")
-    @ColumnDefine(type = "varchar", length = 100,notNull = true)
+    @ColumnDefine(ColumnDefine.Type.STRING)
     private String name;
 
     /**
      * 描述
      */
     @Schema(description = "描述")
-    @ColumnDefine(type = "varchar", length = 200)
+    @ColumnDefine(ColumnDefine.Type.STRING)
     private String description;
 
 }

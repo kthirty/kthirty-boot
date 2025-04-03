@@ -8,6 +8,7 @@ import com.mybatisflex.core.dialect.DbType;
 import com.mybatisflex.core.dialect.DbTypeUtil;
 import com.mybatisflex.spring.boot.MybatisFlexProperties;
 import com.tangzc.mybatisflex.autotable.CustomAutoTableMetadataAdapter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.dromara.autotable.annotation.ColumnType;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import top.kthirty.core.tool.utils.SpringUtil;
@@ -31,16 +32,20 @@ public class KThirtyCustomAutoTableMetadataAdapter extends CustomAutoTableMetada
 
     @Override
     public String getColumnComment(Field field, Class<?> clazz) {
-        KtColumn column = AnnotationUtil.getAnnotation(field, KtColumn.class);
-        if (column != null) {
-            return column.comment();
+        String columnComment = super.getColumnComment(field, clazz);
+        if(StrUtil.isBlank(columnComment)){
+            Schema schema = AnnotationUtil.getAnnotation(field, Schema.class);
+            if(schema != null && StrUtil.isNotBlank(schema.description())){
+                columnComment = schema.description();
+            }
         }
-        return super.getColumnComment(field, clazz);
+
+        return columnComment;
     }
 
     @Override
     public ColumnType getColumnType(Field field, Class<?> clazz) {
-        KtColumn column = AnnotationUtil.getAnnotation(field, KtColumn.class);
+        ColumnDefine column = AnnotationUtil.getAnnotation(field, ColumnDefine.class);
         if (column != null) {
             Table table = AnnotatedElementUtils.findMergedAnnotation(field, Table.class);
             DbType dbType = getDbType(table);
@@ -89,13 +94,4 @@ public class KThirtyCustomAutoTableMetadataAdapter extends CustomAutoTableMetada
         return DbTypeUtil.parseDbType(url);
     }
 
-
-    @Override
-    public boolean isNotNull(Field field, Class<?> clazz) {
-        KtColumn column = AnnotationUtil.getAnnotation(field, KtColumn.class);
-        if (column != null) {
-            return column.notNull();
-        }
-        return super.isNotNull(field, clazz);
-    }
 }

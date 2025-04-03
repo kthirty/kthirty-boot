@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.poi.ss.formula.functions.T;
+import top.kthirty.core.db.auto.ColumnDefine;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -14,5 +15,6 @@ public class IdEntity extends BaseEntity {
      * 主键
      */
     @Id
+    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
     protected String id;
 }
