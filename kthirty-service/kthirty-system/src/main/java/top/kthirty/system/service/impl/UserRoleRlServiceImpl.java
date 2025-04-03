@@ -2,10 +2,10 @@ package top.kthirty.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import org.springframework.stereotype.Service;
 import top.kthirty.system.entity.UserRoleRl;
 import top.kthirty.system.mapper.UserRoleRlMapper;
 import top.kthirty.system.service.UserRoleRlService;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

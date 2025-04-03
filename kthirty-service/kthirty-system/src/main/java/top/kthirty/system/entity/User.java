@@ -10,7 +10,6 @@ import top.kthirty.core.db.base.entity.IdEntity;
 import top.kthirty.core.db.base.entity.LogicEntity;
 import top.kthirty.core.db.fill.FillData;
 import top.kthirty.core.db.fill.handler.NumberSeqHandler;
-import top.kthirty.core.db.sequence.SequenceCode;
 import top.kthirty.core.tool.dict.Dict;
 import top.kthirty.core.tool.jackson.generate.GenerateField;
 

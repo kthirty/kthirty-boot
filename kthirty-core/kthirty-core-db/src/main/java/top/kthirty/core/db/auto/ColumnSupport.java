@@ -1,12 +1,10 @@
 package top.kthirty.core.db.auto;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.multi.RowKeyTable;
+import com.mybatisflex.core.dialect.DbType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import com.mybatisflex.core.dialect.DbType;
-
-import cn.hutool.core.lang.Assert;
 
 /**
  * @author KThirty

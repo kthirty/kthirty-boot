@@ -1,10 +1,10 @@
 package top.kthirty.system.entity;
 
 import com.mybatisflex.annotation.Table;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import top.kthirty.core.db.auto.ColumnDefine;
 import top.kthirty.core.db.base.entity.LogicEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 角色 实体类。

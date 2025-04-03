@@ -1,7 +1,6 @@
 package top.kthirty.core.db.fill.handler;
 
 import top.kthirty.core.boot.secure.SecureUtil;
-import top.kthirty.core.db.base.entity.BaseEntity;
 import top.kthirty.core.db.fill.FillHandler;
 
 import java.lang.reflect.Field;

@@ -2,7 +2,6 @@ package top.kthirty.core.db.config;
 
 import com.mybatisflex.spring.boot.MybatisFlexProperties;
 import com.tangzc.mybatisflex.autotable.MybatisFlexAutoTableAutoConfig;
-import org.dromara.autotable.core.AutoTableClassScanner;
 import org.dromara.autotable.core.AutoTableMetadataAdapter;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

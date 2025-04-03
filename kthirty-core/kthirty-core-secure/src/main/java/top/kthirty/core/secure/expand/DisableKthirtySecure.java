@@ -1,6 +1,7 @@
 package top.kthirty.core.secure.expand;
 
 import top.kthirty.core.boot.launch.annotations.KthirtyLauncher;
+
 import java.lang.annotation.*;
 
 /**

@@ -1,10 +1,10 @@
 package top.kthirty.system.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import org.springframework.stereotype.Service;
 import top.kthirty.system.entity.RoleMenuRl;
 import top.kthirty.system.mapper.RoleMenuRlMapper;
 import top.kthirty.system.service.RoleMenuRlService;
-import org.springframework.stereotype.Service;
 
 /**
  * 角色菜单关联表 服务层实现。

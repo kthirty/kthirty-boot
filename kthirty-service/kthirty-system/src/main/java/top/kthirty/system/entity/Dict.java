@@ -2,11 +2,10 @@ package top.kthirty.system.entity;
 
 import com.mybatisflex.annotation.Table;
 import com.tangzc.mybatisflex.autotable.annotation.UniIndex;
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import top.kthirty.core.db.auto.ColumnDefine;
 import top.kthirty.core.db.base.entity.LogicEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 字典 实体类。

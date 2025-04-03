@@ -7,9 +7,9 @@ import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
-import top.kthirty.core.tool.utils.BeanUtil;
 import top.kthirty.core.tool.api.R;
 import top.kthirty.core.tool.api.SystemResultCode;
+import top.kthirty.core.tool.utils.BeanUtil;
 import top.kthirty.core.web.utils.WebUtil;
 
 import java.util.List;

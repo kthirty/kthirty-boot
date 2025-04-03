@@ -1,7 +1,6 @@
 package top.kthirty.core.tool.excel.handler;
 
 import cn.hutool.core.annotation.AnnotationUtil;
-import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.StrUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import top.kthirty.core.tool.Func;

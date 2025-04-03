@@ -18,14 +18,14 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import top.kthirty.core.boot.secure.SysUserProvider;
 import top.kthirty.core.secure.auth.AuthConstant;
-import top.kthirty.core.tool.exception.NotLoginException;
-import top.kthirty.core.tool.exception.SecureException;
 import top.kthirty.core.secure.interceptor.SecureInterceptor;
 import top.kthirty.core.secure.interceptor.SecureRegistry;
 import top.kthirty.core.secure.token.JwtTokenProvider;
 import top.kthirty.core.secure.token.TokenProvider;
 import top.kthirty.core.tool.api.R;
 import top.kthirty.core.tool.api.SystemResultCode;
+import top.kthirty.core.tool.exception.NotLoginException;
+import top.kthirty.core.tool.exception.SecureException;
 import top.kthirty.core.web.error.ErrorHandler;
 import top.kthirty.core.web.utils.WebUtil;
 

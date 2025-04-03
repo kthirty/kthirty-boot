@@ -4,7 +4,6 @@ import com.mybatisflex.annotation.Id;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.poi.ss.formula.functions.T;
 import top.kthirty.core.db.auto.ColumnDefine;
 
 @EqualsAndHashCode(callSuper = true)

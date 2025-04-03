@@ -1,18 +1,18 @@
 package top.kthirty.develop.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import org.springframework.web.bind.annotation.*;
-import lombok.AllArgsConstructor;
-import top.kthirty.develop.entity.DevForm;
-import top.kthirty.develop.service.DevFormService;
-import org.springframework.web.bind.annotation.RestController;
-import top.kthirty.core.web.base.BaseController;
-import top.kthirty.core.db.support.Condition;
-import top.kthirty.core.db.support.Query;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import top.kthirty.core.db.support.Condition;
+import top.kthirty.core.db.support.Query;
+import top.kthirty.core.web.base.BaseController;
+import top.kthirty.develop.entity.DevForm;
+import top.kthirty.develop.service.DevFormService;
+
 import java.io.Serializable;
 import java.util.List;
 

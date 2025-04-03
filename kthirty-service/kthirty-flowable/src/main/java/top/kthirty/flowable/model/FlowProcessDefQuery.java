@@ -3,7 +3,6 @@ package top.kthirty.flowable.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.flowable.engine.repository.ProcessDefinition;
 import top.kthirty.core.db.support.Query;
 /**
  * @description 流程定义查询

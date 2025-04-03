@@ -3,8 +3,6 @@ package top.kthirty.core.tool.api;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import static org.ietf.jgss.GSSException.UNAUTHORIZED;
-
 /**
  * 业务代码枚举
  * 返回码规划

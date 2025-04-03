@@ -2,19 +2,11 @@ package top.kthirty.flowable.model;
 
 import cn.hutool.core.util.ObjectUtil;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.flowable.common.engine.impl.db.SuspensionState;
 import org.flowable.engine.ProcessEngineConfiguration;
-import org.flowable.engine.impl.bpmn.data.IOSpecification;
-import org.flowable.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.flowable.engine.impl.persistence.entity.ProcessDefinitionEntityImpl;
 import org.flowable.engine.repository.ProcessDefinition;
-import org.flowable.identitylink.service.impl.persistence.entity.IdentityLinkEntity;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @description 流程定义信息

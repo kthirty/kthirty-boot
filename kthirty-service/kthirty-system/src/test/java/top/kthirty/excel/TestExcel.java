@@ -6,9 +6,7 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import top.kthirty.core.test.BaseKthirtyTest;
 import top.kthirty.core.test.KthirtyTest;
 import top.kthirty.core.tool.dict.DictItem;
@@ -17,7 +15,6 @@ import top.kthirty.core.tool.excel.ExcelUtil;
 import top.kthirty.core.tool.excel.support.ExcelParams;
 import top.kthirty.core.tool.excel.support.ExcelStyle;
 import top.kthirty.system.SystemApplication;
-import top.kthirty.system.entity.User;
 import top.kthirty.system.service.UserService;
 
 import java.io.BufferedInputStream;

@@ -2,7 +2,6 @@ package top.kthirty.flowable.support;
 
 import cn.hutool.core.convert.Convert;
 import lombok.extern.slf4j.Slf4j;
-import org.flowable.common.engine.impl.event.FlowableEventSupport;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.ExecutionListener;
 import org.springframework.stereotype.Component;

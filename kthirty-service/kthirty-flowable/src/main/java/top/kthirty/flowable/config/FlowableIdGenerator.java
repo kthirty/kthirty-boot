@@ -1,7 +1,6 @@
 package top.kthirty.flowable.config;
 
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.log.StaticLog;
 import org.flowable.common.engine.impl.cfg.IdGenerator;
 /**
  * @description flowable id生成器

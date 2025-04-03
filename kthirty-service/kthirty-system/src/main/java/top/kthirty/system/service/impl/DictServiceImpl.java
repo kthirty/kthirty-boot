@@ -1,10 +1,10 @@
 package top.kthirty.system.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import org.springframework.stereotype.Service;
 import top.kthirty.system.entity.Dict;
 import top.kthirty.system.mapper.DictMapper;
 import top.kthirty.system.service.DictService;
-import org.springframework.stereotype.Service;
 
 /**
  *  服务层实现。

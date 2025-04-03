@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 import org.dromara.autotable.annotation.ColumnDefault;
 import top.kthirty.core.db.auto.ColumnDefine;
 import top.kthirty.core.db.fill.FillData;
-import top.kthirty.core.db.fill.handler.OperatingUserHandler;
 import top.kthirty.core.db.fill.handler.OperatingUserOrgHandler;
 import top.kthirty.core.tool.support.Constant;
 

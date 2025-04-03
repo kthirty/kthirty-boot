@@ -1,14 +1,9 @@
 package top.kthirty.develop.entity;
 
 import com.mybatisflex.annotation.Table;
-import top.kthirty.core.db.base.entity.LogicEntity;
-
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import top.kthirty.core.db.base.entity.LogicEntity;
 import top.kthirty.develop.enums.FieldAttribute;
 
 import java.io.Serial;

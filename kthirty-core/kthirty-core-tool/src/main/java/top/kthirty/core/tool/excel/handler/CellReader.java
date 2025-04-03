@@ -1,7 +1,6 @@
 package top.kthirty.core.tool.excel.handler;
 
 import cn.hutool.core.lang.func.Func1;
-import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.cell.CellEditor;
 import org.apache.poi.ss.usermodel.Cell;
 
