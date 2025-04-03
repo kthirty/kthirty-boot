@@ -33,7 +33,7 @@ public class KthirtyBootUtils {
         launchInfo.addProperties("kthirty.name", launchInfo.getAppName());
         launchInfo.addProperties("spring.profiles.active", activeProfileStr);
         launchInfo.addProperties("kthirty.env", launchInfo.getEnv());
-        launchInfo.addProperties("kthirty.base-package", AppConstant.basePackages());
+        launchInfo.addProperties("kthirty.base-packages", AppConstant.basePackages());
         launchInfo.addProperties("logging.config","classpath:log/logback_".concat(launchInfo.getEnv()).concat(".xml"));
         launchInfo.addProperties("spring.main.allow-bean-definition-overriding","true");
         launchInfo.addProperties("server.port",launchInfo.getPort());

@@ -14,6 +14,7 @@ import top.kthirty.core.boot.launch.KthirtyLaunchInfo;
 public class AppConstant {
     /**
      * 基础包名
+     * Mapper扫描路径
      */
     public static String[] BASE_PACKAGES = new String[]{};
     public static KthirtyLaunchInfo LAUNCH_INFO = new KthirtyLaunchInfo();

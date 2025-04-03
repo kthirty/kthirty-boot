@@ -1,5 +1,6 @@
 package top.kthirty.examples.db.test;
 
+import com.demo.UserMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -14,11 +15,12 @@ import javax.sql.DataSource;
 @AllArgsConstructor
 public class DbStartListener implements ApplicationRunner {
     private final AccountMapper accountMapper;
+//    private final UserMapper userMapper;
     private final DataSource dataSource;
 
     @Override
     public void run(ApplicationArguments args)  {
-
+//        userMapper.selectAll().forEach(it -> System.out.println(it));
 
     }
 }

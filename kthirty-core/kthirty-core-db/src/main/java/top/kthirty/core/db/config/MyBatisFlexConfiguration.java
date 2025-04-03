@@ -1,6 +1,7 @@
 package top.kthirty.core.db.config;
 
 import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.core.BaseMapper;
 import com.mybatisflex.core.FlexGlobalConfig;
 import com.mybatisflex.core.audit.AuditManager;
 import com.mybatisflex.core.dialect.DbType;
@@ -10,16 +11,14 @@ import com.mybatisflex.spring.boot.MyBatisFlexCustomizer;
 import com.mybatisflex.spring.boot.MybatisFlexAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.plugin.Interceptor;
-import org.dromara.autotable.springboot.EnableAutoTable;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import top.kthirty.core.db.base.entity.BaseEntity;
 import top.kthirty.core.db.fill.EntityFillListener;
-import top.kthirty.core.db.listener.OperatingListener;
 import top.kthirty.core.db.permission.DataPermissionDialectImpl;
 import top.kthirty.core.db.permission.DataPermissionInterceptor;
-import top.kthirty.core.db.sequence.SequenceCodeListener;
 
 /**
  * @author KTHIRTY
@@ -29,6 +28,7 @@ import top.kthirty.core.db.sequence.SequenceCodeListener;
 @Slf4j
 @Configuration
 @AutoConfigureAfter(MybatisFlexAutoConfiguration.class)
+@MapperScan(basePackages = "${kthirty.base-packages}",markerInterface = BaseMapper.class)
 public class MyBatisFlexConfiguration implements MyBatisFlexCustomizer {
     @Override
     public void customize(FlexGlobalConfig flexGlobalConfig) {
@@ -37,8 +37,6 @@ public class MyBatisFlexConfiguration implements MyBatisFlexCustomizer {
         keyConfig.setKeyType(KeyType.Generator);
         keyConfig.setValue(KeyGenerators.snowFlakeId);
         flexGlobalConfig.setKeyConfig(keyConfig);
-        // 是否打印Banner
-        flexGlobalConfig.setPrintBanner(false);
         // 插入与更新监听
         flexGlobalConfig.registerInsertListener(new EntityFillListener(),BaseEntity.class);
         flexGlobalConfig.registerUpdateListener(new EntityFillListener(),BaseEntity.class);

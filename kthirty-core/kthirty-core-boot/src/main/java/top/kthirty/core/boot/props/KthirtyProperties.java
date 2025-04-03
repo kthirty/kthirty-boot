@@ -23,4 +23,9 @@ public class KthirtyProperties {
      */
     private String name;
 
+    /**
+     * 基础包名
+     */
+    private String basePackages;
+
 }

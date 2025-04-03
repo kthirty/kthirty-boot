@@ -19,6 +19,10 @@ import top.kthirty.core.boot.utils.KthirtyBootUtils;
  * @since 2023/11/16
  */
 public class KthirtyApplication {
+
+    public static void addBasePackages(String basePackage){
+        AppConstant.addBasePackages(basePackage);
+    }
     /**
      * Create an application context
      * java -jar app.jar --spring.profiles.active=prod --server.port=2333

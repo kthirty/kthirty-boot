@@ -34,8 +34,6 @@ public class CoreDbLaunchImpl implements LauncherService {
         launchInfo.addProperties("spring.datasource.hikari.connection-timeout","30000");
         launchInfo.addProperties("spring.datasource.hikari.leak-detection-threshold","15000");
         launchInfo.addProperties("spring.datasource.hikari.auto-commit",true);
-        launchInfo.addProperties("mybatis-flex.global-config.print-banner",false);
-//        launchInfo.addProperties("mybatis-flex.configuration.log-impl","org.apache.ibatis.logging.nologging.NoLoggingImpl");
-        launchInfo.addProperties("spring.liquibase.show-summary","off");
+        launchInfo.addProperties("spring.liquibase.show-summary","summary");
     }
 }

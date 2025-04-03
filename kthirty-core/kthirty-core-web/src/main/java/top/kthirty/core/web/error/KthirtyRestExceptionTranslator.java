@@ -37,6 +37,7 @@ import top.kthirty.core.tool.utils.StringPool;
 import top.kthirty.core.web.utils.WebUtil;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Proxy;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -156,7 +157,9 @@ public class KthirtyRestExceptionTranslator {
 	public R handleError(Throwable e) {
 		HttpServletResponse response = WebUtil.getResponse();
 		if(Func.isNotEmpty(errorHandlers)){
-			List<ErrorHandler> handlers = errorHandlers.stream().sorted(Comparator.comparing(ErrorHandler::getOrder)).toList();
+			List<ErrorHandler> handlers = errorHandlers.stream()
+					.filter(it -> !Proxy.isProxyClass(it.getClass()))
+					.sorted(Comparator.comparing(ErrorHandler::getOrder)).toList();
 			for (ErrorHandler handler : handlers) {
 				if(handler.support(e)){
 					return handler.handle(e, response);
