@@ -27,7 +27,7 @@ public class ColumnSupport {
         TYPE.put(DbType.ORACLE, ColumnDefine.Type.DATETIME, new ColumnInfo("timestamp", 3, -1));
         TYPE.put(DbType.ORACLE, ColumnDefine.Type.BOOLEAN, new ColumnInfo("number", 1, -1));
         TYPE.put(DbType.ORACLE, ColumnDefine.Type.LONG, new ColumnInfo("number", 20, -1));
-
+        TYPE.put(DbType.ORACLE, ColumnDefine.Type.JSON, new ColumnInfo("clob", -1, -1));
         // Mysql
         TYPE.put(DbType.MYSQL, ColumnDefine.Type.SHORT_STRING, new ColumnInfo("varchar", 32, -1));
         TYPE.put(DbType.MYSQL, ColumnDefine.Type.STRING, new ColumnInfo("varchar", 255, -1));
@@ -40,6 +40,8 @@ public class ColumnSupport {
         TYPE.put(DbType.MYSQL, ColumnDefine.Type.DATETIME, new ColumnInfo("timestamp", 3, -1));
         TYPE.put(DbType.MYSQL, ColumnDefine.Type.BOOLEAN, new ColumnInfo("tinyint", 1, -1));
         TYPE.put(DbType.MYSQL, ColumnDefine.Type.LONG, new ColumnInfo("bigint", 20, -1));
+        TYPE.put(DbType.MYSQL, ColumnDefine.Type.JSON, new ColumnInfo("json", -1, -1));
+     
     }
 
     public static ColumnInfo getColumnType(DbType dbType, ColumnDefine.Type type) {

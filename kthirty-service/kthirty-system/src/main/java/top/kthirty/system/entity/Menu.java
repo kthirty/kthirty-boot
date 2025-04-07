@@ -2,6 +2,7 @@ package top.kthirty.system.entity;
 
 import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Table;
+import com.mybatisflex.core.handler.JacksonTypeHandler;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import top.kthirty.core.db.auto.ColumnDefine;
@@ -9,6 +10,7 @@ import top.kthirty.core.db.base.entity.LogicEntity;
 import top.kthirty.core.tool.dict.Dict;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 菜单 实体类。
@@ -113,4 +115,8 @@ public class Menu extends LogicEntity {
     @Column(ignore = true)
     private List<Menu> children;
 
+    @Schema(description = "额外参数")
+    @ColumnDefine(ColumnDefine.Type.JSON)
+    @Column(typeHandler = JacksonTypeHandler.class)
+    private Map<String,Object> meta;
 }
