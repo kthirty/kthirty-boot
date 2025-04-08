@@ -46,7 +46,7 @@ public class Role extends LogicEntity {
      * 1正常0停用
      */
     @Schema(description = "状态")
-    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
+    @ColumnDefine(ColumnDefine.Type.INTEGER)
     private String status;
 
     @Schema(description = "排序")

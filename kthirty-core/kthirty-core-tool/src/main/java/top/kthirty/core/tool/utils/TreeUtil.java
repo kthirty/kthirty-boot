@@ -128,6 +128,7 @@ public class TreeUtil extends cn.hutool.core.lang.tree.TreeUtil {
                         ReflectUtil.setFieldValue(it, treeNodeConfig.getChildrenKey(), null);
                     }
                 })
+                .sorted(Comparator.comparingDouble(it -> Convert.toDouble(ReflectUtil.getFieldValue(it,treeNodeConfig.getWeightKey()),0D)))
                 .toList();
        return CollUtil.isEmpty(childrenList) ? null : childrenList;
     }

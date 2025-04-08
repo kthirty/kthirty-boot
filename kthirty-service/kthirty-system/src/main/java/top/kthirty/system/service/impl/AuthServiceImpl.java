@@ -109,13 +109,16 @@ public class AuthServiceImpl implements AuthService {
                     treeNode.setId(it.getId());
                     treeNode.setName(it.getComponentName());
                     treeNode.setWeight(Func.toInt(it.getSort(), 0));
-                    Kv extra = Kv.init().set("meta", Kv.init()
-                                    .set("title", it.getName())
-                                    .set("order", Func.toInt(it.getSort(), 0))
-                                    .set("hideMenu", !BooleanUtil.toBoolean(it.getShow()))
-                                    .set("icon", it.getIcon()))
+                    Kv extra = Kv.init()
                             .set("path",it.getPath())
                             .set("component",it.getComponent());
+                    extra.set("meta", Kv.init()
+                            .set("title", it.getName())
+                            .set("order", Func.toInt(it.getSort(), 0))
+                            .set("hideMenu", !BooleanUtil.toBoolean(it.getShow()))
+                            .set("icon", it.getIcon())
+                            .setAll(it.getMeta()));
+
                     treeNode.setExtra(extra);
                     return treeNode;
                 }).toList();

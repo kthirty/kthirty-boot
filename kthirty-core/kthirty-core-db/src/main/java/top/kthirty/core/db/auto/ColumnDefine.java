@@ -66,7 +66,8 @@ public @interface ColumnDefine {
          * 长整型
          */
         LONG,
-        JSON
+        JSON,
+        SHORT_INTEGER
     }
 }
 

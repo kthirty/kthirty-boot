@@ -1,5 +1,6 @@
 package top.kthirty.system.service.impl;
 
+import cn.hutool.core.lang.tree.TreeNodeConfig;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public List<Menu> tree(QueryWrapper wrapper) {
-        return TreeUtil.buildBean(list(wrapper));
+        return TreeUtil.buildBean(list(wrapper),new TreeNodeConfig().setWeightKey("sort"));
     }
 }
