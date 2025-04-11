@@ -1,5 +1,6 @@
 package top.kthirty.system.service.impl;
 
+import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import top.kthirty.core.tool.utils.TreeUtil;
@@ -19,7 +20,7 @@ import java.util.List;
 public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements DeptService {
 
     @Override
-    public List<Dept> tree() {
-        return TreeUtil.buildBean(list());
+    public List<Dept> tree(QueryWrapper wrapper) {
+        return TreeUtil.forest(list(wrapper));
     }
 }

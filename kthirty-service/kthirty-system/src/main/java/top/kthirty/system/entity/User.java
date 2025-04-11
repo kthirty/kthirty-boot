@@ -1,8 +1,10 @@
 package top.kthirty.system.entity;
 
 import com.mybatisflex.annotation.Column;
+import com.mybatisflex.annotation.ColumnMask;
 import com.mybatisflex.annotation.RelationManyToMany;
 import com.mybatisflex.annotation.Table;
+import com.mybatisflex.core.mask.Masks;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import top.kthirty.core.db.auto.ColumnDefine;
@@ -13,7 +15,7 @@ import top.kthirty.core.db.fill.handler.NumberSeqHandler;
 import top.kthirty.core.tool.dict.Dict;
 import top.kthirty.core.tool.jackson.generate.GenerateField;
 
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,6 +59,7 @@ public class User extends LogicEntity {
      * 密码
      */
     @Schema(description = "密码")
+    @ColumnMask(Masks.PASSWORD)
     @ColumnDefine(ColumnDefine.Type.STRING)
     private String password;
 
@@ -79,7 +82,7 @@ public class User extends LogicEntity {
      */
     @Schema(description = "生日")
     @ColumnDefine(ColumnDefine.Type.DATETIME)
-    private Timestamp birthday;
+    private Date birthday;
 
     /**
      * 性别

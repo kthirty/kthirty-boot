@@ -1,6 +1,8 @@
 package top.kthirty.system.controller;
 
+import com.mybatisflex.core.constant.SqlOperator;
 import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.SqlOperators;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import top.kthirty.core.db.support.Condition;
 import top.kthirty.core.web.base.BaseController;
 import top.kthirty.system.entity.Dept;
+import top.kthirty.system.entity.table.DeptTableDef;
 import top.kthirty.system.service.DeptService;
 
 import java.io.Serializable;
@@ -48,8 +51,8 @@ public class DeptController extends BaseController {
 
     @GetMapping("tree")
     @Operation(summary = "查询所有部门信息树",description="查询所有部门信息树")
-    public List<Dept> tree() {
-        return deptService.tree();
+    public List<Dept> tree(Dept dept) {
+        return deptService.tree(Condition.getWrapper(dept, SqlOperators.of(DeptTableDef.DEPT.NAME, SqlOperator.LIKE)));
     }
 
     @GetMapping("getInfo/{id}")

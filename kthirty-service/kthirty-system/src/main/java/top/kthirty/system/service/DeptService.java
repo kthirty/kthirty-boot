@@ -1,5 +1,6 @@
 package top.kthirty.system.service;
 
+import com.mybatisflex.core.query.QueryWrapper;
 import top.kthirty.core.db.base.service.BaseService;
 import top.kthirty.system.entity.Dept;
 
@@ -13,5 +14,5 @@ import java.util.List;
  */
 public interface DeptService extends BaseService<Dept> {
 
-    List<Dept> tree();
+    List<Dept> tree(QueryWrapper wrapper);
 }

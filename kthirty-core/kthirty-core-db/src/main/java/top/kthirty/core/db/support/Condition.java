@@ -9,6 +9,7 @@ import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.query.SqlOperators;
 import com.mybatisflex.core.util.ClassUtil;
+import org.dromara.autotable.core.utils.TableMetadataHandler;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.utils.StringPool;
 
@@ -34,15 +35,18 @@ public class Condition {
         return new Page<>(ObjUtil.defaultIfNull(query.getPageNumber(), DEFAULT_CURRENT), ObjUtil.defaultIfNull(query.getPageSize(), DEFAULT_SIZE));
     }
 
+    public static QueryWrapper getWrapper(Object entity) {
+        return getWrapper(entity,SqlOperators.of());
+    }
     /**
      * 获取mybatis flex中的QueryWrapper
      *
      * @param entity 实体
      * @return QueryWrapper
      */
-    public static QueryWrapper getWrapper(Object entity) {
-        SqlOperators sqlOperators = SqlOperators.of();
-        Arrays.stream(ReflectUtil.getFields(ClassUtil.getUsefulClass(entity.getClass()))).forEach(field -> {
+    public static QueryWrapper getWrapper(Object entity,SqlOperators sqlOperators) {
+        Class<?> usefulClass = ClassUtil.getUsefulClass(entity.getClass());
+        Arrays.stream(ReflectUtil.getFields(usefulClass)).forEach(field -> {
             if (field.getType() != String.class) {
                 return;
             }
@@ -50,21 +54,22 @@ public class Condition {
             if (StrUtil.isBlank(Convert.toStr(fieldValue))) {
                 return;
             }
+            String columnName = TableMetadataHandler.getColumnName(usefulClass, field);
             String str = Convert.toStr(fieldValue);
             if (StrUtil.startWith(str, StringPool.ASTERISK) && StrUtil.endWith(str, StringPool.ASTERISK)) {
                 str = StrUtil.removeSuffix(StrUtil.removePrefix(str, StringPool.ASTERISK), StringPool.ASTERISK);
                 ReflectUtil.setFieldValue(entity, field, str);
-                sqlOperators.put(field.getName(), SqlOperator.LIKE);
+                sqlOperators.putIfAbsent(columnName, SqlOperator.LIKE);
             } else if (StrUtil.startWith(str, StringPool.ASTERISK)) {
                 str = StrUtil.removePrefix(str, StringPool.ASTERISK);
                 ReflectUtil.setFieldValue(entity, field, str);
-                sqlOperators.put(field.getName(), SqlOperator.LIKE_RIGHT);
+                sqlOperators.putIfAbsent(columnName, SqlOperator.LIKE_RIGHT);
             } else if (StrUtil.endWith(str, StringPool.ASTERISK)) {
                 str = StrUtil.removeSuffix(str, StringPool.ASTERISK);
                 ReflectUtil.setFieldValue(entity, field, str);
-                sqlOperators.put(field.getName(), SqlOperator.LIKE_LEFT);
+                sqlOperators.putIfAbsent(columnName, SqlOperator.LIKE_LEFT);
             } else {
-                sqlOperators.put(field.getName(), SqlOperator.EQUALS);
+                sqlOperators.putIfAbsent(columnName, SqlOperator.EQUALS);
             }
         });
         return QueryWrapper.create(entity, sqlOperators);

@@ -1,6 +1,8 @@
 package top.kthirty.system.controller;
 
+import com.mybatisflex.core.constant.SqlOperator;
 import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.SqlOperators;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +14,7 @@ import top.kthirty.core.db.support.Condition;
 import top.kthirty.core.db.support.Query;
 import top.kthirty.core.web.base.BaseController;
 import top.kthirty.system.entity.Menu;
+import top.kthirty.system.entity.table.MenuTableDef;
 import top.kthirty.system.service.MenuService;
 
 import java.io.Serializable;
@@ -52,7 +55,7 @@ public class MenuController extends BaseController {
     @GetMapping("tree")
     @Operation(summary = "查询所有菜单", description = "查询所有菜单")
     public List<Menu> tree(Menu menu) {
-        return menuService.tree(Condition.getWrapper(menu));
+        return menuService.tree(Condition.getWrapper(menu, SqlOperators.of(MenuTableDef.MENU.NAME, SqlOperator.LIKE)));
     }
 
     @GetMapping("getInfo/{id}")

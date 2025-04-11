@@ -22,6 +22,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public List<Menu> tree(QueryWrapper wrapper) {
-        return TreeUtil.buildBean(list(wrapper),new TreeNodeConfig().setWeightKey("sort"));
+        return TreeUtil.forest(list(wrapper),new TreeNodeConfig().setWeightKey("sort"));
     }
 }

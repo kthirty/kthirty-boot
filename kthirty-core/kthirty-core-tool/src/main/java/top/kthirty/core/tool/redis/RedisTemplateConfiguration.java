@@ -11,6 +11,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
@@ -19,6 +20,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
+import top.kthirty.core.tool.cache.CacheConfiguration;
 import top.kthirty.core.tool.cache.CacheHandler;
 import top.kthirty.core.tool.cache.RedisCacheHandler;
 import top.kthirty.core.tool.utils.StringPool;
@@ -38,24 +40,18 @@ import java.util.Locale;
 @EnableCaching
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass({RedisAutoConfiguration.class, RedisSerializer.class})
-@AutoConfigureBefore({RedisAutoConfiguration.class})
-@ConditionalOnBean({RedisConnectionFactory.class})
+@AutoConfigureBefore({RedisAutoConfiguration.class, CacheConfiguration.class})
 public class RedisTemplateConfiguration {
-
-    /**
-     * value 值 序列化
-     *
-     * @return RedisSerializer
-     */
     @Bean
+    @Order(1)
     @ConditionalOnMissingBean(RedisSerializer.class)
     public RedisSerializer<Object> redisSerializer() {
         return new JdkSerializationRedisSerializer();
     }
 
     @Bean(name = "redisTemplate")
+    @Order(2)
     @ConditionalOnMissingBean(RedisTemplate.class)
-    @ConditionalOnBean(RedisSerializer.class)
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory, RedisSerializer<Object> redisSerializer) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         String applicationName = SpringUtil.getProperty("spring.application.name").toLowerCase(Locale.ROOT);
@@ -72,8 +68,8 @@ public class RedisTemplateConfiguration {
     }
 
     @Bean
+    @Order(3)
     @ConditionalOnMissingBean({CacheManager.class})
-    @ConditionalOnBean(RedisTemplate.class)
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory, RedisTemplate<String, Object> redisTemplate) {
         RedisSerializer<?> keySerializer = redisTemplate.getKeySerializer();
         RedisSerializer<?> valueSerializer = redisTemplate.getValueSerializer();
@@ -91,18 +87,18 @@ public class RedisTemplateConfiguration {
     }
 
     @Bean(name = "redisUtil")
+    @Order(4)
     @ConditionalOnBean(RedisTemplate.class)
     public RedisUtil redisUtils() {
         return new RedisUtil();
     }
 
     @Bean(name = "cacheHandler")
+    @Order(5)
     @ConditionalOnBean(RedisTemplate.class)
     @ConditionalOnMissingBean(CacheHandler.class)
     public CacheHandler cacheHandler() {
         return new RedisCacheHandler();
     }
-
-
 
 }

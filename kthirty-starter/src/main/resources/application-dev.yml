@@ -7,13 +7,7 @@ spring:
     password: ${KTHIRTY_PASSWORD}
   data:
     redis:
-      repositories:
-        enabled: false
-  #  data:
-#    redis:
-#      host: mysql.kthirty.top
-#      port: 9004
-#      password: ${KTHIRTY_PASSWORD}
+      host: localhost
 
   liquibase:
     show-summary: off
