@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -151,6 +152,13 @@ public class KthirtyRestExceptionTranslator {
 	public R handleError(HttpMediaTypeNotSupportedException e) {
 		log.error("不支持当前媒体类型:{}", e.getMessage());
 		return R.fail(SystemResultCode.MEDIA_TYPE_NOT_SUPPORTED, e.getMessage());
+	}
+
+	@ExceptionHandler(DuplicateKeyException.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public R handleError(DuplicateKeyException e){
+		log.warn("数据库唯一约束异常：{}", e.getMessage());
+		return R.fail(SystemResultCode.INTERNAL_SERVER_ERROR, e.getMessage());
 	}
 
 	@ExceptionHandler(Throwable.class)

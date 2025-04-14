@@ -108,7 +108,7 @@
     <logger name="com.netflix.discovery" level="INFO"/>
     <logger name="com.netflix.eureka" level="INFO"/>
     <!-- 业务日志 -->
-    <Logger name="top.kthirty" level="DEBUG" />
+    <Logger name="top.kthirty" level="INFO" />
     <Logger name="com.zaxxer.hikari" level="WARN" />
 
     <logger name="org.springframework.transaction" level="DEBUG"/>

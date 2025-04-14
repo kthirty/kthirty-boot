@@ -2,30 +2,20 @@ package top.kthirty.core.tool.redis;
 
 import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.cache.RedisCacheWriter;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import top.kthirty.core.tool.cache.CacheConfiguration;
-import top.kthirty.core.tool.cache.CacheHandler;
-import top.kthirty.core.tool.cache.RedisCacheHandler;
 import top.kthirty.core.tool.utils.StringPool;
 
-import java.time.Duration;
 import java.util.Locale;
 
 /**
@@ -37,21 +27,19 @@ import java.util.Locale;
  * @since 2023/11/19
  */
 @Slf4j
-@EnableCaching
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass({RedisAutoConfiguration.class, RedisSerializer.class})
-@AutoConfigureBefore({RedisAutoConfiguration.class, CacheConfiguration.class})
+@AutoConfigureAfter({RedisAutoConfiguration.class})
+@ConditionalOnBean(RedisTemplate.class)
 public class RedisTemplateConfiguration {
     @Bean
-    @Order(1)
     @ConditionalOnMissingBean(RedisSerializer.class)
     public RedisSerializer<Object> redisSerializer() {
         return new JdkSerializationRedisSerializer();
     }
 
     @Bean(name = "redisTemplate")
-    @Order(2)
-    @ConditionalOnMissingBean(RedisTemplate.class)
+    @Primary
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory, RedisSerializer<Object> redisSerializer) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         String applicationName = SpringUtil.getProperty("spring.application.name").toLowerCase(Locale.ROOT);
@@ -65,40 +53,6 @@ public class RedisTemplateConfiguration {
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
-    }
-
-    @Bean
-    @Order(3)
-    @ConditionalOnMissingBean({CacheManager.class})
-    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory, RedisTemplate<String, Object> redisTemplate) {
-        RedisSerializer<?> keySerializer = redisTemplate.getKeySerializer();
-        RedisSerializer<?> valueSerializer = redisTemplate.getValueSerializer();
-        RedisSerializationContext.SerializationPair<?> keySerializationPair = RedisSerializationContext.SerializationPair.fromSerializer(keySerializer);
-        RedisSerializationContext.SerializationPair<?> valueSerializationPair = RedisSerializationContext.SerializationPair.fromSerializer(valueSerializer);
-        @SuppressWarnings("unchecked")
-        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofHours(1))
-                .serializeKeysWith((RedisSerializationContext.SerializationPair<String>) keySerializationPair)
-                .serializeValuesWith(valueSerializationPair);
-
-        return RedisCacheManager
-                .builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
-                .cacheDefaults(redisCacheConfiguration).build();
-    }
-
-    @Bean(name = "redisUtil")
-    @Order(4)
-    @ConditionalOnBean(RedisTemplate.class)
-    public RedisUtil redisUtils() {
-        return new RedisUtil();
-    }
-
-    @Bean(name = "cacheHandler")
-    @Order(5)
-    @ConditionalOnBean(RedisTemplate.class)
-    @ConditionalOnMissingBean(CacheHandler.class)
-    public CacheHandler cacheHandler() {
-        return new RedisCacheHandler();
     }
 
 }
