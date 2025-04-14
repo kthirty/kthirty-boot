@@ -37,7 +37,8 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
     @Override
     public <R> Page<R> pageAs(Page<R> page, QueryWrapper query, Class<R> asType) {
-        return getMapper().paginateWithRelationsAs(page, query, asType);
+        return getMapper()
+                .paginateWithRelationsAs(page, query, asType);
     }
 
     @Override
