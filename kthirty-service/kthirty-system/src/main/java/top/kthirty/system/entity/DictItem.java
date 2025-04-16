@@ -69,7 +69,6 @@ public class DictItem extends LogicEntity {
      * 父ID
      */
     @Schema(description = "父ID")
-    @ColumnDefault(value = "0")
     @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
     private String parentId;
 

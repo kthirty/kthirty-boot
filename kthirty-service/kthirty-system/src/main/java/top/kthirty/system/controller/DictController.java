@@ -87,6 +87,12 @@ public class DictController extends BaseController {
         return dictItemService.saveOrUpdate(dictItem);
     }
 
+    @DeleteMapping("removeItem/{id}")
+    @Operation(summary = "根据主键删除字典选项", description = "根据主键删除字典选项")
+    public boolean removeItem(@PathVariable @Parameter(description = "主键") Serializable id) {
+        return dictItemService.removeById(id);
+    }
+
     @GetMapping("queryAllItem")
     @Operation(summary = "查询所有字典", description = "查询所有字典")
     public Kv queryAllItem() {

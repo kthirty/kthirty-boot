@@ -158,7 +158,7 @@ public class KthirtyRestExceptionTranslator {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public R handleError(DuplicateKeyException e){
 		log.warn("数据库唯一约束异常：{}", e.getMessage());
-		return R.fail(SystemResultCode.INTERNAL_SERVER_ERROR, e.getMessage());
+		return R.fail(SystemResultCode.INTERNAL_SERVER_ERROR, "唯一键冲突"+e.getCause().getMessage());
 	}
 
 	@ExceptionHandler(Throwable.class)
