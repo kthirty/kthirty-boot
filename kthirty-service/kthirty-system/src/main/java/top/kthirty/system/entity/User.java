@@ -1,9 +1,6 @@
 package top.kthirty.system.entity;
 
-import com.mybatisflex.annotation.Column;
-import com.mybatisflex.annotation.ColumnMask;
-import com.mybatisflex.annotation.RelationManyToMany;
-import com.mybatisflex.annotation.Table;
+import com.mybatisflex.annotation.*;
 import com.mybatisflex.core.mask.Masks;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -51,7 +48,7 @@ public class User extends LogicEntity {
      * 编码
      */
     @Schema(description = "编码")
-    @FillData(value = NumberSeqHandler.class,override = true,scope = FillData.Scope.INSERT)
+    @FillData(value = NumberSeqHandler.class, override = true, scope = FillData.Scope.INSERT)
     @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
     private String code;
 
@@ -112,7 +109,7 @@ public class User extends LogicEntity {
             joinSelfColumn = "user_id",
             joinTargetColumn = "role_id"
     )
-    @GenerateField(genField = "roleName",objField = "name")
+    @GenerateField(genField = "roleName", objField = "name")
     private List<Role> roleList;
 
     @RelationManyToMany(
@@ -120,24 +117,30 @@ public class User extends LogicEntity {
             joinSelfColumn = "user_id",
             joinTargetColumn = "dept_id"
     )
-    @GenerateField(genField = "deptName",objField = "name")
+    @GenerateField(genField = "deptName", objField = "name")
     private List<Dept> deptList;
+
+    @RelationOneToMany(selfField = "id", targetField = "userId")
+    private List<UserDeptRl> deptRls;
+
+    @RelationOneToMany(selfField = "id", targetField = "userId")
+    private List<UserRoleRl> roleRls;
 
     @Column(ignore = true)
     private List<String> roleIds;
     @Column(ignore = true)
     private List<String> deptIds;
 
-    public void setRoleList(List<Role> list){
-        if(list == null){
+    public void setRoleList(List<Role> list) {
+        if (list == null) {
             return;
         }
         this.roleList = list;
         this.roleIds = list.stream().map(IdEntity::getId).toList();
     }
 
-    public void setDeptList(List<Dept> list){
-        if(list == null){
+    public void setDeptList(List<Dept> list) {
+        if (list == null) {
             return;
         }
         this.deptList = list;

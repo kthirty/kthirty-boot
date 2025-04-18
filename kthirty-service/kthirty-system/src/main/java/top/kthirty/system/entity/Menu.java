@@ -31,14 +31,14 @@ public class Menu extends LogicEntity {
      * 菜单名称
      */
     @ColumnDefine(ColumnDefine.Type.STRING)
-    @Schema(description = "菜单名称")
+    @Schema(description = "组件名称")
     private String name;
 
     /**
      * 类型(1菜单,2权限)
      */
     @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
-    @Schema(description = "类型(0目录,1菜单,2权限)")
+    @Schema(description = "类型")
     @Dict(code = "menu_type")
     private String type;
 
@@ -76,19 +76,6 @@ public class Menu extends LogicEntity {
     @Schema(description = "前端组件")
     @ColumnDefine(ColumnDefine.Type.STRING)
     private String component;
-    /**
-     * 前端组件名
-     */
-    @Schema(description = "前端组件名称")
-    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
-    private String componentName;
-
-    /**
-     * 图标
-     */
-    @Schema(description = "图标")
-    @ColumnDefine(ColumnDefine.Type.STRING)
-    private String icon;
 
     /**
      * 描述
@@ -100,17 +87,10 @@ public class Menu extends LogicEntity {
     /**
      * 状态(1启用/0禁用)
      */
-    @Schema(description = "状态(1启用/0禁用)")
+    @Schema(description = "状态")
     @Dict(code = "enable_status")
     @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
     private String status;
-    /**
-     * 是否显示(1显示/0隐藏)
-     */
-    @Schema(description = "状态(1显示/0隐藏)")
-    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
-    @Dict(code = "show_status")
-    private String show;
 
     @Column(ignore = true)
     private List<Menu> children;

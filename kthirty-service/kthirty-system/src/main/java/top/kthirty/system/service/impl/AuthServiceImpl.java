@@ -4,7 +4,6 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
-import cn.hutool.core.util.BooleanUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import top.kthirty.core.boot.secure.SecureUtil;
@@ -107,7 +106,7 @@ public class AuthServiceImpl implements AuthService {
                     TreeNode<String> treeNode = new TreeNode<>();
                     treeNode.setParentId(it.getParentId());
                     treeNode.setId(it.getId());
-                    treeNode.setName(it.getComponentName());
+                    treeNode.setName(it.getName());
                     treeNode.setWeight(Func.toInt(it.getSort(), 0));
                     Kv extra = Kv.init()
                             .set("path",it.getPath())
@@ -115,8 +114,6 @@ public class AuthServiceImpl implements AuthService {
                     extra.set("meta", Kv.init()
                             .set("title", it.getName())
                             .set("order", Func.toInt(it.getSort(), 0))
-                            .set("hideMenu", !BooleanUtil.toBoolean(it.getShow()))
-                            .set("icon", it.getIcon())
                             .setAll(it.getMeta()));
 
                     treeNode.setExtra(extra);

@@ -59,7 +59,7 @@ public class UserController extends BaseController {
     @GetMapping("getInfo/{id}")
     @Operation(summary = "根据主键获取用户信息",description="根据主键获取用户信息")
     public User getInfo(@PathVariable Serializable id) {
-        return userService.getById(id);
+        return userService.getMapper().selectOneWithRelationsById(id);
     }
 
     @GetMapping("page")
@@ -70,6 +70,12 @@ public class UserController extends BaseController {
         wrapper.where(UserDeptRlTableDef.USER_DEPT_RL.DEPT_ID.in(user.getDeptIds(), Func.isNotEmpty(user.getDeptIds())));
 
         return userService.page(page, wrapper);
+    }
+
+    @PostMapping("saveUserAuth")
+    @Operation(summary = "保存用户授权信息",description="保存用户授权信息")
+    public void saveUserAuth(@RequestBody @Parameter(description="用户授权信息")User user) {
+        userService.saveUserAuth(user);
     }
 
 }

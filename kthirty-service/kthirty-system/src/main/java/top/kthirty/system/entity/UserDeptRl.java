@@ -37,4 +37,11 @@ public class UserDeptRl extends IdEntity {
     @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
     private String userId;
 
+    @Schema(description = "岗位ID")
+    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
+    private String postId;
+
+    @Schema(description = "是否主部门")
+    @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
+    private String isMain;
 }

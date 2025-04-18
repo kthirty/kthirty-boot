@@ -85,4 +85,17 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         return true;
     }
 
+    @Override
+    public void saveUserAuth(User user) {
+        userRoleRlService.remove(QueryWrapper.create().and(UserRoleRlTableDef.USER_ROLE_RL.USER_ID.eq(user.getId())));
+        userDeptRlService.remove(QueryWrapper.create().and(UserDeptRlTableDef.USER_DEPT_RL.USER_ID.eq(user.getId())));
+        if (CollUtil.isNotEmpty(user.getRoleRls())) {
+            List<UserRoleRl> userRoleRls = user.getRoleRls().stream().map(it -> it.setUserId(user.getId())).toList();
+            userRoleRlService.saveBatch(userRoleRls);
+        }
+        if(CollUtil.isNotEmpty(user.getDeptRls())){
+            List<UserDeptRl> userDeptRls = user.getDeptRls().stream().map(it -> it.setUserId(user.getId())).toList();
+            userDeptRlService.saveBatch(userDeptRls);
+        }
+    }
 }
