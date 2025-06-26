@@ -28,11 +28,12 @@ public class KthirtySpringExtension extends SpringExtension {
         Assert.hasText(kthirtyTest.appName(), "@KthirtyTest AppName must not blank");
         KthirtyLaunchInfo launchInfo = new KthirtyLaunchInfo();
         launchInfo.setAppName(kthirtyTest.appName());
-        launchInfo.setSource(kthirtyTest.getClass());
+        launchInfo.setSource(kthirtyTest.classes()[0]);
         launchInfo.setEnv(kthirtyTest.env());
         launchInfo.addActive(kthirtyTest.env());
         launchInfo.setPort(8900);
         SpringApplicationBuilder builder = new SpringApplicationBuilder(clazz);
+        KthirtyBootUtils.processPackage(launchInfo);
         KthirtyBootUtils.processEnv(builder, launchInfo);
         KthirtyBootUtils.processLauncher(builder,launchInfo);
         KthirtyBootUtils.processProperties(builder,launchInfo);

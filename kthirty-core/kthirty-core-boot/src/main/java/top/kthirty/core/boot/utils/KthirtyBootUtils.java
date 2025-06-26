@@ -2,11 +2,13 @@ package top.kthirty.core.boot.utils;
 
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.lang.Singleton;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.core.env.*;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 import top.kthirty.core.boot.constant.AppConstant;
 import top.kthirty.core.boot.constant.EnvEnum;
 import top.kthirty.core.boot.launch.KthirtyLaunchInfo;
@@ -103,4 +105,12 @@ public class KthirtyBootUtils {
     }
 
 
+    public static void processPackage(KthirtyLaunchInfo launchInfo) {
+        // 添加启动类所在Package
+        String appPackage = ClassUtils.getPackageName(launchInfo.getSource());
+        if (!ArrayUtil.contains(AppConstant.BASE_PACKAGES, appPackage)) {
+            AppConstant.addBasePackages(appPackage);
+        }
+        AppConstant.LAUNCH_INFO = launchInfo;
+    }
 }

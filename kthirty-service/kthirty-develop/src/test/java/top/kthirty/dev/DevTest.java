@@ -10,6 +10,9 @@ import top.kthirty.core.test.BaseKthirtyTest;
 import top.kthirty.core.test.KthirtyTest;
 import top.kthirty.core.tool.utils.SpringUtil;
 import top.kthirty.develop.DevelopApplication;
+import top.kthirty.develop.entity.DevForm;
+import top.kthirty.develop.enums.ListType;
+import top.kthirty.develop.enums.TableType;
 
 import javax.sql.DataSource;
 
@@ -23,5 +26,12 @@ public class DevTest extends BaseKthirtyTest {
         Assert.notNull(dataSource,"dataSource is null");
         Table table = MetaUtil.getTableMeta(dataSource, "sys_user");
         log.info(JSONUtil.toJsonPrettyStr(table));
+
+        DevForm devForm = new DevForm();
+        devForm.setTableName(table.getTableName());
+        devForm.setTableType(TableType.SINGLE_TABLE.getValue());
+        devForm.setIsDbSync("Y");
+        devForm.setRemarks(table.getComment());
+        devForm.setListType(ListType.PAGE.getValue());
     }
 }

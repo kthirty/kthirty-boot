@@ -11,4 +11,5 @@ import top.kthirty.develop.entity.DevForm;
  */
 public interface DevFormService extends BaseService<DevForm> {
 
+
 }

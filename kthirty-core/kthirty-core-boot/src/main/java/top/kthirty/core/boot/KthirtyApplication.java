@@ -69,12 +69,7 @@ public class KthirtyApplication {
                 .setCustomLaunchers(CollUtil.list(true,kthirtyAppInfo.getCustomLaunchers()))
                 .setDescription(kthirtyAppInfo.getDescription())
                 .setArgs(CollUtil.newHashSet(args));
-        // 添加启动类所在Package
-        String appPackage = ClassUtils.getPackageName(launchInfo.getSource());
-        if (!ArrayUtil.contains(AppConstant.BASE_PACKAGES, appPackage)) {
-            AppConstant.addBasePackages(appPackage);
-        }
-        AppConstant.LAUNCH_INFO = launchInfo;
+       KthirtyBootUtils.processPackage(launchInfo);
         // 处理当前运行环境
         KthirtyBootUtils.processEnv(builder, launchInfo);
         // 处理Launcher
