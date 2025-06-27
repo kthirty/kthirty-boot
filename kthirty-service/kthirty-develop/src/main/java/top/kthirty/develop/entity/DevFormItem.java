@@ -102,7 +102,7 @@ public class DevFormItem extends LogicEntity {
      * 是否必填
      */
     @Schema(description = "是否必填")
-    private Integer formRequired;
+    private Boolean formRequired;
 
     /**
      * 正则验证
@@ -114,13 +114,13 @@ public class DevFormItem extends LogicEntity {
      * 排序权重
      */
     @Schema(description = "排序权重")
-    private Integer weight;
+    private Double weight;
 
     /**
      * 是否查询
      */
     @Schema(description = "是否查询")
-    private Integer isShowQuery;
+    private Boolean isShowQuery;
 
     /**
      * 查询模式

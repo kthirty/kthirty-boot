@@ -3,6 +3,8 @@ package top.kthirty.develop.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Set;
+
 /**
  * @description 字段属性
  * @author KThirty
@@ -18,4 +20,18 @@ public enum FieldAttribute {
 
     private final String value;
     private final String description;
+
+    public static FieldAttribute infer(String name, Set<String> pkNames) {
+        if(pkNames.contains(name)){
+            return PRIMARY_KEY;
+        }
+        if ("DELETED".equalsIgnoreCase(name)) {
+            return DEL_FLAG;
+        }
+        return NORMAL;
+    }
+
+    public boolean isNormal(){
+        return this == NORMAL;
+    }
 }

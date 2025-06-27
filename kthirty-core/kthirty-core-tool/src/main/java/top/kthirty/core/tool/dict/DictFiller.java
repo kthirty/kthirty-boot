@@ -50,7 +50,7 @@ public interface DictFiller extends JsonFiller {
 
                         Assert.isTrue(method.getReturnType() == String.class,"数据字典只能用在返回值为String的方法上");
                         Dict dict = AnnotationUtil.getAnnotation(method, Dict.class);
-                        String code =StrUtil.blankToDefault(dict.code(), method.getName());
+                        String code = StrUtil.blankToDefault(dict.code(), method.getName());
                         String value = Convert.toStr(ReflectUtil.invoke(this,method));
                         Assert.notBlank(dict.fieldName(),"字段名不可为空");
                         String fieldName = StrUtil.format(dict.fieldName(), name);

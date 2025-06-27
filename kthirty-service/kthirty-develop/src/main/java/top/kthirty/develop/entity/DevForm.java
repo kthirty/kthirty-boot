@@ -3,10 +3,12 @@ package top.kthirty.develop.entity;
 import com.mybatisflex.annotation.Table;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.dromara.autotable.annotation.Ignore;
 import top.kthirty.core.db.base.entity.LogicEntity;
 import top.kthirty.core.tool.dict.Dict;
 
 import java.io.Serial;
+import java.util.List;
 
 /**
  * form开发 实体类。
@@ -59,5 +61,16 @@ public class DevForm extends LogicEntity {
     @Schema(description = "是否已同步到数据库")
     @Dict(code = "whether")
     private String isDbSync;
+
+
+    @Ignore
+    @Schema(description = "表单字段")
+    @Singular
+    private List<DevFormItem> items;
+
+    @Ignore
+    @Schema(description = "表单索引")
+    @Singular
+    private List<DevFormIndex> indexes;
 
 }
