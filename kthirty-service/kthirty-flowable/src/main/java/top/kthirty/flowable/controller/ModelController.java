@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  * @since 2024/11/21 15:21
  */
 @RestController
-@RequestMapping("model")
+@RequestMapping("/flw/model")
 @RequiredArgsConstructor
 @Tag(name = "流程模型")
 public class ModelController extends BaseController {
@@ -92,9 +92,9 @@ public class ModelController extends BaseController {
         return flowModel;
     }
 
-    @DeleteMapping("delete")
+    @DeleteMapping("delete/{modelId}")
     @Operation(summary = "删除模型")
-    public void delete(@Parameter(description = "模型ID") String modelId){
+    public void delete(@PathVariable String modelId){
         repositoryService.deleteModel(modelId);
     }
 

@@ -28,7 +28,7 @@ import java.util.List;
  * @since 2024/11/22 16:39
  */
 @RestController
-@RequestMapping("process/instance")
+@RequestMapping("flw/process/instance")
 @RequiredArgsConstructor
 @Tag(name = "流程实例")
 @Transactional(rollbackFor = Exception.class)

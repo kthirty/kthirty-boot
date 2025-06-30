@@ -1,5 +1,6 @@
 package top.kthirty.system.service.impl;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNode;
@@ -13,6 +14,7 @@ import top.kthirty.core.secure.token.TokenUtil;
 import top.kthirty.core.secure.util.PasswordUtil;
 import top.kthirty.core.tool.Func;
 import top.kthirty.core.tool.exception.NotLoginException;
+import top.kthirty.core.tool.support.Constant;
 import top.kthirty.core.tool.support.Kv;
 import top.kthirty.core.tool.utils.StringPool;
 import top.kthirty.system.entity.Menu;
@@ -104,7 +106,7 @@ public class AuthServiceImpl implements AuthService {
                 .stream().map(it -> {
                     it.setSort(Func.toInt(it.getSort(), 0));
                     TreeNode<String> treeNode = new TreeNode<>();
-                    treeNode.setParentId(it.getParentId());
+                    treeNode.setParentId(Convert.toStr(it.getParentId(), Constant.ROOT_ID));
                     treeNode.setId(it.getId());
                     treeNode.setName(it.getName());
                     treeNode.setWeight(Func.toInt(it.getSort(), 0));

@@ -37,7 +37,7 @@ import java.util.List;
  * @since 2024/11/26 15:44
  */
 @RestController
-@RequestMapping("task")
+@RequestMapping("flw/task")
 @RequiredArgsConstructor
 @Tag(name = "运行时相关接口")
 @Transactional

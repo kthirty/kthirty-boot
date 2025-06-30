@@ -26,7 +26,7 @@ import java.util.List;
  * @since 2024/11/22 15:30
  */
 @RestController
-@RequestMapping("process/definition")
+@RequestMapping("flw/process/definition")
 @RequiredArgsConstructor
 @Tag(name = "流程定义")
 public class ProcessDefinitionController extends BaseController {

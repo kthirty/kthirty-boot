@@ -60,7 +60,7 @@ public class TreeUtil extends cn.hutool.core.lang.tree.TreeUtil {
             return null;
         }
         // 计算森林顶级节点ID
-        Set<String> parentIds = list.parallelStream().map(it -> Convert.toStr(ReflectUtil.getFieldValue(it, config.getParentIdKey()))).collect(Collectors.toSet());
+        Set<String> parentIds = list.parallelStream().map(it -> Convert.toStr(ReflectUtil.getFieldValue(it, config.getParentIdKey()),Constant.ROOT_ID)).collect(Collectors.toSet());
         Set<String> ids = list.parallelStream().map(it -> Convert.toStr(ReflectUtil.getFieldValue(it, config.getIdKey()))).collect(Collectors.toSet());
         parentIds.removeAll(ids);
         Map<String, List<T>> idRecordMap = list.stream().collect(Collectors.groupingBy(it -> Convert.toStr(ReflectUtil.getFieldValue(it, config.getIdKey()))));

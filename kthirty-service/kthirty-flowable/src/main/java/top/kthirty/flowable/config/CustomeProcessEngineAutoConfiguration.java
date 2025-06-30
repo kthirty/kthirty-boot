@@ -1,10 +1,7 @@
 package top.kthirty.flowable.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
+import jakarta.servlet.*;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.flowable.common.engine.api.async.AsyncTaskExecutor;
 import org.flowable.common.engine.impl.cfg.IdGenerator;
@@ -103,12 +100,9 @@ public class CustomeProcessEngineAutoConfiguration extends ProcessEngineAutoConf
 
     @Bean
     public Filter flowableAuthFilter() {
-        return new Filter() {
-            @Override
-            public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)  {
-                Authentication.setAuthenticatedUserId(SecureUtil.getUsername());
-                doFilter(servletRequest, servletResponse, filterChain);
-            }
+        return (servletRequest, servletResponse, filterChain) -> {
+            Authentication.setAuthenticatedUserId(SecureUtil.getUsername());
+            filterChain.doFilter(servletRequest, servletResponse);
         };
     }
 
