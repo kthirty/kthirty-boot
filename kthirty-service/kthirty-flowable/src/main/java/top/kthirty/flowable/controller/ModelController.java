@@ -15,6 +15,7 @@ import org.flowable.engine.ManagementService;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.impl.persistence.entity.ModelEntityImpl;
+import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.repository.Model;
 import org.flowable.engine.repository.ModelQuery;
 import org.springframework.util.Assert;
@@ -105,12 +106,14 @@ public class ModelController extends BaseController {
         byte[] xmlByte = repositoryService.getModelEditorSource(modelId);
         Assert.notNull(model,"模型不存在");
         Assert.isTrue(ObjUtil.isNotEmpty(xmlByte),"模型XML有误");
-        repositoryService.createDeployment()
+        Deployment deployment = repositoryService.createDeployment()
                 .name(model.getName())
                 .key(model.getKey())
                 .category(model.getCategory())
                 .addBytes("process.bpmn", xmlByte)
                 .deploy();
+        model.setDeploymentId(deployment.getId());
+        repositoryService.saveModel(model);
     }
 
     @GetMapping("exportZip")
