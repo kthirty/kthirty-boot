@@ -52,7 +52,6 @@ public class FlowableHooks {
          * @param processInstance 流程实例
          * @param task 任务信息
          * @param req 办理请求信息
-         * @return 流程变量（作为变量存入流程）
          */
         void onTaskCompleteAfter(ProcessInstance processInstance, Task task, TaskCompleteReq req,Map<String,Object> variables);
     }
@@ -103,17 +102,14 @@ public class FlowableHooks {
      */
     public static <T extends BaseHook> List<T> getHooks(Class<T> hookClass, String processDefinitionKey){
         try{
-            List<T> hooks = SpringUtil.getBeansOfType(hookClass)
+            return SpringUtil.getBeansOfType(hookClass)
                     .values()
                     .stream()
                     .filter(hook -> CollUtil.contains(hook.listenProcessDefinitionKey(), processDefinitionKey))
                     .sorted(Comparator.comparingInt(BaseHook::getOrder))
                     .toList();
-            log.info("获取到 {} 个 {} 钩子 {}", hooks.size()
-                    , getClassName(hookClass,false)
-                    , hooks.stream().map(it -> getClassName(it,false)).collect(Collectors.joining("\n")));
-            return hooks;
         }catch (BeansException e){
+            log.error("获取钩子失败",e);
             return ListUtil.empty();
         }
     }
