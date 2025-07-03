@@ -51,13 +51,13 @@ public class ProcessDefinitionController extends BaseController {
     }
     @PutMapping("active")
     @Operation(summary = "流程激活")
-    public void active(String processDefId){
-        repositoryService.activateProcessDefinitionById(processDefId);
+    public void active(String id){
+        repositoryService.activateProcessDefinitionById(id);
     }
     @PutMapping("suspended")
     @Operation(summary = "流程激活")
-    public void suspended(String processDefId){
-        repositoryService.suspendProcessDefinitionById(processDefId);
+    public void suspended(String id){
+        repositoryService.suspendProcessDefinitionById(id);
     }
 
     @GetMapping("get")

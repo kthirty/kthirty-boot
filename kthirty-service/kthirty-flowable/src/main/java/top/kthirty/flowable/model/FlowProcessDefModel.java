@@ -47,4 +47,8 @@ public class FlowProcessDefModel {
             this.suspensionState = ObjectUtil.defaultIfNull(entity.getSuspensionState(),SuspensionState.ACTIVE.getStateCode());
         }
     }
+
+    public boolean getSuspended(){
+        return this.suspensionState == SuspensionState.SUSPENDED.getStateCode();
+    }
 }
