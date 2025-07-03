@@ -2,6 +2,7 @@ package top.kthirty.system.controller;
 
 import com.mybatisflex.core.constant.SqlOperator;
 import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.query.SqlOperators;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -69,4 +70,16 @@ public class MenuController extends BaseController {
     public Page<Menu> page(Query<Menu> query, Menu menu) {
         return menuService.page(query.getPage(), Condition.getWrapper(menu));
     }
+
+    @GetMapping("path-exists")
+    @Operation(summary = "路径是否已存在", description = "路径是否已存在")
+    public boolean pathExists(String id,String path) {
+        return menuService.exists(QueryWrapper.create().and(MenuTableDef.MENU.PATH.eq(path).and(MenuTableDef.MENU.ID.ne(id))));
+    }
+    @GetMapping("name-exists")
+    @Operation(summary = "名称是否已存在", description = "名称是否已存在")
+    public boolean nameExists(String id,String name) {
+        return menuService.exists(QueryWrapper.create().and(MenuTableDef.MENU.NAME.eq(name).and(MenuTableDef.MENU.ID.ne(id))));
+    }
+
 }
