@@ -1,5 +1,6 @@
 package top.kthirty.flowable.controller;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,7 +43,7 @@ public class ProcessDefinitionController extends BaseController {
         Func.doIf(StrUtil.isNotBlank(req.getName()), () -> query.processDefinitionNameLike(req.getName()));
         Func.doIf(req.getActive() != null && req.getActive() , query::active);
         Func.doIf(req.getActive() != null && !req.getActive() , query::suspended);
-        query.latestVersion();
+        Func.doIf(!Convert.toBool(req.getShowHistory(),false), query::latestVersion);
         List<FlowProcessDefModel> list = query.listPage(req.getFirstResult(), req.getPageSize())
                 .stream()
                 .map(FlowProcessDefModel::new)
