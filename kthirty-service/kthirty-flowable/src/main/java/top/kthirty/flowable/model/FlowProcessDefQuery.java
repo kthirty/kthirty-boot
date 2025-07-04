@@ -19,7 +19,7 @@ public class FlowProcessDefQuery extends Query<FlowProcessDefModel> {
     @Schema(description = "流程分类")
     private String category;
     @Schema(description = "流程定义是否激活")
-    private Boolean active;
+    private Boolean suspended;
     @Schema(description = "是否显示历史版本")
-    private Boolean showHistory;
+    private boolean showHistory = false;
 }

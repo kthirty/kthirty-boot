@@ -2,7 +2,6 @@ package top.kthirty.flowable.test;
 
 import com.mybatisflex.core.paginate.Page;
 import lombok.extern.slf4j.Slf4j;
-import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.task.api.history.HistoricTaskInstance;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class FlowHisTest extends BaseKthirtyTest {
 
     @Test
     public void test2(){
-        Page<HistoricProcessInstance> page = processInstanceController.page(new FlowProcessInstQuery());
+        Page<?> page = processInstanceController.page(new FlowProcessInstQuery());
         log.info("historicTaskInstances {}", JsonUtil.toJson(page));
     }
 }
