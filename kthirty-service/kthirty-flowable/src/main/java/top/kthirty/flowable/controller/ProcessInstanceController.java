@@ -23,6 +23,7 @@ import top.kthirty.flowable.model.FlowProcessInstQuery;
 import top.kthirty.flowable.util.FlowableHooks;
 import top.kthirty.flowable.util.FlowableUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -103,7 +104,10 @@ public class ProcessInstanceController extends BaseController {
         // 获取流程定义
         BpmnModel bpmnModel = FlowableUtil.getBpmnModel(historicProcessInstance.getProcessDefinitionId());
         // 获取当前正在进行的节点
-        List<String> activeActivityIds = runtimeService.getActiveActivityIds(procInstId);
+        List<String> activeActivityIds = new ArrayList<>();
+        if(historicProcessInstance.getEndTime() == null){
+            activeActivityIds = runtimeService.getActiveActivityIds(procInstId);
+        }
         // 生成流程图
         return FlowableUtil.generateThumbnailBase64(bpmnModel, "png", activeActivityIds, List.of());
     }
