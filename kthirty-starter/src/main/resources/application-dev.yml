@@ -11,11 +11,3 @@ spring:
 
   liquibase:
     show-summary: off
-#springdoc:
-#  group-configs:
-#    - packages-to-scan: top.kthirty.develop
-#      group: 'develop'
-#      paths-to-match: /**
-#    - packages-to-scan: top.kthirty.system
-#      group: 'system'
-#      paths-to-match: /**

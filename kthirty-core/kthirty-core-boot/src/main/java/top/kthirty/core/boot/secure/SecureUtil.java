@@ -58,6 +58,9 @@ public class SecureUtil implements ApplicationContextAware {
     public static boolean isSuperAdmin(){
         return getRoles().contains(SUPER_ADMIN_CODE);
     }
+    public static boolean isNotSuperAdmin(){
+        return !isSuperAdmin();
+    }
     public static SysUser getCurrentUser(){
         SysUserProvider provider = getProvider();
         if(provider != null){

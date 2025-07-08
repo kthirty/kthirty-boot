@@ -89,7 +89,7 @@ public class FlowableHelper {
         Assert.notNull(task, "任务不存在");
         Assert.isFalse(task.isSuspended(), "任务已挂起，无法办理");
         // 验证任务是否已签收
-        if (!SecureUtil.isSuperAdmin() && StrUtil.isNotBlank(task.getClaimedBy())) {
+        if (SecureUtil.isNotSuperAdmin() && StrUtil.isNotBlank(task.getClaimedBy())) {
             Assert.isTrue(task.getClaimedBy().equals(SecureUtil.getUsername()), "任务已被他人领取，无法办理");
         }
         ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();

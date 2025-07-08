@@ -2,6 +2,7 @@ package top.kthirty.flowable.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import top.kthirty.core.boot.secure.SecureUtil;
 import top.kthirty.core.tool.support.Constant;
 import top.kthirty.core.tool.utils.StringPool;
+import top.kthirty.core.web.base.BaseController;
 import top.kthirty.flowable.model.FlowCompletePre;
 import top.kthirty.flowable.model.FlowTask;
 import top.kthirty.flowable.model.FlowTaskQuery;
@@ -31,6 +33,7 @@ import top.kthirty.flowable.util.FlowableHelper;
 import top.kthirty.flowable.util.FlowableUtil;
 
 import java.util.List;
+
 /**
  * @description 运行时相关接口
  * @author KThirty
@@ -41,7 +44,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "运行时相关接口")
 @Transactional
-public class TaskController {
+public class TaskController extends BaseController {
     private final FlowableHelper flowableHelper;
     private final TaskService taskService;
     private final RuntimeService runtimeService;
@@ -58,7 +61,7 @@ public class TaskController {
     public Page<FlowTask> done(FlowTaskQuery req) {
         HistoricTaskInstanceQuery taskQuery = historyService.createHistoricTaskInstanceQuery();
         req.handleTaskQuery(taskQuery);
-        if(!SecureUtil.isSuperAdmin()){
+        if(SecureUtil.isNotSuperAdmin()){
             taskQuery.taskCompletedBy(SecureUtil.getUsername());
         }
         List<FlowTask> flowTasks = taskQuery.orderByHistoricTaskInstanceEndTime().desc()
@@ -73,11 +76,11 @@ public class TaskController {
     public Page<FlowTask> todo(FlowTaskQuery req) {
         TaskQuery taskQuery = taskService.createTaskQuery();
         req.handleTaskQuery(taskQuery);
-        if(!SecureUtil.isSuperAdmin()){
+        if(SecureUtil.isNotSuperAdmin()){
             // 任务人筛选处理
             // 1. 所有拥有的角色 2. 拥有的部门:职位 3. 拥有的部门:角色
             List<String> groupCodes = CollUtil.unionAll(CollUtil.toList(Constant.NOT_FOUND),SecureUtil.getRoles(), SecureUtil.getIdentityCodes());
-            SecureUtil.getDeptCodes().forEach(deptCode -> SecureUtil.getRoles().forEach(roleCode -> groupCodes.add(StrUtil.join(StringPool.COLON, deptCode, roleCode))));
+            ObjUtil.defaultIfNull(SecureUtil.getDeptCodes(),List.of()).forEach(deptCode -> SecureUtil.getRoles().forEach(roleCode -> groupCodes.add(StrUtil.join(StringPool.COLON, deptCode, roleCode))));
             taskQuery.or().taskCandidateOrAssigned(SecureUtil.getUsername()).taskCandidateGroupIn(groupCodes).endOr();
         }
         // 排序
@@ -116,7 +119,7 @@ public class TaskController {
     @PutMapping("unclaim")
     @Operation(summary = "任务退签收")
     public void unclaim(@Parameter(description = "任务ID") String taskId) {
-        if(!SecureUtil.isSuperAdmin()){
+        if(SecureUtil.isNotSuperAdmin()){
             Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
             Assert.isTrue(task.getClaimedBy().equals(SecureUtil.getUsername()), "只能退签收本人签收的任务");
         }
