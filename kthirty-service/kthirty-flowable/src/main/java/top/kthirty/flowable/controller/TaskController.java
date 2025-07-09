@@ -83,7 +83,7 @@ public class TaskController extends BaseController {
             ObjUtil.defaultIfNull(SecureUtil.getDeptCodes(),List.of()).forEach(deptCode -> SecureUtil.getRoles().forEach(roleCode -> groupCodes.add(StrUtil.join(StringPool.COLON, deptCode, roleCode))));
             taskQuery.or().taskCandidateOrAssigned(SecureUtil.getUsername()).taskCandidateGroupIn(groupCodes).endOr();
         }
-        // 排序
+        // 排序并获取任务信息
         List<FlowTask> flowTasks = taskQuery.orderByTaskCreateTime().desc()
                 .listPage(req.getFirstResult(), req.getPageSize())
                 .stream()

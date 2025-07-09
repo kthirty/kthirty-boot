@@ -78,6 +78,10 @@ public class FlowTask  {
     private String formKey;
     @Schema(title = "租户ID")
     private String tenantId;
+    @Schema(title = "流程开始人")
+    private String processInstanceStartedBy;
+    @Schema(title = "流程开始时间")
+    protected Date processInstanceStartTime;
 
     public FlowTask(TaskInfo task){
         this.taskId = task.getId();
@@ -123,6 +127,8 @@ public class FlowTask  {
                 HistoricProcessInstance processInstance = procInstMap.get(it.getProcessInstanceId());
                 it.setProcessInstanceName(processInstance.getName());
                 it.setProcessDefinitionName(processInstance.getProcessDefinitionName());
+                it.setProcessInstanceStartedBy(processInstance.getStartUserId());
+                it.setProcessInstanceStartTime(processInstance.getStartTime());
             });
         }
         return list;
