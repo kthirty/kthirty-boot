@@ -51,6 +51,7 @@ public class ProcessInstanceController extends BaseController {
 
         HistoricProcessInstanceQuery query = historyService.createHistoricProcessInstanceQuery();
 
+        Func.doNotBlank(req.getId(), () -> query.processInstanceId(req.getId()));
         Func.doNotBlank(req.getProcessDefinitionCategory(), () -> query.processDefinitionCategory(req.getProcessDefinitionCategory()));
         Func.doNotBlank(req.getProcessDefinitionKey(), () -> query.processDefinitionKeyLike(req.getProcessDefinitionKey()));
         Func.doNotBlank(req.getProcessDefinitionName(), () -> query.processDefinitionNameLike(req.getProcessDefinitionName()));

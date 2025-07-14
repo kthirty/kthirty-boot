@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.task.api.TaskInfo;
+import org.flowable.task.api.history.HistoricTaskInstance;
 import org.flowable.task.service.impl.persistence.entity.TaskEntity;
 import top.kthirty.core.tool.utils.SpringUtil;
 
@@ -50,6 +51,8 @@ public class FlowTask  {
     private String state;
     @Schema(title = "任务创建时间")
     private Date createTime;
+    @Schema(title = "任务结束时间")
+    private Date endTime;
     @Schema(title = "任务认领时间")
     private Date claimTime;
     @Schema(title = "任务认领人")
@@ -108,6 +111,9 @@ public class FlowTask  {
         this.tenantId = task.getTenantId();
         if(task instanceof TaskEntity taskEntity){
             this.suspensionState = taskEntity.getSuspensionState();
+        }
+        if(task instanceof HistoricTaskInstance hisTask){
+            this.endTime = hisTask.getEndTime();
         }
     }
 

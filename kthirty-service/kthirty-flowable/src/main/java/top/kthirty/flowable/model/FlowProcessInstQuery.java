@@ -17,6 +17,8 @@ public class FlowProcessInstQuery extends Query<FlowHisProcInst> {
     private String processDefinitionName;
     @Schema(description = "发起人ID")
     private String startUserId;
+    @Schema(description = "流程实例ID")
+    private String id;
 
     @Schema(description = "流程定义KEY")
     private String processDefinitionKey;

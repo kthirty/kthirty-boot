@@ -113,11 +113,13 @@ public class FlowableUtil {
         Task task = processEngine.getTaskService().createTaskQuery().taskId(taskId).singleResult();
         Assert.notNull(task, "任务不存在");
         // 读取流程实例变量
-        Kv procInstVars = Kv.init(variables);
+        Kv procInstVars = Kv.init();
         processEngine.getRuntimeService().createVariableInstanceQuery()
                 .processInstanceId(task.getProcessInstanceId())
                 .list()
                 .forEach(it -> procInstVars.put(it.getName(), it.getValue()));
+        // 合并变量
+        procInstVars.setAll(variables);
         // 获取定义
         BpmnModel bpmnModel = processEngine.getRepositoryService().getBpmnModel(task.getProcessDefinitionId());
         FlowNode currentNode = (FlowNode) bpmnModel.getFlowElement(task.getTaskDefinitionKey());
