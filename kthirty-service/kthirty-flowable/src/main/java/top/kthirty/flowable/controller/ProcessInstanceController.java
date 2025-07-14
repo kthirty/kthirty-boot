@@ -8,10 +8,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.engine.HistoryService;
+import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
 import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.history.HistoricProcessInstanceQuery;
+import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.runtime.Execution;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,7 @@ import top.kthirty.flowable.util.FlowableUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,6 +44,7 @@ import java.util.stream.Collectors;
 @Transactional(rollbackFor = Exception.class)
 public class ProcessInstanceController extends BaseController {
     private final RuntimeService runtimeService;
+    private final RepositoryService repositoryService;
     private final HistoryService historyService;
     private final TaskService taskService;
 
@@ -121,5 +125,50 @@ public class ProcessInstanceController extends BaseController {
         return FlowableUtil.generateThumbnailBase64(bpmnModel, "png", activeActivityIds, List.of());
     }
 
+    @PutMapping("upgrade")
+    @Operation(summary = "将正在运行的流程实例升级为最新版本")
+    @Transactional
+    public void upgradeProcessInstance(@RequestParam String procInstId) {
+        // 1. 查询当前流程实例
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                .processInstanceId(procInstId)
+                .singleResult();
+        Assert.notNull(processInstance, "流程实例不存在");
+        // 2. 获取流程定义key
+        String processDefinitionKey = processInstance.getProcessDefinitionKey();
+        // 3. 查询最新的流程定义
+        ProcessDefinition latestDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionKey(processDefinitionKey).latestVersion().singleResult();
+        Assert.notNull(latestDefinition, "未找到最新流程定义");
+        // 4. 检查当前流程实例是否已经是最新版本
+        Assert.isFalse(processInstance.getProcessDefinitionId().equals(latestDefinition.getId()),"已经是最新版本了");
+        // 5. 获取当前流程实例的变量
+        Map<String, Object> variables = runtimeService.getVariables(procInstId);
+        // 6. 获取当前活动节点
+        List<Execution> executions = runtimeService.createExecutionQuery()
+                .processInstanceId(procInstId)
+                .onlyChildExecutions()
+                .list();
+        List<String> currentActivityIds = new ArrayList<>();
+        for (Execution execution : executions) {
+            if (execution.getActivityId() != null) {
+                currentActivityIds.add(execution.getActivityId());
+            }
+        }
+        Assert.notEmpty(currentActivityIds, "未找到当前活动节点");
+
+        // 7. 删除原流程实例（先挂起，后删除，防止并发操作）
+        runtimeService.suspendProcessInstanceById(procInstId);
+        runtimeService.deleteProcessInstance(procInstId, "流程升级到最新版本");
+
+        // 8. 启动新流程实例，带上原有参数
+        ProcessInstance newInstance = runtimeService.startProcessInstanceById(latestDefinition.getId(), variables);
+
+        // 9. 跳转到原来正在运行的节点
+        // 这里假设节点key在新流程中依然存在，否则需要做兼容
+        runtimeService.createChangeActivityStateBuilder()
+                .processInstanceId(newInstance.getId())
+                .moveSingleExecutionToActivityIds(newInstance.getId(), currentActivityIds)
+                .changeState();
+    }
 
 }
