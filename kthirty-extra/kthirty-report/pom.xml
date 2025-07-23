@@ -22,6 +22,7 @@
             <groupId>top.kthirty</groupId>
             <artifactId>kthirty-core-secure</artifactId>
             <version>${version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>top.kthirty.ureport</groupId>

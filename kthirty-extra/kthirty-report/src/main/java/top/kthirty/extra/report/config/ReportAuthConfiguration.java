@@ -1,6 +1,7 @@
 package top.kthirty.extra.report.config;
 
 import jakarta.servlet.Filter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -14,9 +15,11 @@ import top.kthirty.extra.report.config.filter.UReportAuthFilter;
  * @since 2025/7/22 17:24
  */
 @Configuration
+@ConditionalOnBean(SecureRegistry.class)
 @ConditionalOnProperty(value = "report.auth", havingValue = "true", matchIfMissing = true)
 public class ReportAuthConfiguration {
     @Bean
+    @ConditionalOnProperty(name = "kthirty.secure.enabled", matchIfMissing = true, havingValue = "true")
     public FilterRegistrationBean<Filter> uReportAuthFilter(SecureRegistry registry) {
         registry.excludePathPatterns("/ureport/**");
         FilterRegistrationBean<Filter> registration = new FilterRegistrationBean<>();
