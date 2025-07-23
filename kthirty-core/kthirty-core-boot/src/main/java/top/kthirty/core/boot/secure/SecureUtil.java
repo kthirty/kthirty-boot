@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class SecureUtil implements ApplicationContextAware {
     private static SysUserProvider sysUserProvider;
-    public static final String SUPER_ADMIN_CODE = "super_admin";
+    public static final String SUPER_ADMIN_CODE = "administrator";
     public static String getUserId(){
         SysUser currentUser = getCurrentUser();
         return currentUser != null ? currentUser.getId() : null;

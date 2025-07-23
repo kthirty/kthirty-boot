@@ -12,7 +12,7 @@
     <artifactId>kthirty-extra</artifactId>
     <packaging>pom</packaging>
     <modules>
-
+        <module>kthirty-report</module>
     </modules>
     <dependencies>
 
