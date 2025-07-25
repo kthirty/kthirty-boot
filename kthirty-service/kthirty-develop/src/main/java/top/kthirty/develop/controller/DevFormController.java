@@ -1,6 +1,8 @@
 package top.kthirty.develop.controller;
 
 import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryCondition;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,6 +13,8 @@ import top.kthirty.core.db.support.Condition;
 import top.kthirty.core.db.support.Query;
 import top.kthirty.core.web.base.BaseController;
 import top.kthirty.develop.entity.DevForm;
+import top.kthirty.develop.entity.table.DevFormItemTableDef;
+import top.kthirty.develop.service.DevFormItemService;
 import top.kthirty.develop.service.DevFormService;
 
 import java.io.Serializable;
@@ -28,6 +32,8 @@ import java.util.List;
 @RequestMapping("/dev/form")
 public class DevFormController extends BaseController {
     private final DevFormService devFormService;
+    private final DevFormItemService devFormItemService;
+
 
     @PostMapping("save")
     @Operation(summary = "保存form开发",description="保存form开发")
@@ -50,7 +56,9 @@ public class DevFormController extends BaseController {
     @GetMapping("getInfo/{id}")
     @Operation(summary = "根据主键获取form开发",description="根据主键获取form开发")
     public DevForm getInfo(@PathVariable Serializable id) {
-        return devFormService.getById(id);
+        DevForm devForm = devFormService.getById(id);
+        devForm.setItems(devFormItemService.list(QueryCondition.create(DevFormItemTableDef.DEV_FORM_ITEM.FORM_ID, id)));
+        return devForm;
     }
 
     @GetMapping("page")

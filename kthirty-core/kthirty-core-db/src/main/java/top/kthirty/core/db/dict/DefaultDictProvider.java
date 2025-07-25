@@ -5,7 +5,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.StrUtil;
-import com.mybatisflex.core.constant.SqlOperator;
+import com.mybatisflex.core.constant.SqlConsts;
 import com.mybatisflex.core.query.QueryColumn;
 import com.mybatisflex.core.query.QueryCondition;
 import com.mybatisflex.core.row.Db;
@@ -23,7 +23,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
+/**
+ * @description 默认的字段处理器
+ * @author KThirty
+ * @since 2025/7/25 9:25
+ */
 @Slf4j
 @AllArgsConstructor
 public class DefaultDictProvider implements DictProvider {
@@ -48,13 +52,13 @@ public class DefaultDictProvider implements DictProvider {
             return RequestVariableHolder.get(finalCode);
         }
         // 存在Redis缓存
-        if (Boolean.TRUE.equals(Cache.hasKey(finalCode))) {
+        if (Cache.hasKey(finalCode)) {
             List<DictItem> items = Cache.get(finalCode);
             RequestVariableHolder.add(finalCode,items);
             return items;
         }
         // 近期查询过且为结果为空
-        if (Boolean.TRUE.equals(Cache.hasKey("empty:" + finalCode))) {
+        if (Cache.hasKey("empty:" + finalCode)) {
             return ListUtil.empty();
         }
         // 已配置不查询数据库
@@ -184,7 +188,7 @@ public class DefaultDictProvider implements DictProvider {
             boolean hasMultiple = StrUtil.splitTrim(text, separator).size() > 1;
             QueryCondition queryCondition = QueryCondition.create(
                     new QueryColumn(valueQueryLabel ? tableInfo.valueFieldName : tableInfo.labelFieldName),
-                    hasMultiple ? SqlOperator.IN : SqlOperator.EQUALS,
+                    hasMultiple ? SqlConsts.IN : SqlConsts.EQUALS,
                     hasMultiple ? StrUtil.splitTrim(text, separator) : text);
             String result = Db.selectListByCondition(tableInfo.tableName, queryCondition)
                     .stream()
