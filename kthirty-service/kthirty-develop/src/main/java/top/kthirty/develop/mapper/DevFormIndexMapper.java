@@ -1,7 +1,7 @@
 package top.kthirty.develop.mapper;
 
 import top.kthirty.core.db.base.mp.BaseMapper;
-import top.kthirty.develop.entity.DevFormItem;
+import top.kthirty.develop.entity.DevFormIndex;
 
 /**
  *  映射层。
@@ -9,6 +9,6 @@ import top.kthirty.develop.entity.DevFormItem;
  * @author KTHIRTY
  * @since 2024-07-02
  */
-public interface DevFormItemMapper extends BaseMapper<DevFormItem> {
+public interface DevFormIndexMapper extends BaseMapper<DevFormIndex> {
 
 }

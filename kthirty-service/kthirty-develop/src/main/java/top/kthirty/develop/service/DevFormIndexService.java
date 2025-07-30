@@ -1,7 +1,7 @@
 package top.kthirty.develop.service;
 
 import top.kthirty.core.db.base.service.BaseService;
-import top.kthirty.develop.entity.DevFormItem;
+import top.kthirty.develop.entity.DevFormIndex;
 
 /**
  *  服务层。
@@ -9,6 +9,4 @@ import top.kthirty.develop.entity.DevFormItem;
  * @author KTHIRTY
  * @since 2024-07-02
  */
-public interface DevFormItemService extends BaseService<DevFormItem> {
-
-}
+public interface DevFormIndexService extends BaseService<DevFormIndex> { }

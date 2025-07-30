@@ -25,7 +25,7 @@ public class CodeGen {
         String basePackage = "top.kthirty.develop";
 
         Map<String,String> moduleTable = new HashMap<>();
-        moduleTable.put("","dev_form,dev_form_item");
+        moduleTable.put("","dev_form_index");
 
         moduleTable.forEach((model,tables) -> gen(basePath,basePackage,tablePrefix,tables.split(",")));
     }

@@ -3,6 +3,7 @@ package top.kthirty.develop.entity;
 import com.mybatisflex.annotation.Table;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import lombok.experimental.Accessors;
 import top.kthirty.core.db.auto.ColumnDefine;
 import top.kthirty.core.db.base.entity.LogicEntity;
 /**
@@ -17,6 +18,7 @@ import top.kthirty.core.db.base.entity.LogicEntity;
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "form开发")
 @Table("dev_form_index")
+@Accessors(chain = true)
 public class DevFormIndex extends LogicEntity {
 
     /**

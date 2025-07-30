@@ -3,6 +3,7 @@ package top.kthirty.develop.entity;
 import com.mybatisflex.annotation.Table;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import lombok.experimental.Accessors;
 import top.kthirty.core.db.base.entity.LogicEntity;
 import top.kthirty.develop.enums.FieldAttribute;
 
@@ -21,6 +22,7 @@ import java.io.Serial;
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "Form开发字段")
 @Table("dev_form_item")
+@Accessors(chain = true)
 public class DevFormItem extends LogicEntity {
     @Serial
     private static final long serialVersionUID = 1L;
