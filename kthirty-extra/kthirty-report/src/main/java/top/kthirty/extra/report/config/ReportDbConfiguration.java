@@ -3,6 +3,7 @@ package top.kthirty.extra.report.config;
 import com.bstek.ureport.definition.datasource.BuildinDatasource;
 import com.bstek.ureport.provider.report.ReportProvider;
 import com.bstek.ureport.provider.report.file.FileReportProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -35,5 +36,10 @@ public class ReportDbConfiguration  {
     @Primary
     public BuildinDatasource datasourceProvider(){
         return new SpringDataSourceProvider();
+    }
+
+    @Bean
+    public ReportController reportController(@Autowired DbReportProvider dbReportProvider){
+        return new ReportController(dbReportProvider);
     }
 }
