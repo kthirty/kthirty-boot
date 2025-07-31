@@ -13,9 +13,3 @@ spring:
     show-summary: off
 
 
-#ureport:
-#  disableHttpSessionReportCache: false
-#  disableFileProvider: false
-#  fileStoreDir: /ureportfiles
-#  debug: true
-

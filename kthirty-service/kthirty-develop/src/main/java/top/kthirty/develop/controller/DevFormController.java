@@ -3,6 +3,7 @@ package top.kthirty.develop.controller;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryCondition;
 
+import com.mybatisflex.core.query.QueryWrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,6 +15,7 @@ import top.kthirty.core.db.support.Query;
 import top.kthirty.core.web.base.BaseController;
 import top.kthirty.develop.entity.DevForm;
 import top.kthirty.develop.entity.table.DevFormItemTableDef;
+import top.kthirty.develop.entity.table.DevFormTableDef;
 import top.kthirty.develop.service.DevFormItemService;
 import top.kthirty.develop.service.DevFormService;
 
@@ -73,4 +75,9 @@ public class DevFormController extends BaseController {
         return devFormService.list(Condition.getWrapper(devForm));
     }
 
+    @GetMapping("tableNameExists")
+    @Operation(summary = "名称是否已存在", description = "名称是否已存在")
+    public boolean tableNameExists(String id,String tableName) {
+        return devFormService.exists(QueryWrapper.create().and(DevFormTableDef.DEV_FORM.TABLE_NAME.eq(tableName).and(DevFormTableDef.DEV_FORM.ID.ne(id))));
+    }
 }

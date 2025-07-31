@@ -166,4 +166,10 @@ public class DevFormItem extends LogicEntity {
     @Schema(description = "外键主表字段")
     private String foreignKeyMainColumn;
 
+    /**
+     * 是否允许排序
+     */
+    @Schema(description = "是否已同步到数据库")
+    private Boolean isDbSync;
+
 }

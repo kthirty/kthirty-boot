@@ -39,4 +39,10 @@ public class DevFormIndex extends LogicEntity {
     @Schema(description = "dev_form表ID")
     @ColumnDefine(ColumnDefine.Type.SHORT_STRING)
     private String formId;
+
+    /**
+     * 是否允许排序
+     */
+    @Schema(description = "是否已同步到数据库")
+    private Boolean isDbSync;
 }
