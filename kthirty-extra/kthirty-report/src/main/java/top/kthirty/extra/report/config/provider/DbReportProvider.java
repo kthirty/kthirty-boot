@@ -18,7 +18,7 @@ import java.util.List;
  * @author KThirty
  */
 public class DbReportProvider implements ReportProvider, InitializingBean {
-    @Autowired
+    @Autowired(required = false)
     private DataSource dataSource;
     private String dbType = "";
     private final String TABLE_NAME = "ureport_file";

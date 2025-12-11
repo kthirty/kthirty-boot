@@ -1,8 +1,10 @@
 package top.kthirty.develop.controller;
 
+import cn.hutool.core.lang.Dict;
+import com.mybatisflex.core.dialect.DbType;
+import com.mybatisflex.core.dialect.DbTypeUtil;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryCondition;
-
 import com.mybatisflex.core.query.QueryWrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -10,8 +12,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import top.kthirty.core.db.auto.ColumnDefine;
+import top.kthirty.core.db.auto.ColumnSupport;
 import top.kthirty.core.db.support.Condition;
 import top.kthirty.core.db.support.Query;
+import top.kthirty.core.tool.utils.SpringUtil;
 import top.kthirty.core.web.base.BaseController;
 import top.kthirty.develop.entity.DevForm;
 import top.kthirty.develop.entity.table.DevFormItemTableDef;
@@ -19,8 +24,9 @@ import top.kthirty.develop.entity.table.DevFormTableDef;
 import top.kthirty.develop.service.DevFormItemService;
 import top.kthirty.develop.service.DevFormService;
 
+import javax.sql.DataSource;
 import java.io.Serializable;
-import java.util.List;
+import java.util.*;
 
 /**
  * form开发 控制层。
@@ -79,5 +85,25 @@ public class DevFormController extends BaseController {
     @Operation(summary = "名称是否已存在", description = "名称是否已存在")
     public boolean tableNameExists(String id,String tableName) {
         return devFormService.exists(QueryWrapper.create().and(DevFormTableDef.DEV_FORM.TABLE_NAME.eq(tableName).and(DevFormTableDef.DEV_FORM.ID.ne(id))));
+    }
+
+    @GetMapping("itemPresetTypes")
+    public List<Dict> itemTypes(){
+        DbType dbType = DbTypeUtil.getDbType(SpringUtil.getBean(DataSource.class));
+        List<Dict> options = new ArrayList<>();
+        Map<ColumnDefine.Type, ColumnSupport.ColumnInfo> row = ColumnSupport.getRow(dbType);
+        for (ColumnDefine.Type type : row.keySet()) {
+            ColumnSupport.ColumnInfo v = row.get(type);
+            options.add(Dict.create().set("value",v).set("label",type.name()));
+        }
+        options = options.stream().sorted(Comparator.comparingInt(it -> ColumnDefine.Type.valueOf(it.getStr("label")).ordinal())).toList();
+        return options;
+    }
+    @GetMapping("dbTypes")
+    public List<Dict> dbTypes(){
+        DbType dbType = DbTypeUtil.getDbType(SpringUtil.getBean(DataSource.class));
+        return Arrays.stream(ColumnSupport.COLUMN_TYPES.get(dbType))
+                .map(it -> Dict.create().set("value", it).set("label", it))
+                .toList();
     }
 }

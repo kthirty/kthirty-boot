@@ -16,7 +16,7 @@ import top.kthirty.extra.report.config.filter.UReportAuthFilter;
  */
 @Configuration
 @ConditionalOnBean(SecureRegistry.class)
-@ConditionalOnProperty(value = "report.auth", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = "report.auth", havingValue = "true", matchIfMissing = false)
 public class ReportAuthConfiguration {
     @Bean
     @ConditionalOnProperty(name = "kthirty.secure.enabled", matchIfMissing = true, havingValue = "true")

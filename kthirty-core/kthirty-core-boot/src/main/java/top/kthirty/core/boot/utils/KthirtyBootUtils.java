@@ -65,6 +65,11 @@ public class KthirtyBootUtils {
         String env = presetProfiles.get(0);
         launchInfo.addActive(env);
         launchInfo.setEnv(env);
+
+//        // 去除非本Source的Application加载
+//        builder.initializers(ctx -> ctx
+//                .getBeanFactory()
+//                .registerSingleton("ImportIgnorePostProcessor",new ImportIgnorePostProcessor(launchInfo.getSource())));
     }
     /**
      * 加载自定义组件

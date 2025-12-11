@@ -1,12 +1,10 @@
 package top.kthirty.core.boot;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
 import top.kthirty.core.boot.constant.AppConstant;
 import top.kthirty.core.boot.launch.KthirtyAppInfo;
 import top.kthirty.core.boot.launch.KthirtyLaunchInfo;
@@ -62,6 +60,37 @@ public class KthirtyApplication {
     public static SpringApplicationBuilder handleSpringApplicationBuilder(SpringApplicationBuilder builder, KthirtyAppInfo kthirtyAppInfo, Class<?> source, String... args) {
         Assert.hasText(kthirtyAppInfo.getApplicationName(), "[applicationName]服务名不能为空");
         builder.sources(source);
+        builder .initializers(ctx -> {
+            // 注册一个 BeanDefinitionRegistryPostProcessor，屏蔽非当前启动类的 @Import
+            ctx.getBeanFactory().registerSingleton("importIgnorePostProcessor",
+                    new org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor() {
+                        final String currentApp = "top.kthirty.Starter";
+
+                        @Override
+                        public void postProcessBeanDefinitionRegistry(org.springframework.beans.factory.support.BeanDefinitionRegistry registry) {
+                            for (String name : registry.getBeanDefinitionNames()) {
+                                var bd = registry.getBeanDefinition(name);
+                                String beanClass = bd.getBeanClassName();
+                                String source = bd.getResourceDescription();
+                                if (beanClass != null
+                                        && source != null
+                                        && source.contains("Application")
+                                        && !source.contains(currentApp)
+                                        && !beanClass.endsWith("Application")) {
+                                    // 屏蔽非当前启动类的 @Import 导入的 BeanDefinition
+                                    registry.removeBeanDefinition(name);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void postProcessBeanFactory(org.springframework.beans.factory.config.ConfigurableListableBeanFactory beanFactory) {
+                            // 不做处理
+                        }
+                    });
+        });
+
+
         KthirtyLaunchInfo launchInfo = new KthirtyLaunchInfo()
                 .setAppName(kthirtyAppInfo.getApplicationName())
                 .setSource(source)

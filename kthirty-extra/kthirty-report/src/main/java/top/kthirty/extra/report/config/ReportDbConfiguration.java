@@ -20,7 +20,7 @@ import javax.sql.DataSource;
  * @author KThirty
  * @since 2025/7/22 17:18
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @AutoConfigureAfter({DataSourceAutoConfiguration.class})
 @ConditionalOnBean(DataSource.class)
 public class ReportDbConfiguration  {
