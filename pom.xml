@@ -64,7 +64,7 @@
         <spring-cloud-alibaba.verion>2023.0.1.3</spring-cloud-alibaba.verion>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!-- Tools-->
-        <hutool.version>5.8.33</hutool.version>
+        <hutool.version>5.8.42</hutool.version>
         <mica-auto.version>3.1.4</mica-auto.version>
         <swagger3.version>2.2.25</swagger3.version>
         <knife4j.version>4.5.0</knife4j.version>
@@ -156,6 +156,11 @@
                 <version>${mybatis-flex.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.mybatis-flex</groupId>
+                <artifactId>mybatis-flex-processor</artifactId>
+                <version>${mybatis-flex.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.tangzc</groupId>
                 <artifactId>mybatis-flex-ext-spring-boot3-starter</artifactId>
                 <version>${mybatis-flex-ext.version}</version>
@@ -210,7 +215,7 @@
                         <compilerArgs>
                             <arg>-parameters</arg>
                         </compilerArgs>
-                        <annotationProcessorPaths>
+                       <!-- <annotationProcessorPaths>
                             <path>
                                 <groupId>org.projectlombok</groupId>
                                 <artifactId>lombok</artifactId>
@@ -228,7 +233,7 @@
                                 <version>${mica-auto.version}</version>
                                 <scope>provided</scope>
                             </path>
-                        </annotationProcessorPaths>
+                        </annotationProcessorPaths>-->
                     </configuration>
                 </plugin>
                 <!-- jar -->
@@ -270,7 +275,7 @@
                         </execution>
                     </executions>
                 </plugin>
-                <plugin>
+                <!--<plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>flatten-maven-plugin</artifactId>
                     <version>${maven.flatten.version}</version>
@@ -294,7 +299,7 @@
                             </goals>
                         </execution>
                     </executions>
-                </plugin>
+                </plugin>-->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
