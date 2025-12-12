@@ -70,7 +70,7 @@
         <knife4j.version>4.5.0</knife4j.version>
         <redission.version>3.39.0</redission.version>
         <jjwt.version>0.12.6</jjwt.version>
-        <flowable.version>7.1.0</flowable.version>
+        <flowable.version>7.2.0</flowable.version>
         <!--DB-->
         <mybatis-flex.version>1.10.8</mybatis-flex.version>
         <mybatis-flex-ext.version>1.10.8.121</mybatis-flex-ext.version>
@@ -177,6 +177,11 @@
                 <artifactId>flowable-spring-boot-starter-process</artifactId>
                 <version>${flowable.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-bpmn-model</artifactId>
+                <version>${flowable.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>
@@ -205,7 +210,7 @@
                         <compilerArgs>
                             <arg>-parameters</arg>
                         </compilerArgs>
-                        <!--<annotationProcessorPaths>
+                        <annotationProcessorPaths>
                             <path>
                                 <groupId>org.projectlombok</groupId>
                                 <artifactId>lombok</artifactId>
@@ -223,7 +228,7 @@
                                 <version>${mica-auto.version}</version>
                                 <scope>provided</scope>
                             </path>
-                        </annotationProcessorPaths>-->
+                        </annotationProcessorPaths>
                     </configuration>
                 </plugin>
                 <!-- jar -->

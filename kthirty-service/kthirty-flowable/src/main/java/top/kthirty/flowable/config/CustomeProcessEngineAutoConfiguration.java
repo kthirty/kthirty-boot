@@ -1,7 +1,7 @@
 package top.kthirty.flowable.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.*;
+import jakarta.servlet.Filter;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.flowable.common.engine.api.async.AsyncTaskExecutor;
 import org.flowable.common.engine.impl.cfg.IdGenerator;

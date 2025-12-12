@@ -65,6 +65,8 @@ public class KthirtyBootUtils {
         String env = presetProfiles.get(0);
         launchInfo.addActive(env);
         launchInfo.setEnv(env);
+//        builder.allowCircularReferences(true);
+//        builder.initializers(new DisableOtherAppImportsInitializer(launchInfo.getSource()));
 
 //        // 去除非本Source的Application加载
 //        builder.initializers(ctx -> ctx
