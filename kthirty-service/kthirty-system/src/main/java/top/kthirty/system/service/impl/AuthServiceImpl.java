@@ -1,5 +1,7 @@
 package top.kthirty.system.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.tree.Tree;
@@ -68,8 +70,9 @@ public class AuthServiceImpl implements AuthService {
                 .stream()
                 .map(Role::getCode)
                 .toList();
+
         // 获取权限
-        List<String> permissions = menuService.queryChain()
+        List<String> permissions = CollUtil.isEmpty(roles) ? ListUtil.empty() : menuService.queryChain()
                 .select(MENU.PERMISSION)
                 .join(ROLE_MENU_RL).on(ROLE_MENU_RL.MENU_ID.eq(MENU.ID))
                 .join(ROLE).on(ROLE_MENU_RL.ROLE_ID.eq(ROLE.ID))
