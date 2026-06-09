@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>kthirty-report</module>
+        <module>kthirty-oos</module>
     </modules>
     <dependencies>
 

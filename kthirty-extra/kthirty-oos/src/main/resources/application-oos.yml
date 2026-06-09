@@ -1,0 +1,22 @@
+kthirty:
+  oos:
+    enabled: true
+    # 存储类型: local / minio / seaweedfs
+    storage-type: local
+    url-prefix: /oos/file/download/
+    max-file-size: 52428800
+    # allowed-extensions:
+    #   - jpg
+    #   - png
+    #   - pdf
+    local:
+      base-path: ./data/oos
+    minio:
+      endpoint: http://127.0.0.1:9000
+      access-key: minioadmin
+      secret-key: minioadmin
+      bucket: kthirty
+      auto-create-bucket: true
+    seaweedfs:
+      filer-url: http://127.0.0.1:8888
+      collection: kthirty

@@ -8,8 +8,11 @@ spring:
   data:
     redis:
       host: localhost
-
   liquibase:
     show-summary: off
-
-
+  config:
+    import: optional:classpath:application-oos.yml
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 200MB
