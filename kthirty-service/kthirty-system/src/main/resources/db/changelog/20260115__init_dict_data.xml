@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="20260115__init_dict" author="admin">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="sys_dict"/>
+            <tableIsEmpty tableName="sys_dict"/>
+        </preConditions>
+        <sql>
+            INSERT INTO sys_dict (code, name, description, create_by, create_date, update_by, update_date, deleted, id) VALUES ('test', '测试字典', null, 'admin', '2025-04-16 13:59:27.000', 'admin', '2025-04-16 13:59:27.000', 0, '269993667733831680');
+            INSERT INTO sys_dict (code, name, description, create_by, create_date, update_by, update_date, deleted, id) VALUES ('whether', '是否', '', 'admin', '2024-04-24 20:52:55.000', 'admin', '2024-06-01 21:21:37.000', 0, '33551516202000177');
+            INSERT INTO sys_dict (code, name, description, create_by, create_date, update_by, update_date, deleted, id) VALUES ('enable_status', '是否有效', '', 'admin', '2024-06-01 21:19:04.000', 'admin', '2024-06-01 21:21:29.000', 0, '36836284891000126');
+            INSERT INTO sys_dict (code, name, description, create_by, create_date, update_by, update_date, deleted, id) VALUES ('dept_category', '机构类型', null, 'admin', '2024-06-02 21:46:17.000', null, '2024-06-02 21:46:17.000', 0, '36924317812000163');
+            INSERT INTO sys_dict (code, name, description, create_by, create_date, update_by, update_date, deleted, id) VALUES ('menu_type', '菜单类型', null, 'admin', '2024-06-04 13:16:27.000', null, '2024-06-04 13:16:27.000', 0, '37066515788000114');
+            INSERT INTO sys_dict (code, name, description, create_by, create_date, update_by, update_date, deleted, id) VALUES ('show_status', '显示状态', null, 'admin', '2024-06-04 13:19:23.000', null, '2024-06-04 13:19:23.000', 0, '37066690925000149');
+            INSERT INTO sys_dict (code, name, description, create_by, create_date, update_by, update_date, deleted, id) VALUES ('dev_table_type', '表类型', null, 'admin', '2024-08-17 21:50:40.000', null, '2024-08-17 21:50:40.000', 0, '43490981057000140');
+            INSERT INTO sys_dict (code, name, description, create_by, create_date, update_by, update_date, deleted, id) VALUES ('dev_list_type', '列表类型', null, 'admin', '2024-08-17 22:20:29.000', null, '2024-08-17 22:20:29.000', 0, '43492769537000129');
+
+
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('test', '1', '选项一', '222222222', 0, null, '1', 'admin', '2025-04-16 14:29:13.000', 'admin', '2025-04-16 14:33:33.000', 0, '270001161176694784');
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('test', '1-1', '选项1-1', null, 0, '270001161176694784', '1', 'admin', '2025-04-16 16:18:27.000', 'admin', '2025-04-16 16:18:27.000', 0, '270028648669601792');
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('whether', '1', '是', '', 0, null, '1', 'admin', '2024-04-24 22:15:15.000', 'admin', '2024-06-02 21:52:45.000', 0, '33556456380000155');
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('whether', '0', '否', '', 0, null, '1', 'admin', '2024-04-24 22:15:23.000', 'admin', '2025-04-16 18:55:49.000', 0, '33556464676000177');
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('enable_status', '1', '启用', null, 1, null, null, 'admin', '2024-06-02 17:40:41.000', null, '2024-06-02 17:40:41.000', 0, '36909581582000199');
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('enable_status', '0', '停用', null, 2, null, null, 'admin', '2024-06-02 17:41:21.000', null, '2024-06-02 17:41:21.000', 0, '36909621453000131');
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('dept_category', '10', '公司', null, 0, null, null, 'admin', '2024-06-02 21:46:39.000', null, '2024-06-02 21:46:39.000', 0, '36924339576000195');
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('dept_category', '20', '部门', null, 0, null, null, 'admin', '2024-06-02 21:47:22.000', null, '2024-06-02 21:47:22.000', 0, '36924382891000172');
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('dept_category', '30', '岗位', null, 30, null, null, 'admin', '2024-06-02 21:47:31.000', null, '2024-06-02 21:47:31.000', 0, '36924392306000156');
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('menu_type', '0', '目录', null, null, null, '1', 'admin', '2024-06-04 13:16:47.000', null, '2024-06-04 13:16:47.000', 0, '37066535656000191');
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('menu_type', '1', '菜单', null, 1, null, '1', 'admin', '2024-06-04 13:17:52.000', null, '2024-06-04 13:17:52.000', 0, '37066600043000114');
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('menu_type', '2', '权限', null, 0, null, '1', 'admin', '2024-06-04 13:18:03.000', null, '2024-06-04 13:18:03.000', 0, '37066611350000127');
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('show_status', '1', '显示', null, 1, null, '1', 'admin', '2024-06-04 13:19:38.000', null, '2024-06-04 13:19:38.000', 0, '37066706538000117');
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('show_status', '0', '隐藏', null, 2, null, '1', 'admin', '2024-06-04 13:19:52.000', null, '2024-06-04 13:19:52.000', 0, '37066720256000161');
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('dev_table_type', '1', '单表', null, 1, null, null, 'admin', '2024-08-17 21:55:11.000', 'admin', '2024-08-17 21:58:31.000', 0, '43491251758000177');
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('dev_table_type', '2', '主表', null, 2, null, null, 'admin', '2024-08-17 21:55:25.000', 'admin', '2024-08-17 21:56:05.000', 0, '43491265785000156');
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('dev_table_type', '3', '子表', null, 3, null, null, 'admin', '2024-08-17 21:56:41.000', 'admin', '2024-08-17 21:57:18.000', 0, '43491342334000195');
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('dev_list_type', '1', '分页列表', null, 1, null, null, 'admin', '2024-08-17 22:21:01.000', null, '2024-08-17 22:21:01.000', 0, '43492801463000165');
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('dev_list_type', '2', '不分页列表', null, 2, null, null, 'admin', '2024-08-17 22:21:20.000', null, '2024-08-17 22:21:20.000', 0, '43492820925000107');
+            INSERT INTO sys_dict_item (code, value, label, description, weight, parent_id, status, create_by, create_date, update_by, update_date, deleted, id) VALUES ('dev_list_type', '3', '树形列表', null, 3, null, null, 'admin', '2024-08-17 22:21:35.000', null, '2024-08-17 22:21:35.000', 0, '43492835349000140');
+
+        </sql>
+    </changeSet>
+</databaseChangeLog>
