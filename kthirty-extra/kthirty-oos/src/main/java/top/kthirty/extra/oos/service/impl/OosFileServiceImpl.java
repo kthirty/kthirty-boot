@@ -131,10 +131,9 @@ public class OosFileServiceImpl extends BaseServiceImpl<OosFileMapper, OosFile> 
         return OosFileVO.builder()
                 .id(entity.getId())
                 .fileName(entity.getOriginalFileName())
-                .url(OosUtil.buildDownloadUrl(properties, entity.getId()))
+//                .url(OosUtil.buildDownloadUrl(properties, entity.getId()))
                 .contentType(entity.getContentType())
                 .fileSize(entity.getFileSize())
-                .createDate(entity.getCreateDate())
                 .build();
     }
 }

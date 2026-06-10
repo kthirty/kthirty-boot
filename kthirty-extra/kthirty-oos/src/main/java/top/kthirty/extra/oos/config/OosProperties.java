@@ -52,7 +52,7 @@ public class OosProperties {
         /**
          * 本地存储根目录
          */
-        private String basePath = "./data/oos";
+        private String basePath = "/data/oos";
     }
 
     @Data
