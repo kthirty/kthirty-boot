@@ -55,7 +55,7 @@ public class ProcessDefinitionController extends BaseController {
         repositoryService.activateProcessDefinitionById(id);
     }
     @PutMapping("suspended")
-    @Operation(summary = "流程激活")
+    @Operation(summary = "流程挂起")
     public void suspended(String id){
         repositoryService.suspendProcessDefinitionById(id);
     }
