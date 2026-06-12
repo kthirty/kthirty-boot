@@ -17,8 +17,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import top.kthirty.core.db.base.entity.BaseEntity;
 import top.kthirty.core.db.fill.EntityFillListener;
+import top.kthirty.core.db.listener.OperatingListener;
 import top.kthirty.core.db.permission.DataPermissionDialectImpl;
 import top.kthirty.core.db.permission.DataPermissionInterceptor;
+import top.kthirty.core.db.sequence.SequenceCodeListener;
 
 /**
  * @author KTHIRTY
@@ -40,6 +42,9 @@ public class MyBatisFlexConfiguration implements MyBatisFlexCustomizer {
         // 插入与更新监听
         flexGlobalConfig.registerInsertListener(new EntityFillListener(),BaseEntity.class);
         flexGlobalConfig.registerUpdateListener(new EntityFillListener(),BaseEntity.class);
+        flexGlobalConfig.registerInsertListener(new SequenceCodeListener(),BaseEntity.class);
+        flexGlobalConfig.registerInsertListener(new OperatingListener(),BaseEntity.class);
+        flexGlobalConfig.registerUpdateListener(new OperatingListener(),BaseEntity.class);
         // Sql审计功能
         AuditManager.setAuditEnable(true);
         AuditManager.setMessageCollector(auditMessage -> log.debug("{} ,count {},{}ms", auditMessage.getFullSql(), auditMessage.getQueryCount(), auditMessage.getElapsedTime()));

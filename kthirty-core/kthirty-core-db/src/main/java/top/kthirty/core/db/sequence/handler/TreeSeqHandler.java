@@ -48,7 +48,7 @@ public class TreeSeqHandler implements RuleHandler {
         String nextVal;
         String currentVal = current();
         if (StrUtil.isBlank(currentVal)) {
-            nextVal = "A00";
+            nextVal = prefix+"A00";
         }else{
             Assert.isTrue(currentVal.length() == 3, "当前值位数必须为3,但是目前值为{}", currentVal);
             String seq = StrUtil.sub(currentVal, 1, 3);
