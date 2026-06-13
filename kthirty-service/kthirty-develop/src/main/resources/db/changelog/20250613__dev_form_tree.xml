@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="dev_form_tree_config" author="admin">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="dev_form"/>
+            <not>
+                <columnExists tableName="dev_form" columnName="tree_parent_field"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="dev_form">
+            <column name="tree_parent_field" type="varchar(32)" remarks="树形父级字段"/>
+            <column name="tree_label_field" type="varchar(32)" remarks="树形显示字段"/>
+            <column name="tree_sort_field" type="varchar(32)" remarks="树形排序字段"/>
+            <column name="tree_root_value" type="varchar(32)" remarks="树形根节点值" defaultValue="0"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

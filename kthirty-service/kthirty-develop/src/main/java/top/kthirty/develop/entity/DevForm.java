@@ -62,6 +62,30 @@ public class DevForm extends LogicEntity {
     @Dict(code = "whether")
     private String isDbSync;
 
+    /**
+     * 树形父级字段
+     */
+    @Schema(description = "树形父级字段")
+    private String treeParentField;
+
+    /**
+     * 树形显示字段
+     */
+    @Schema(description = "树形显示字段")
+    private String treeLabelField;
+
+    /**
+     * 树形排序字段
+     */
+    @Schema(description = "树形排序字段")
+    private String treeSortField;
+
+    /**
+     * 树形根节点值
+     */
+    @Schema(description = "树形根节点值")
+    private String treeRootValue;
+
 
     @Ignore
     @Schema(description = "表单字段")

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="dev_runtime_menu" author="admin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM sys_menu WHERE path = '/dev/runtime'
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            INSERT INTO sys_menu (name, type, permission, parent_id, sort, path, component, description, status, meta, create_by, create_date, update_by, update_date, deleted, id, component_name, icon, `show`)
+            VALUES ('DevRuntime', 'menu', null, '369246783473266688', 2, '/dev/runtime', '/develop/runtime/list', null, '1',
+                    '{"title": "动态数据", "hideInMenu": true, "keepAlive": true}', 'admin', NOW(), 'admin', NOW(), 0,
+                    '369247187489599489', null, null, 0);
+        </sql>
+    </changeSet>
+</databaseChangeLog>
