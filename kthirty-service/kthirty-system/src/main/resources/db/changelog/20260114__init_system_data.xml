@@ -7,7 +7,7 @@
     <changeSet id="20260114_init_data" author="admin">
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="sys_menu"/>
-            <tableIsEmpty tableName="sys_menu"/>
+            <sqlCheck expectedResult="0">select count(*) from sys_menu where id = '1706364345'</sqlCheck>
         </preConditions>
         <sql>
             insert into sys_user_role_rl (role_id, user_id, id) values (1,1,1);
@@ -27,19 +27,10 @@
             INSERT INTO sys_menu (name, type, permission, parent_id, sort, path, component, description, status, meta, create_by, create_date, update_by, update_date, deleted, id) VALUES ('Analytics', 'menu', '', '398023345985032191', 0, '/analytics', '/dashboard/analytics/index.vue', 'description', '1', '{"icon": "carbon:apps", "title": "menu.dashboard.analytics", "activeIcon": "carbon:arrange-vertical"}', null, '2024-04-23 21:13:54.000', 'admin', '2025-04-08 15:41:44.000', 0, '398023345985032192');
             INSERT INTO sys_menu (name, type, permission, parent_id, sort, path, component, description, status, meta, create_by, create_date, update_by, update_date, deleted, id, component_name, icon, `show`) VALUES ('Develop', 'catalog', null, null, 4, '/dev', null, null, '1', '{"icon": "carbon:development", "title": "在线开发"}', 'admin', '2026-01-15 11:15:53.000', 'admin', '2026-01-15 11:16:39.000', 0, '369246783473266688', null, null, null);
             INSERT INTO sys_menu (name, type, permission, parent_id, sort, path, component, description, status, meta, create_by, create_date, update_by, update_date, deleted, id, component_name, icon, `show`) VALUES ('DevForm', 'menu', null, '369246783473266688', 1, '/dev/form', '/develop/form/list', null, '1', '{"icon": "carbon:data-format", "title": "表单开发", "keepAlive": true}', 'admin', '2026-01-15 11:17:30.000', 'admin', '2026-01-15 11:17:30.000', 0, '369247187489599488', null, null, null);
-
-            insert into sys_role_menu_rl select 1,id,id from sys_menu
-        </sql>
-    </changeSet>
-
-    <changeSet id="20260611_flw_task_menu" author="admin">
-        <preConditions onFail="MARK_RAN">
-            <tableExists tableName="sys_menu"/>
-            <sqlCheck expectedResult="0">select count(*) from sys_menu where id = '298416852403535872'</sqlCheck>
-        </preConditions>
-        <sql>
             INSERT INTO sys_menu (name, type, permission, parent_id, sort, path, component, description, status, meta, create_by, create_date, update_by, update_date, deleted, id) VALUES ('FlwTask', 'menu', null, '297165294707716096', 7, '/flowable/task', '/flowable/task/list', null, '1', '{"icon": "carbon:task", "title": "流程任务", "keepAlive": true, "activeIcon": "carbon:task-complete"}', 'admin', '2026-06-11 10:00:00.000', 'admin', '2026-06-11 10:00:00.000', 0, '298416852403535872');
-            insert into sys_role_menu_rl (role_id, menu_id, id) values (1, '298416852403535872', '298416852403535872');
+
+            insert into sys_role_menu_rl (role_id,menu_id,id) select 1,id,id from sys_menu
         </sql>
     </changeSet>
+
 </databaseChangeLog>

@@ -1,6 +1,7 @@
 package top.kthirty.develop.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.meta.Column;
@@ -137,12 +138,12 @@ public class DevFormToolServiceImpl implements DevFormToolService {
 
         DataSource dataSource = getDataSource();
         DbType dbType = DbTypeUtil.getDbType(dataSource);
-        Table tableMeta = MetaUtil.getTableMeta(dataSource, form.getTableName());
+
         List<String> messages = new ArrayList<>();
         List<String> addedColumns = new ArrayList<>();
         List<String> addedIndexes = new ArrayList<>();
-        boolean created = tableMeta == null;
-
+        List<String> tables = MetaUtil.getTables(dataSource);
+        boolean created = tables.stream().noneMatch(it -> it.equalsIgnoreCase(form.getTableName()));
         if (created) {
             executeDdl(buildCreateTableSql(dbType, form, items));
             messages.add("创建表 " + form.getTableName());
@@ -153,14 +154,16 @@ public class DevFormToolServiceImpl implements DevFormToolService {
                 }
             }
         } else {
+            Table tableMeta = MetaUtil.getTableMeta(dataSource, form.getTableName());
             Set<String> existsColumns = tableMeta.getColumns().stream()
                     .map(Column::getName)
+                    .map(String::toUpperCase)
                     .collect(Collectors.toSet());
             for (DevFormItem item : items) {
                 if (FieldAttribute.NOT_DB_FIELD.getValue().equals(item.getFieldAttribute())) {
                     continue;
                 }
-                if (!existsColumns.contains(item.getColumnName())) {
+                if (!existsColumns.contains(StrUtil.toUpperCase(item.getColumnName()))) {
                     executeDdl(DevFormDdlBuilder.buildAddColumnSql(dbType, form.getTableName(), item));
                     addedColumns.add(item.getColumnName());
                     messages.add("新增字段 " + item.getColumnName());
@@ -173,7 +176,7 @@ public class DevFormToolServiceImpl implements DevFormToolService {
         Table refreshedMeta = MetaUtil.getTableMeta(dataSource, form.getTableName());
         List<DevFormIndex> indexes = devFormIndexService.list(
                 DevFormIndexTableDef.DEV_FORM_INDEX.FORM_ID.eq(formId));
-        if (CollUtil.isNotEmpty(indexes) && refreshedMeta != null) {
+        if (CollUtil.isNotEmpty(indexes)) {
             Set<String> existsIndexes = refreshedMeta.getIndexInfoList().stream()
                     .map(it -> it.getIndexName().toLowerCase())
                     .collect(Collectors.toSet());
