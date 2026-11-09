@@ -53,7 +53,7 @@ public class DevHelper {
                             .columnDefaultVal(column.getColumnDef())
                             .columnNullable(column.isNullable())
                             .columnRemarks(column.getComment())
-                            .fieldType(javaType.getName())
+                            .fieldType(javaType.getSimpleName())
                             .fieldAttribute(fieldAttribute.getValue())
                             .formRequired(column.isNullable())
                             .weight(i++)
