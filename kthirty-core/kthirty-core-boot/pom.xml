@@ -39,6 +39,9 @@
     <profiles>
         <profile>
             <id>cloud</id>
+            <properties>
+                <maven.cloud.profile.enabled>true</maven.cloud.profile.enabled>
+            </properties>
             <dependencies>
                 <!--配置中心-->
                 <dependency>

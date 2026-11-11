@@ -39,6 +39,7 @@ public class KthirtyBootUtils {
         launchInfo.addProperties("logging.config","classpath:log/logback_".concat(launchInfo.getEnv()).concat(".xml"));
         launchInfo.addProperties("spring.main.allow-bean-definition-overriding","true");
         launchInfo.addProperties("server.port",launchInfo.getPort());
+        launchInfo.addProperties("kthirty.cloud.enabled","${maven.cloud.profile.enabled:false}");
         builder.application().setDefaultProperties(launchInfo.getProperties());
     }
 
