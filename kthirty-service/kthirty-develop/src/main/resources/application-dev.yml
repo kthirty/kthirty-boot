@@ -8,3 +8,13 @@ spring:
   data:
     redis:
       host: localhost
+
+# 报表多数据源（DevReport.dsKey 对应此处 key；primary 始终指向 spring.datasource）
+# kthirty:
+#   develop:
+#     datasources:
+#       biz:
+#         url: jdbc:mysql://localhost:5006/biz
+#         username: root
+#         password: ${KTHIRTY_PASSWORD}
+#         driver-class-name: com.mysql.cj.jdbc.Driver

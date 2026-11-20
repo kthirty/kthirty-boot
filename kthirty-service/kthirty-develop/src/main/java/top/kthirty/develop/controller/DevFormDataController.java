@@ -81,7 +81,7 @@ public class DevFormDataController extends BaseController {
         return devFormDataService.remove(formId, id);
     }
 
-    @PostMapping("removeBatch")
+    @DeleteMapping("removeBatch")
     @Operation(summary = "批量删除动态数据")
     public boolean removeBatch(@RequestParam String formId, @RequestBody List<? extends Serializable> ids) {
         return devFormDataService.removeBatch(formId, ids);

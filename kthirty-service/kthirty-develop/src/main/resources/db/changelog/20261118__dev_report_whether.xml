@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="dev_report_whether_string" author="admin">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="dev_report"/>
+        </preConditions>
+        <modifyDataType tableName="dev_report" columnName="is_page" newDataType="varchar(1)"/>
+        <modifyDataType tableName="dev_report_item" columnName="is_show_query" newDataType="varchar(1)"/>
+        <modifyDataType tableName="dev_report_item" columnName="is_show_list" newDataType="varchar(1)"/>
+        <modifyDataType tableName="dev_report_item" columnName="is_allow_sort" newDataType="varchar(1)"/>
+        <sql>
+            UPDATE dev_report
+            SET is_page = CASE WHEN is_page IN ('1', 'true', 'TRUE') THEN '1' ELSE '0' END;
+            UPDATE dev_report_item
+            SET is_show_query = CASE WHEN is_show_query IN ('1', 'true', 'TRUE') THEN '1' ELSE '0' END,
+                is_show_list = CASE WHEN is_show_list IN ('1', 'true', 'TRUE') THEN '1' ELSE '0' END,
+                is_allow_sort = CASE WHEN is_allow_sort IN ('1', 'true', 'TRUE') THEN '1' ELSE '0' END;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

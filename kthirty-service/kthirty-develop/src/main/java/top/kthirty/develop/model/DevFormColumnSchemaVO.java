@@ -60,6 +60,15 @@ public class DevFormColumnSchemaVO {
     @Schema(description = "字典Code")
     private String dictCode;
 
+    @Schema(description = "数据库字段类型")
+    private String columnType;
+
+    @Schema(description = "外键主表名")
+    private String foreignKeyMainTable;
+
+    @Schema(description = "外键主表字段")
+    private String foreignKeyMainColumn;
+
     @Schema(description = "是否允许为空")
     private boolean nullable;
 

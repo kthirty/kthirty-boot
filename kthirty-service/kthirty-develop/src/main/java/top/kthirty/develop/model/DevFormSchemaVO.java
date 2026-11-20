@@ -52,4 +52,7 @@ public class DevFormSchemaVO {
 
     @Schema(description = "功能开关")
     private DevFormFeaturesVO features;
+
+    @Schema(description = "主表关联的子表")
+    private List<DevFormSchemaVO> subTables;
 }

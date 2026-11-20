@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="dev_report_menu" author="admin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM sys_menu WHERE path = '/dev/report'
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            INSERT INTO sys_menu (name, type, permission, parent_id, sort, path, component, description, status, meta, create_by, create_date, update_by, update_date, deleted, id, component_name, icon, `show`)
+            VALUES ('DevReport', 'menu', null, '369246783473266688', 3, '/dev/report', '/dev/report/index.vue', '报表开发', '1',
+                    '{"icon": "carbon:report", "title": "报表开发", "keepAlive": true}', 'admin', NOW(), 'admin', NOW(), 0,
+                    '369247187489599490', null, null, 1);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

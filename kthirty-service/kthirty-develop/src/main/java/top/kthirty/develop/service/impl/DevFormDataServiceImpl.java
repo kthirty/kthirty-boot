@@ -33,6 +33,7 @@ import top.kthirty.develop.entity.DevFormItem;
 import top.kthirty.develop.entity.table.DevFormItemTableDef;
 import top.kthirty.develop.enums.FieldAttribute;
 import top.kthirty.develop.enums.ListType;
+import top.kthirty.develop.enums.TableType;
 import top.kthirty.develop.model.*;
 import top.kthirty.develop.service.DevFormDataService;
 import top.kthirty.develop.service.DevFormItemService;
@@ -64,34 +65,7 @@ public class DevFormDataServiceImpl implements DevFormDataService {
 
     @Override
     public DevFormSchemaVO getSchema(String formId) {
-        DevFormContext ctx = loadContext(formId);
-        DevForm form = ctx.getForm();
-        String primaryKey = ctx.getPrimaryKeyColumn();
-        return DevFormSchemaVO.builder()
-                .formId(form.getId())
-                .tableName(form.getTableName())
-                .title(form.getRemarks())
-                .tableType(form.getTableType())
-                .listType(form.getListType())
-                .isDbSync(form.getIsDbSync())
-                .primaryKey(primaryKey)
-                .primaryKeyField(DevFormContext.toFieldName(primaryKey))
-                .logicDeleteField(ctx.hasLogicDelete() ? ctx.getLogicDeleteColumn() : null)
-                .auditFields(AUDIT_COLUMNS.stream()
-                        .filter(it -> ctx.getColumnMap().containsKey(it))
-                        .map(DevFormContext::toFieldName)
-                        .toList())
-                .treeConfig(buildTreeConfig(form))
-                .columns(buildColumnSchemas(ctx))
-                .features(DevFormFeaturesVO.builder()
-                        .enableAdd(true)
-                        .enableEdit(true)
-                        .enableDelete(true)
-                        .enableExport(true)
-                        .enableImport(true)
-                        .enableBatchDelete(true)
-                        .build())
-                .build();
+        return buildSchema(loadContext(formId), true);
     }
 
     @Override
@@ -155,7 +129,12 @@ public class DevFormDataServiceImpl implements DevFormDataService {
         }
         Row row = Db.selectOneByQuery(ctx.getTableName(), wrapper);
         Assert.notNull(row, "数据不存在");
-        return convertRow(ctx, row);
+        Map<String, Object> result = convertRow(ctx, row);
+        Map<String, List<Map<String, Object>>> subTables = loadSubTables(ctx, Convert.toStr(id));
+        if (CollUtil.isNotEmpty(subTables)) {
+            result.put("subTables", subTables);
+        }
+        return result;
     }
 
     @Override
@@ -165,6 +144,7 @@ public class DevFormDataServiceImpl implements DevFormDataService {
         fillInsertDefaults(ctx, row);
         validateFormData(ctx, row, false);
         Assert.isTrue(Db.insert(ctx.getTableName(), row) > 0, "保存失败");
+        saveSubTables(ctx, Convert.toStr(row.get(ctx.getPrimaryKeyColumn())), data);
         return true;
     }
 
@@ -182,6 +162,7 @@ public class DevFormDataServiceImpl implements DevFormDataService {
         QueryWrapper wrapper = QueryWrapper.create()
                 .where(column(ctx.getPrimaryKeyColumn()).eq(id));
         Assert.isTrue(Db.updateByQuery(ctx.getTableName(), row, wrapper) > 0, "更新失败");
+        saveSubTables(ctx, Convert.toStr(id), data);
         return true;
     }
 
@@ -194,6 +175,7 @@ public class DevFormDataServiceImpl implements DevFormDataService {
     public boolean removeBatch(String formId, List<? extends Serializable> ids) {
         DevFormContext ctx = loadContext(formId);
         Assert.notEmpty(ids, "请选择要删除的数据");
+        removeSubTables(ctx, ids);
         QueryWrapper wrapper = QueryWrapper.create()
                 .where(column(ctx.getPrimaryKeyColumn()).in(ids));
         if (ctx.hasLogicDelete()) {
@@ -303,6 +285,171 @@ public class DevFormDataServiceImpl implements DevFormDataService {
         return new DevFormContext(form, items);
     }
 
+    private DevFormSchemaVO buildSchema(DevFormContext ctx, boolean withSubTables) {
+        DevForm form = ctx.getForm();
+        String primaryKey = ctx.getPrimaryKeyColumn();
+        return DevFormSchemaVO.builder()
+                .formId(form.getId())
+                .tableName(form.getTableName())
+                .title(StrUtil.blankToDefault(form.getRemarks(), form.getTableName()))
+                .tableType(form.getTableType())
+                .listType(form.getListType())
+                .isDbSync(form.getIsDbSync())
+                .primaryKey(primaryKey)
+                .primaryKeyField(DevFormContext.toFieldName(primaryKey))
+                .logicDeleteField(ctx.hasLogicDelete() ? ctx.getLogicDeleteColumn() : null)
+                .auditFields(AUDIT_COLUMNS.stream()
+                        .filter(it -> ctx.getColumnMap().containsKey(it))
+                        .map(DevFormContext::toFieldName)
+                        .toList())
+                .treeConfig(buildTreeConfig(form))
+                .columns(buildColumnSchemas(ctx))
+                .features(DevFormFeaturesVO.builder()
+                        .enableAdd(true)
+                        .enableEdit(true)
+                        .enableDelete(true)
+                        .enableExport(true)
+                        .enableImport(true)
+                        .enableBatchDelete(true)
+                        .build())
+                .subTables(withSubTables ? buildSubTables(form) : List.of())
+                .build();
+    }
+
+    private List<DevFormSchemaVO> buildSubTables(DevForm form) {
+        if (!TableType.MAIN_TABLE.getValue().equals(form.getTableType()) || StrUtil.isBlank(form.getTableName())) {
+            return List.of();
+        }
+        List<DevForm> forms = devFormService.list(QueryWrapper.create()
+                .eq(DevForm::getTableType, TableType.SUB_TABLE.getValue()));
+        List<DevFormSchemaVO> result = new ArrayList<>();
+        for (DevForm sub : forms) {
+            if (sub.getId().equals(form.getId())) {
+                continue;
+            }
+            DevFormContext subCtx = loadContext(sub.getId());
+            boolean linked = subCtx.getItems().stream()
+                    .anyMatch(it -> form.getTableName().equalsIgnoreCase(it.getForeignKeyMainTable()));
+            if (linked) {
+                result.add(buildSchema(subCtx, false));
+            }
+        }
+        return result;
+    }
+
+    private DevFormItem findForeignKey(DevFormContext child, String mainTable) {
+        return child.getItems().stream()
+                .filter(it -> mainTable.equalsIgnoreCase(it.getForeignKeyMainTable()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private Map<String, List<Map<String, Object>>> loadSubTables(DevFormContext parent, String parentId) {
+        Map<String, List<Map<String, Object>>> result = new LinkedHashMap<>();
+        for (DevFormSchemaVO sub : buildSubTables(parent.getForm())) {
+            DevFormContext child = loadContext(sub.getFormId());
+            DevFormItem fk = findForeignKey(child, parent.getTableName());
+            if (fk == null) {
+                continue;
+            }
+            QueryWrapper wrapper = QueryWrapper.create().where(column(fk.getColumnName()).eq(parentId));
+            if (child.hasLogicDelete()) {
+                wrapper.and(column(child.getLogicDeleteColumn()).eq(false));
+            }
+            result.put(sub.getFormId(), convertRows(child, Db.selectListByQuery(child.getTableName(), wrapper)));
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void saveSubTables(DevFormContext parent, String parentId, Map<String, Object> data) {
+        if (!TableType.MAIN_TABLE.getValue().equals(parent.getForm().getTableType())) {
+            return;
+        }
+        Object raw = data.get("subTables");
+        if (!(raw instanceof Map<?, ?> subMap)) {
+            return;
+        }
+        for (DevFormSchemaVO sub : buildSubTables(parent.getForm())) {
+            if (!subMap.containsKey(sub.getFormId())) {
+                continue;
+            }
+            Object rowsObj = subMap.get(sub.getFormId());
+            List<?> rows = rowsObj instanceof List<?> list ? list : List.of();
+            DevFormContext child = loadContext(sub.getFormId());
+            DevFormItem fk = findForeignKey(child, parent.getTableName());
+            if (fk == null) {
+                continue;
+            }
+            String fkField = DevFormContext.toFieldName(fk.getColumnName());
+            String pkField = DevFormContext.toFieldName(child.getPrimaryKeyColumn());
+            QueryWrapper existingWrapper = QueryWrapper.create().where(column(fk.getColumnName()).eq(parentId));
+            if (child.hasLogicDelete()) {
+                existingWrapper.and(column(child.getLogicDeleteColumn()).eq(false));
+            }
+            List<Row> existing = Db.selectListByQuery(child.getTableName(), existingWrapper);
+            Set<String> keep = new HashSet<>();
+            for (Object rowObj : rows) {
+                if (!(rowObj instanceof Map<?, ?> rowMap)) {
+                    continue;
+                }
+                Map<String, Object> rowData = new LinkedHashMap<>();
+                rowMap.forEach((key, value) -> {
+                    if (key != null && !String.valueOf(key).startsWith("_")) {
+                        rowData.put(String.valueOf(key), value);
+                    }
+                });
+                rowData.put(fkField, parentId);
+                Object id = rowData.get(pkField);
+                if (ObjUtil.isEmpty(id)) {
+                    Row row = buildRow(child, rowData, false);
+                    row.set(fk.getColumnName(), parentId);
+                    fillInsertDefaults(child, row);
+                    validateFormData(child, row, false);
+                    Assert.isTrue(Db.insert(child.getTableName(), row) > 0, "子表保存失败");
+                    keep.add(Convert.toStr(row.get(child.getPrimaryKeyColumn())));
+                } else {
+                    Row row = buildRow(child, rowData, true);
+                    row.set(fk.getColumnName(), parentId);
+                    fillUpdateDefaults(child, row);
+                    validateFormData(child, row, true);
+                    QueryWrapper wrapper = QueryWrapper.create()
+                            .where(column(child.getPrimaryKeyColumn()).eq(id));
+                    Assert.isTrue(Db.updateByQuery(child.getTableName(), row, wrapper) > 0, "子表更新失败");
+                    keep.add(Convert.toStr(id));
+                }
+            }
+            List<String> removed = existing.stream()
+                    .map(it -> Convert.toStr(it.get(child.getPrimaryKeyColumn())))
+                    .filter(it -> StrUtil.isNotBlank(it) && !keep.contains(it))
+                    .toList();
+            if (CollUtil.isNotEmpty(removed)) {
+                removeBatch(child.getForm().getId(), removed);
+            }
+        }
+    }
+
+    private void removeSubTables(DevFormContext parent, List<? extends Serializable> ids) {
+        for (DevFormSchemaVO sub : buildSubTables(parent.getForm())) {
+            DevFormContext child = loadContext(sub.getFormId());
+            DevFormItem fk = findForeignKey(child, parent.getTableName());
+            if (fk == null) {
+                continue;
+            }
+            QueryWrapper wrapper = QueryWrapper.create().where(column(fk.getColumnName()).in(ids));
+            if (child.hasLogicDelete()) {
+                wrapper.and(column(child.getLogicDeleteColumn()).eq(false));
+            }
+            List<String> childIds = Db.selectListByQuery(child.getTableName(), wrapper).stream()
+                    .map(it -> Convert.toStr(it.get(child.getPrimaryKeyColumn())))
+                    .filter(StrUtil::isNotBlank)
+                    .toList();
+            if (CollUtil.isNotEmpty(childIds)) {
+                removeBatch(child.getForm().getId(), childIds);
+            }
+        }
+    }
+
     private DevFormTreeConfigVO buildTreeConfig(DevForm form) {
         if (!ListType.TREE.getValue().equals(form.getListType())) {
             return null;
@@ -339,6 +486,9 @@ public class DevFormDataServiceImpl implements DevFormDataService {
                         .regexp(it.getFormRegexp())
                         .defaultValue(it.getColumnDefaultVal())
                         .dictCode(it.getDictCode())
+                        .columnType(it.getColumnType())
+                        .foreignKeyMainTable(it.getForeignKeyMainTable())
+                        .foreignKeyMainColumn(it.getForeignKeyMainColumn())
                         .nullable(Boolean.TRUE.equals(it.getColumnNullable()))
                         .maxLength(it.getColumnLength())
                         .pointLength(it.getColumnPointLength())
@@ -388,7 +538,11 @@ public class DevFormDataServiceImpl implements DevFormDataService {
                 return;
             }
             String normalized = normalizeQueryValue(value);
-            if (StrUtil.startWith(value, "*") || StrUtil.endWith(value, "*")) {
+            if (isRangeQuery(item, value)) {
+                String[] parts = value.split(",", 2);
+                wrapper.and(column(columnName).ge(parts[0].trim()));
+                wrapper.and(column(columnName).le(parts[1].trim()));
+            } else if (StrUtil.startWith(value, "*") || StrUtil.endWith(value, "*")) {
                 wrapper.and(column(columnName).like(normalized));
             } else {
                 wrapper.and(column(columnName).eq(normalized));
@@ -399,6 +553,42 @@ public class DevFormDataServiceImpl implements DevFormDataService {
 
     private QueryColumn column(String columnName) {
         return new QueryColumn(columnName);
+    }
+
+    private boolean isRangeQuery(DevFormItem item, String value) {
+        if (item == null || StrUtil.isBlank(value) || !value.contains(",")) {
+            return false;
+        }
+        String component = StrUtil.blankToDefault(item.getQueryComponent(), "");
+        return StrUtil.containsIgnoreCase(component, "Range");
+    }
+
+    private String tryResolveColumn(DevFormContext ctx, String fieldOrColumn) {
+        if (StrUtil.isBlank(fieldOrColumn)) {
+            return null;
+        }
+        if (ctx.getColumnMap().containsKey(fieldOrColumn)) {
+            return fieldOrColumn;
+        }
+        String columnName = DevFormContext.toColumnName(fieldOrColumn);
+        return ctx.getColumnMap().containsKey(columnName) ? columnName : null;
+    }
+
+    private Object normalizeWhetherValue(DevFormItem item, Object value) {
+        if (value instanceof Boolean bool) {
+            return bool ? Constant.YES : Constant.NO;
+        }
+        if (value == null || item == null || !"Boolean".equalsIgnoreCase(item.getFieldType())) {
+            return value;
+        }
+        String text = String.valueOf(value);
+        if (Constant.YES.equals(text) || "true".equalsIgnoreCase(text)) {
+            return Constant.YES;
+        }
+        if (Constant.NO.equals(text) || "false".equalsIgnoreCase(text)) {
+            return Constant.NO;
+        }
+        return value;
     }
 
     private String normalizeQueryValue(String value) {
@@ -445,6 +635,7 @@ public class DevFormDataServiceImpl implements DevFormDataService {
                 return;
             }
             DevFormItem item = ctx.getItem(column);
+            value = normalizeWhetherValue(item, value);
             if (item != null && StrUtil.isNotBlank(item.getDictCode()) && value != null) {
                 map.put(DevFormContext.toFieldName(column), value);
                 map.put(DevFormContext.toFieldName(column) + "Label",
@@ -459,11 +650,11 @@ public class DevFormDataServiceImpl implements DevFormDataService {
     private Row buildRow(DevFormContext ctx, Map<String, Object> data, boolean update) {
         Row row = new Row();
         data.forEach((fieldName, value) -> {
-            if (IGNORE_PARAMS.contains(fieldName)) {
+            if (IGNORE_PARAMS.contains(fieldName) || "subTables".equals(fieldName)) {
                 return;
             }
-            String columnName = ctx.resolveColumnName(fieldName);
-            if (!ctx.isDbColumn(columnName)) {
+            String columnName = tryResolveColumn(ctx, fieldName);
+            if (columnName == null || !ctx.isDbColumn(columnName)) {
                 return;
             }
             if (update && ctx.isPrimaryKey(columnName)) {

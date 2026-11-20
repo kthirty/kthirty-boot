@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="dev_report" author="admin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="dev_report"/>
+            </not>
+        </preConditions>
+        <createTable tableName="dev_report" remarks="报表开发">
+            <column name="id" type="varchar(32)" remarks="主键">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="create_by" remarks="创建人" type="varchar(32)"/>
+            <column name="update_by" remarks="更新人" type="varchar(32)"/>
+            <column name="create_date" remarks="创建时间" type="timestamp" defaultValueDate="current_timestamp"/>
+            <column name="update_date" remarks="更新时间" type="timestamp" defaultValueDate="current_timestamp"/>
+            <column name="deleted" remarks="删除标记" type="tinyint" defaultValueBoolean="false"/>
+            <column name="code" type="varchar(64)" remarks="报表编码">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(128)" remarks="报表名称">
+                <constraints nullable="false"/>
+            </column>
+            <column name="report_sql" type="text" remarks="报表SQL"/>
+            <column name="is_page" type="varchar(1)" remarks="是否分页" defaultValue="1"/>
+            <column name="ds_key" type="varchar(64)" remarks="数据源Key（对应Properties配置）"/>
+            <column name="remarks" remarks="备注" type="varchar(255)"/>
+        </createTable>
+        <createTable tableName="dev_report_item" remarks="报表开发字段">
+            <column name="id" type="varchar(32)" remarks="主键">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="report_id" type="varchar(32)" remarks="dev_report表ID"/>
+
+            <column name="column_name" remarks="字段名" type="varchar(64)"/>
+            <column name="column_remarks" type="varchar(255)" remarks="字段备注"/>
+            <column name="field_type" remarks="字段类型" type="varchar(32)"/>
+            <column name="dict_code" remarks="字典Code" type="varchar(32)"/>
+
+            <column name="weight" type="int" remarks="排序权重" defaultValueNumeric="0"/>
+            <column name="is_show_query" type="varchar(1)" defaultValue="0" remarks="是否搜索"/>
+            <column name="query_component" type="varchar(20)" remarks="搜索组件"/>
+            <column name="is_show_list" type="varchar(1)" defaultValue="1" remarks="是否List中显示"/>
+            <column name="is_allow_sort" type="varchar(1)" defaultValue="0" remarks="是否允许排序"/>
+            <column name="list_component" type="varchar(20)" remarks="列表显示组件"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
