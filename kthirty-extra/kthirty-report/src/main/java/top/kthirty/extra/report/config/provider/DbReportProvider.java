@@ -22,6 +22,7 @@ public class DbReportProvider implements ReportProvider, InitializingBean {
     private DataSource dataSource;
     private String dbType = "";
     private final String TABLE_NAME = "ureport_file";
+    private final String prefix = "db:";
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -54,6 +55,8 @@ public class DbReportProvider implements ReportProvider, InitializingBean {
 
     @Override
     public InputStream loadReport(String file) {
+        file = removePrefix(file);
+   
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT content FROM " + TABLE_NAME + " WHERE name=?")) {
             ps.setString(1, file);
@@ -70,6 +73,7 @@ public class DbReportProvider implements ReportProvider, InitializingBean {
 
     @Override
     public void saveReport(String file, String content) {
+        file = removePrefix(file);
         try (Connection conn = dataSource.getConnection()) {
             PreparedStatement ps = conn.prepareStatement("SELECT id FROM " + TABLE_NAME + " WHERE name=?");
             ps.setString(1, file);
@@ -94,6 +98,8 @@ public class DbReportProvider implements ReportProvider, InitializingBean {
 
     @Override
     public void deleteReport(String file) {
+        file = removePrefix(file);
+   
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement("DELETE FROM " + TABLE_NAME + " WHERE name=?")) {
             ps.setString(1, file);
@@ -122,7 +128,7 @@ public class DbReportProvider implements ReportProvider, InitializingBean {
 
     @Override
     public String getPrefix() {
-        return "db";
+        return this.prefix;
     }
 
     @Override
@@ -133,5 +139,12 @@ public class DbReportProvider implements ReportProvider, InitializingBean {
     @Override
     public boolean disabled() {
         return false;
+    }
+
+    private String removePrefix(String file) {
+        if (file.startsWith(this.prefix)) {
+            file = file.substring(this.prefix.length(), file.length());
+        }
+        return file;
     }
 }

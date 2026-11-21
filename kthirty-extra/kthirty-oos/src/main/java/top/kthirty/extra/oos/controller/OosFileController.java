@@ -1,5 +1,7 @@
 package top.kthirty.extra.oos.controller;
 
+import cn.hutool.core.util.StrUtil;
+import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import top.kthirty.core.db.support.Condition;
 import top.kthirty.core.web.api.KthirtyResultIgnore;
 import top.kthirty.core.web.base.BaseController;
+import top.kthirty.extra.oos.entity.OosFile;
 import top.kthirty.extra.oos.model.OosFileVO;
 import top.kthirty.extra.oos.service.OosFileService;
 
@@ -43,6 +47,16 @@ public class OosFileController extends BaseController {
     @Operation(summary = "批量上传文件", description = "批量上传多个文件")
     public List<OosFileVO> uploadBatch(@RequestParam("files") @Parameter(description = "上传文件列表") MultipartFile[] files) {
         return oosFileService.uploadBatch(files);
+    }
+
+    @GetMapping("page")
+    @Operation(summary = "分页查询文件", description = "分页查询对象存储文件元数据")
+    public Page<OosFile> page(@Parameter(description = "分页信息") Page<OosFile> page, OosFile file) {
+        if (StrUtil.isNotBlank(file.getOriginalFileName())
+                && !StrUtil.contains(file.getOriginalFileName(), "*")) {
+            file.setOriginalFileName("*" + file.getOriginalFileName() + "*");
+        }
+        return oosFileService.page(page, Condition.getWrapper(file));
     }
 
     @GetMapping("info/{id}")
